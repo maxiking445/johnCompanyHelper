@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://cb044dasqun8u"]
+
+[ext_resource type="Script" uid="uid://bk2gjbqhq2a5" path="res://UI/components/IndianStateComponent/indian_state_component.gd" id="1_aw5bh"]
+[ext_resource type="PackedScene" uid="uid://dksvqybbjoiqb" path="res://UI/components/TitleComponent/titleComponent.tscn" id="2_ecy2w"]
+[ext_resource type="PackedScene" uid="uid://cu3q7tqf03nrd" path="res://UI/components/AddSustractComponent/addSubstractComponent.tscn" id="3_nawlg"]
+[ext_resource type="PackedScene" uid="uid://dje7btfj8w20v" path="res://UI/components/CheckBoxComponent/checkBoxComponent.tscn" id="4_5k0qw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ecy2w"]
+bg_color = Color(0.6, 0.21960784, 0.6, 0.11372549)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.41251674, 0.9030156, 0.7700644, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aw5bh"]
+bg_color = Color(0.5647059, 0, 0, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[node name="IndianStateComponent" type="PanelContainer" unique_id=1772421856]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ecy2w")
+script = ExtResource("1_aw5bh")
+title = "Indian State"
+title_color = Color(0.8509804, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=927879527]
+layout_mode = 2
+
+[node name="Title" parent="VBoxContainer" unique_id=92586880 instance=ExtResource("2_ecy2w")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_aw5bh")
+title = "Indian State"
+color = Color(0, 0, 0, 1)
+
+[node name="Unrest" parent="VBoxContainer" unique_id=985082589 instance=ExtResource("3_nawlg")]
+layout_mode = 2
+title = "Unrest"
+
+[node name="Armies" parent="VBoxContainer" unique_id=375161306 instance=ExtResource("3_nawlg")]
+layout_mode = 2
+title = "Armies"
+
+[node name="Govenor" parent="VBoxContainer" unique_id=1625160985 instance=ExtResource("4_5k0qw")]
+layout_mode = 2
+title = "Govenor"
+
+[node name="Treasury" parent="VBoxContainer" unique_id=1287630156 instance=ExtResource("3_nawlg")]
+layout_mode = 2
+title = "Treasury"

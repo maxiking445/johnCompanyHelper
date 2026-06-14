@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dje7btfj8w20v"]
+
+[ext_resource type="Script" uid="uid://dj2nj2l8hdjqy" path="res://UI/components/CheckBoxComponent/check_box_component.gd" id="1_8yyg5"]
+
+[node name="CheckBoxComponent" type="MarginContainer" unique_id=1625160985]
+offset_right = 95.0
+offset_bottom = 31.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_8yyg5")
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="." unique_id=797919592]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer3" unique_id=1560801787]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="HBoxContainer3/HBoxContainer" unique_id=1300974033]
+layout_mode = 2
+text = "TITLE"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer3" unique_id=579613488]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="CheckBox" type="CheckBox" parent="HBoxContainer3/HBoxContainer2" unique_id=1163653442]
+layout_mode = 2
+
+[connection signal="pressed" from="HBoxContainer3/HBoxContainer2/CheckBox" to="." method="_on_check_box_pressed"]

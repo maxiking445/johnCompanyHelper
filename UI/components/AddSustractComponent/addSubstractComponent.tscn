@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://cu3q7tqf03nrd"]
+
+[ext_resource type="Script" uid="uid://dqi2o128y1wid" path="res://UI/components/AddSustractComponent/add_substract_component.gd" id="1_1b2pi"]
+
+[node name="AddSubstractComponent" type="MarginContainer" unique_id=985082589]
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_1b2pi")
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="." unique_id=567261568]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer3" unique_id=1553277446]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="HBoxContainer3/HBoxContainer" unique_id=976484598]
+layout_mode = 2
+text = "TITLE"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer3" unique_id=1575544105]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="Amount" type="Label" parent="HBoxContainer3/HBoxContainer2" unique_id=106381216]
+layout_mode = 2
+text = "2"
+
+[node name="addButton" type="Button" parent="HBoxContainer3/HBoxContainer2" unique_id=310057182]
+layout_mode = 2
+text = "+"
+
+[node name="substractButton" type="Button" parent="HBoxContainer3/HBoxContainer2" unique_id=24941183]
+layout_mode = 2
+text = "-"
+
+[connection signal="pressed" from="HBoxContainer3/HBoxContainer2/addButton" to="." method="_on_add_button_pressed"]
+[connection signal="pressed" from="HBoxContainer3/HBoxContainer2/substractButton" to="." method="_on_substract_button_pressed"]

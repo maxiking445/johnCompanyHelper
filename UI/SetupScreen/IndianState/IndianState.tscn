@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://7nn4k78nl6et"]
+
+[ext_resource type="Script" uid="uid://clvmvr3physab" path="res://UI/SetupScreen/IndianState/indian_state.gd" id="1_igvd5"]
+[ext_resource type="PackedScene" uid="uid://cb044dasqun8u" path="res://UI/components/IndianStateComponent/indianStateComponent.tscn" id="2_pgsou"]
+
+[node name="IndianState" type="VBoxContainer" unique_id=89164756]
+offset_right = 383.0
+offset_bottom = 743.0
+script = ExtResource("1_igvd5")
+
+[node name="Bengal" parent="." unique_id=424825281 instance=ExtResource("2_pgsou")]
+layout_mode = 2
+title = "Bengal"
+title_color = Color(0.79607844, 0, 0, 1)
+
+[node name="Madras" parent="." unique_id=15160586 instance=ExtResource("2_pgsou")]
+layout_mode = 2
+title = "Madras"
+
+[node name="Bombay" parent="." unique_id=1665681959 instance=ExtResource("2_pgsou")]
+layout_mode = 2
+title = "Bombay"

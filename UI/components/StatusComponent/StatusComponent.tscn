@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cv3q2ay284r8o"]
+
+[ext_resource type="Script" uid="uid://cy541bfdxtrsa" path="res://UI/components/StatusComponent/status_component.gd" id="1_7xauu"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7xauu"]
+
+[node name="StatusComponent" type="Container" unique_id=1943675198]
+offset_right = 54.0
+offset_bottom = 33.0
+size_flags_horizontal = 0
+script = ExtResource("1_7xauu")
+status_name = "Open"
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=236504686]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="MarginContainer" unique_id=429756445]
+layout_mode = 2
+text = "OPEN"
+
+[node name="Panel" type="Panel" parent="MarginContainer" unique_id=1400977746]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_7xauu")
