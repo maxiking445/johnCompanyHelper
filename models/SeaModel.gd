@@ -1,7 +1,4 @@
-extends Node
+extends Resource
 class_name SeaModel
 
-var ships: Array[ShipModel]
-
-func _init(ships: Array[ShipModel]):
-	self.ships = ships
+@export var ships: Array[ShipModel]

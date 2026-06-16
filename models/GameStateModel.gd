@@ -1,42 +1,15 @@
-extends Node
+extends Resource
 class_name GameState
 
-var bombay: StateModel
-var madras: StateModel
-var hyperbad: StateModel
-var punjab: StateModel
-var bengal: StateModel
-var maratha: StateModel
-var delhi: StateModel
-var mysore: StateModel
+@export var bombay: StateModel
+@export var madras: StateModel
+@export var hyperbad: StateModel
+@export var punjab: StateModel
+@export var bengal: StateModel
+@export var maratha: StateModel
+@export var delhi: StateModel
+@export var mysore: StateModel
 
-var seaWest: SeaModel
-var seaEast: SeaModel
-var seaSouth: SeaModel
-
-
-func _init(
-	bombay: StateModel,
-	madras: StateModel,
-	hyperbad: StateModel,
-	punjab: StateModel,
-	bengal: StateModel,
-	maratha: StateModel,
-	delhi: StateModel,
-	mysore: StateModel,
-	seaWest: SeaModel,
-	seaEast: SeaModel,
-	seaSouth: SeaModel
-):
-	self.bombay = bombay
-	self.madras = madras
-	self.hyperbad = hyperbad
-	self.punjab = punjab
-	self.bengal = bengal
-	self.maratha = maratha
-	self.delhi = delhi
-	self.mysore = mysore
-
-	self.seaWest = seaWest
-	self.seaEast = seaEast
-	self.seaSouth = seaSouth
+@export var seaWest: SeaModel
+@export var seaEast: SeaModel
+@export var seaSouth: SeaModel

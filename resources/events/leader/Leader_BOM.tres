@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="IndiaEvent" format=3 uid="uid://0pc4w6ahip65"]
+
+[ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_2vndd"]
+
+[resource]
+script = ExtResource("1_2vndd")
+eventName = "Leader"
+ruleText = "If the region pictured on the top of the draw stack is sovereign, add atower level to it. Otherwise, treat this event as a Rebellion in the picturedregion with a strength modifier equal to the number on the explosionsymbol (see Crisis rules)."
+metadata/_custom_type_script = "uid://cud5w8obqe6uf"

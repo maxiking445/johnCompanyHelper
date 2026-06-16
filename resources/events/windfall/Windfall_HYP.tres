@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="IndiaEvent" format=3 uid="uid://jtgvqovn44ex"]
+
+[ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_bl3uf"]
+
+[resource]
+script = ExtResource("1_bl3uf")
+eventName = "Windfall"
+eventLocation = 2
+ruleText = "Players take £1 from the bank for each writer they have on an order in theregion pictured on the top of the draw stack and all adjacent regions i.e.regions that share a border with that region. "
+metadata/_custom_type_script = "uid://cud5w8obqe6uf"

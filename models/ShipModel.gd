@@ -1,15 +1,10 @@
-extends Node
+extends Resource
 class_name ShipModel
 
-var shipType: ShipTypes.ShipType
-var shipOwner: String
-var isFlipped: bool
+@export var shipType: ShipTypes.ShipType
+@export var shipOwner: String
+@export var isFlipped: bool
 
-func _init(ship_type: ShipTypes.ShipType, ship_owner: String, isFlipped: bool):
-	self.shipType = ship_type
-	self.shipOwner = ship_owner
-	self.isFlipped = isFlipped
-	
 	
 func isCompanyShip() -> bool:
 	return shipType == ShipTypes.ShipType.COMPANY

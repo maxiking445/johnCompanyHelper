@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="IndiaEvent" format=3 uid="uid://v1gf6m07k77"]
+
+[ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_3gx1c"]
+
+[resource]
+script = ExtResource("1_3gx1c")
+eventName = "Turmoil"
+eventLocation = 5
+ruleText = "Close the northernmost open order in the region pictured on the top ofthe draw stack. Any writer on the order is returned to that player's supply.If all orders in this region are already closed, perform a Cascade. "
+metadata/_custom_type_script = "uid://cud5w8obqe6uf"

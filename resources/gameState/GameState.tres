@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="GameState" format=3 uid="uid://df6g5bknjcaik"]
+
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="1_xw62o"]
+[ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="2_bgbnd"]
+[ext_resource type="Script" uid="uid://bcb1pbdmq18c" path="res://models/SeaModel.gd" id="3_0vh61"]
+[ext_resource type="Script" uid="uid://cooqoytdy5ufp" path="res://models/ShipModel.gd" id="4_5xgtk"]
+
+[sub_resource type="Resource" id="Resource_qkx1f"]
+script = ExtResource("1_xw62o")
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Resource_4t2et"]
+script = ExtResource("3_0vh61")
+ships = Array[ExtResource("4_5xgtk")]([null])
+metadata/_custom_type_script = "uid://bcb1pbdmq18c"
+
+[resource]
+script = ExtResource("2_bgbnd")
+bombay = SubResource("Resource_qkx1f")
+seaEast = SubResource("Resource_4t2et")
+metadata/_custom_type_script = "uid://cvcexcttx1ehx"

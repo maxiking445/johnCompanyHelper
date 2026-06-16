@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="IndiaEvent" format=3 uid="uid://clmuhghqeq8iu"]
+
+[ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_c3kj8"]
+
+[resource]
+script = ExtResource("1_c3kj8")
+eventName = "Shuffle"
+eventLocation = 1
+ruleText = "First, perform the Elephant's March. Then, shuffle this tile in with theremainder o f the draw stack. Finally, shuffle the discards and place themon top of the draw stack, facedown. In the rare instance the draw stack isempty, perform the Elephant's March last. "
+metadata/_custom_type_script = "uid://cud5w8obqe6uf"
