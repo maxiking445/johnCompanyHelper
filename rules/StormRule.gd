@@ -2,7 +2,7 @@ class_name StormRule
 extends Rule
 
 func execute(game_state: GameState) -> void:
-	var diceResult: StormDice = RollHelper.rollStormDice()
+	var diceResult: StormDice.Face = RollHelper.rollStormDice()
 	
 	var zones_to_check: Array[SeaModel] = []
 	match diceResult:
@@ -32,7 +32,7 @@ func _check_zone(zone: SeaModel, game_state: GameState) -> void:
 		var roll := RollHelper.rollD6()
 
 		if roll <= 2:
-			print("Ship from ", ship.owner  , "escaped the Storm")
+			print("Ship from ", ship.shipOwner  , " escaped the Storm")
 			continue
 		elif roll == 3 ||  roll == 4:
 			if ship.isDamaged(): 
@@ -44,7 +44,5 @@ func _check_zone(zone: SeaModel, game_state: GameState) -> void:
 
 
 func _sink_ship(ship: ShipModel, zone: SeaModel, game_state: GameState) -> void:
-	log(zone.ships.size())
 	zone.ships.erase(ship)
-	print("Ship sunk from ", ship.owner  , "due to the Storm")
-	log(zone.ships.size())
+	print("Ship sunk from ", ship.shipOwner  , " due to the Storm")

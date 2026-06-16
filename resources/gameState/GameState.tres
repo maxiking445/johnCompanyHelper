@@ -9,13 +9,35 @@
 script = ExtResource("1_xw62o")
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
+[sub_resource type="Resource" id="Resource_xw62o"]
+script = ExtResource("4_5xgtk")
+shipType = 1
+shipOwner = "Max"
+metadata/_custom_type_script = "uid://cooqoytdy5ufp"
+
+[sub_resource type="Resource" id="Resource_bgbnd"]
+script = ExtResource("4_5xgtk")
+shipType = 1
+shipOwner = "Andi"
+metadata/_custom_type_script = "uid://cooqoytdy5ufp"
+
 [sub_resource type="Resource" id="Resource_4t2et"]
 script = ExtResource("3_0vh61")
-ships = Array[ExtResource("4_5xgtk")]([null])
+ships = Array[ExtResource("4_5xgtk")]([SubResource("Resource_xw62o"), SubResource("Resource_bgbnd")])
+metadata/_custom_type_script = "uid://bcb1pbdmq18c"
+
+[sub_resource type="Resource" id="Resource_0vh61"]
+script = ExtResource("3_0vh61")
+metadata/_custom_type_script = "uid://bcb1pbdmq18c"
+
+[sub_resource type="Resource" id="Resource_5xgtk"]
+script = ExtResource("3_0vh61")
 metadata/_custom_type_script = "uid://bcb1pbdmq18c"
 
 [resource]
 script = ExtResource("2_bgbnd")
 bombay = SubResource("Resource_qkx1f")
+seaWest = SubResource("Resource_5xgtk")
 seaEast = SubResource("Resource_4t2et")
+seaSouth = SubResource("Resource_0vh61")
 metadata/_custom_type_script = "uid://cvcexcttx1ehx"
