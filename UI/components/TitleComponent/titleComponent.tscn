@@ -2,9 +2,17 @@
 
 [ext_resource type="Script" uid="uid://cc4gajusj551j" path="res://UI/components/TitleComponent/title_component.gd" id="1_epj23"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_epj23"]
+bg_color = Color(0.5647059, 0, 0, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
 [node name="TitleComponent" type="PanelContainer" unique_id=92586880]
 offset_right = 116.0
 offset_bottom = 28.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_epj23")
 script = ExtResource("1_epj23")
 title = "TEST"
 color = Color(0.5647059, 0, 0, 1)
@@ -22,4 +30,4 @@ theme_override_constants/margin_right = 60
 [node name="Title" type="Label" parent="HBoxContainer/MarginContainer" unique_id=850326706]
 layout_mode = 2
 size_flags_vertical = 0
-text = "TITLE"
+text = "TEST"

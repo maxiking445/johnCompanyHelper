@@ -8,11 +8,26 @@
 
 config_version=5
 
+[GodexCLI]
+
+session_id=""
+use_git=false
+reasoning_effort="medium"
+
 [application]
 
 config/name="JohnCompanyHelper"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+RollHelper="*uid://r52i3x4je7ks"
+RuleManager="*uid://2mqvwogrcldj"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godex-cli/plugin.cfg")
 
 [physics]
 
