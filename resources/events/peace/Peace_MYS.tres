@@ -1,10 +1,16 @@
 [gd_resource type="Resource" script_class="IndiaEvent" format=3 uid="uid://dyd3oob00kcwf"]
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_dq01m"]
+[ext_resource type="Script" uid="uid://y3ds0nyv2mqm" path="res://rules/events/PeaceEventRule.gd" id="1_i00oe"]
+
+[sub_resource type="Resource" id="Resource_ls2c0"]
+script = ExtResource("1_i00oe")
+metadata/_custom_type_script = "uid://y3ds0nyv2mqm"
 
 [resource]
 script = ExtResource("1_dq01m")
 eventName = "Peace"
 eventLocation = 7
 ruleText = "Open any orders that are connected through the border the Elephantstands on. Then add one tower level to each region touching the Elephantthat is not controlled by the Company. If the Elephant was wholly withina region (indicating a potential Rebellion), open all orders in that regionand remove any unrest in this region. Then, perform the Elephant'sMarch."
+rule = SubResource("Resource_ls2c0")
 metadata/_custom_type_script = "uid://cud5w8obqe6uf"

@@ -1,18 +1,36 @@
 extends Node2D
 
 var stormRule: Resource = preload("res://rules/StormRule.gd")
-var gameState: Resource = preload("res://resources/gameState/GameState.tres")
-# Called when the node enters the scene tree for the first time.
+var windfallRule: Resource = preload("res://rules/events/WindfallEventRule.gd")
+var suffleRule: Resource = preload("res://rules/events/ShuffleEventRule.gd")
+var gameState: GameState = preload("res://resources/gameState/GameState.tres")
+
+
 func _ready() -> void:
-	print("Start!")
-	EventHelper.initEvent()
-	print(EventHelper.removeEvent(EventHelper.getRandomEvent()))
-	print(EventHelper.getEvents().size())
-	print(EventHelper.removeEvent(EventHelper.getRandomEvent()))
-	print(EventHelper.getEvents().size())
+	#test()
+	EventHelper.initEventDeck(false)
 	var stormRule: StormRule = stormRule.new()
 	stormRule.execute(gameState)
+	
+	for i in range(gameState.eventsToDraw):
+		print("Draw Event Card.")
+		var event: IndiaEvent = EventHelper.drawEvent()
+		print(event.eventName)
+		print(event.rule)
+		event.rule.execute(gameState)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func test() -> void:
+	print("Start!")
+	
+	print(EventHelper.drawEvent())
+	print(EventHelper.draw_pile.size())
+	print(EventHelper.drawEvent())
+	print(EventHelper.draw_pile.size())
+	var stormRule: StormRule = stormRule.new()
+	stormRule.execute(gameState)
+	
+	var windfallRule: WindfallEventRule = windfallRule.new()
+	windfallRule.execute(gameState)
+	
+	var shuffleEventRule: ShuffleEventRule = suffleRule.new()
+	shuffleEventRule.execute(gameState)

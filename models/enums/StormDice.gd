@@ -7,3 +7,6 @@ enum Face {
 	WEST_2,
 	STORMS_ALL
 }
+
+static func name(state: StormDice.Face) -> String:
+	return StormDice.Face.keys()[state]

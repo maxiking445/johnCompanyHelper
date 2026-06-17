@@ -7,19 +7,23 @@ func execute(game_state: GameState) -> void:
 	var zones_to_check: Array[SeaModel] = []
 	match diceResult:
 		StormDice.Face.FOUR_A, StormDice.Face.FOUR_B:
-			pass
+			game_state.eventsToDraw = 4
 		StormDice.Face.SOUTH_3:
+			game_state.eventsToDraw = 3
 			zones_to_check.append(game_state.seaSouth)
 		StormDice.Face.EAST_2:
+			game_state.eventsToDraw = 2
 			zones_to_check.append(game_state.seaEast)
 		StormDice.Face.WEST_2:
+			game_state.eventsToDraw = 2
 			zones_to_check.append(game_state.seaWest)
 		StormDice.Face.STORMS_ALL:
+			game_state.eventsToDraw = 1
 			zones_to_check.append(game_state.seaSouth)
 			zones_to_check.append(game_state.seaWest)
 			zones_to_check.append(game_state.seaEast)
 	
-	print("Rolled StormDice ", diceResult, " will check zones: ", zones_to_check)
+	print("Rolled StormDice ", StormDice.name(diceResult), " will check zones: ", zones_to_check)
 	for zone in zones_to_check:
 		_check_zone(zone, game_state)
 

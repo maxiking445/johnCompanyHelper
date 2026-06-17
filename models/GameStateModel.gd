@@ -13,3 +13,23 @@ class_name GameState
 @export var seaWest: SeaModel
 @export var seaEast: SeaModel
 @export var seaSouth: SeaModel
+
+var eventsToDraw: int
+
+func findStateByLocation(location: StateType.StateType) -> StateModel:
+	var states: Array[StateModel] = [
+		bombay,
+		madras,
+		hyperbad,
+		punjab,
+		bengal,
+		maratha,
+		delhi,
+		mysore
+	]
+
+	for state in states:
+		if state != null && state.location == location:
+			return state
+
+	return null

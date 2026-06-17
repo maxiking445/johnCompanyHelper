@@ -11,3 +11,6 @@ enum StateType {
 	DELIH,
 	MYSORE,
 }
+
+static func name(state: StateType.StateType) -> String:
+	return StateType.StateType.keys()[state]

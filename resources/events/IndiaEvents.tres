@@ -1,7 +1,6 @@
 [gd_resource type="Resource" script_class="IndiaEvents" format=3 uid="uid://gqyvw8narr3y"]
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_6vn0g"]
-[ext_resource type="Resource" uid="uid://dubqnfdc6snbr" path="res://resources/events/crisis/Crisis_BENG.tres" id="2_nf8n6"]
 [ext_resource type="Script" uid="uid://7uvl05segpkc" path="res://models/events/IndiaEvents.gd" id="2_usicb"]
 [ext_resource type="Resource" uid="uid://13bjruvj062t" path="res://resources/events/crisis/Crisis_BOM.tres" id="3_cf5cp"]
 [ext_resource type="Resource" uid="uid://b2bbgfl46yaft" path="res://resources/events/crisis/Crisis_DEL.tres" id="4_i32uu"]
@@ -26,5 +25,5 @@
 
 [resource]
 script = ExtResource("2_usicb")
-events = Array[ExtResource("1_6vn0g")]([ExtResource("2_nf8n6"), ExtResource("3_cf5cp"), ExtResource("4_i32uu"), ExtResource("5_rd8qr"), ExtResource("6_kc0fb"), ExtResource("7_sr62c"), ExtResource("8_sdoim"), ExtResource("9_kio6o"), ExtResource("10_be7se"), ExtResource("11_rgmv2"), ExtResource("12_3wr4c"), ExtResource("13_uwn58"), ExtResource("14_mnpkn"), ExtResource("15_mcf80"), ExtResource("16_lmetb"), ExtResource("17_tjmr5"), ExtResource("18_smc31"), ExtResource("19_imst7"), ExtResource("20_im4re"), ExtResource("21_rxoms"), ExtResource("22_fkk7f")])
+events = Array[ExtResource("1_6vn0g")]([ExtResource("21_rxoms"), ExtResource("3_cf5cp"), ExtResource("4_i32uu"), ExtResource("5_rd8qr"), ExtResource("6_kc0fb"), ExtResource("7_sr62c"), ExtResource("8_sdoim"), ExtResource("9_kio6o"), ExtResource("10_be7se"), ExtResource("11_rgmv2"), ExtResource("12_3wr4c"), ExtResource("13_uwn58"), ExtResource("14_mnpkn"), ExtResource("15_mcf80"), ExtResource("16_lmetb"), ExtResource("17_tjmr5"), ExtResource("18_smc31"), ExtResource("19_imst7"), ExtResource("20_im4re"), ExtResource("21_rxoms"), ExtResource("22_fkk7f")])
 metadata/_custom_type_script = "uid://7uvl05segpkc"

@@ -1,10 +1,16 @@
 [gd_resource type="Resource" script_class="IndiaEvent" format=3 uid="uid://cak4myqik27x8"]
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_8ut6d"]
+[ext_resource type="Script" uid="uid://c40ckkcsfj3us" path="res://rules/events/CrisisEventRule.gd" id="1_tmkni"]
+
+[sub_resource type="Resource" id="Resource_ilpit"]
+script = ExtResource("1_tmkni")
+metadata/_custom_type_script = "uid://c40ckkcsfj3us"
 
 [resource]
 script = ExtResource("1_8ut6d")
 eventName = "Crisis"
 eventLocation = 5
 ruleText = "Like Peace, the location of the Crisis is determined by the placement ofthe Elephant piece, not by the top tile of the draw stack. The Elephant'stail (where it is walking.from) indicates the attacker. The Elephant's head(where it is walking to) indicates the defender. After resolving a Crisis,perform the Elephant's March."
+rule = SubResource("Resource_ilpit")
 metadata/_custom_type_script = "uid://cud5w8obqe6uf"
