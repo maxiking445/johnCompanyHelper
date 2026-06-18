@@ -7,3 +7,4 @@ class_name StateModel
 @export var armies_size: int
 @export var hasGovenor: bool
 @export var treasury_size: int
+@export var is_connected_to: Array[StateType.StateType]
