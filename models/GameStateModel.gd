@@ -33,3 +33,26 @@ func findStateByLocation(location: StateType.StateType) -> StateModel:
 			return state
 
 	return null
+
+
+func findConnectedLocations(location: StateType.StateType)-> Array[StateType.StateType]:
+	var state: StateModel = findStateByLocation(location)
+	return state.is_connected_to
+
+func closeNorthestOrder(location: StateType.StateType):
+	var state: StateModel = findStateByLocation(location)
+
+	for order in state.orders:
+		if order.orderState == EnumTypes.OrderState.OPEN:
+			order.close()
+	printerr("Everythhing was already closed. This is an implentation Error. Check before!")
+	push_error("Exception!")
+
+
+func areAllOrderClosed(location: StateType.StateType) -> bool:
+	var state: StateModel = findStateByLocation(location)
+	var areAllClosed = true
+	for order in state.orders:
+		if order.orderState == EnumTypes.OrderState.OPEN:
+			areAllClosed = false
+	return areAllClosed
