@@ -5,9 +5,51 @@
 [ext_resource type="Script" uid="uid://bcb1pbdmq18c" path="res://models/SeaModel.gd" id="3_0vh61"]
 [ext_resource type="Script" uid="uid://cooqoytdy5ufp" path="res://models/ShipModel.gd" id="4_5xgtk"]
 
+[sub_resource type="Resource" id="Resource_xupft"]
+script = ExtResource("1_xw62o")
+location = 4
+is_connected_to = Array[int]([5])
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
 [sub_resource type="Resource" id="Resource_qkx1f"]
 script = ExtResource("1_xw62o")
 writers = 5
+is_connected_to = Array[int]([7, 5, 3, 6])
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Resource_8xj7o"]
+script = ExtResource("1_xw62o")
+location = 6
+is_connected_to = Array[int]([0, 5])
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Resource_hvhxu"]
+script = ExtResource("1_xw62o")
+location = 2
+is_connected_to = Array[int]([1, 7, 5])
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Resource_t8rmh"]
+script = ExtResource("1_xw62o")
+location = 1
+is_connected_to = Array[int]([7, 2])
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Resource_5obnq"]
+script = ExtResource("1_xw62o")
+location = 5
+is_connected_to = Array[int]([0, 6, 4])
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Resource_mjn08"]
+script = ExtResource("1_xw62o")
+is_connected_to = Array[int]([0, 2, 1])
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Resource_m5j6m"]
+script = ExtResource("1_xw62o")
+location = 3
+is_connected_to = Array[int]([0, 6])
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
 [sub_resource type="Resource" id="Resource_xw62o"]
@@ -38,6 +80,13 @@ metadata/_custom_type_script = "uid://bcb1pbdmq18c"
 [resource]
 script = ExtResource("2_bgbnd")
 bombay = SubResource("Resource_qkx1f")
+madras = SubResource("Resource_t8rmh")
+hyperbad = SubResource("Resource_hvhxu")
+punjab = SubResource("Resource_m5j6m")
+bengal = SubResource("Resource_xupft")
+maratha = SubResource("Resource_5obnq")
+delhi = SubResource("Resource_8xj7o")
+mysore = SubResource("Resource_mjn08")
 seaWest = SubResource("Resource_5xgtk")
 seaEast = SubResource("Resource_4t2et")
 seaSouth = SubResource("Resource_0vh61")
