@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StateModel" format=3 uid="uid://dj1gne01f6iki"]
+
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="1_mirpw"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_x175o"]
+
+[resource]
+script = ExtResource("2_x175o")
+writers = 5
+is_connected_to = Array[int]([7, 5, 3, 6])
+metadata/_custom_type_script = "uid://d1exlj4eirnis"

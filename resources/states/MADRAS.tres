@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="StateModel" format=3 uid="uid://2tgevahtsjrx"]
+
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="1_ioqwa"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_6nmp5"]
+
+[sub_resource type="Resource" id="Resource_cmtbu"]
+script = ExtResource("1_ioqwa")
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Resource_bygha"]
+script = ExtResource("1_ioqwa")
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[resource]
+script = ExtResource("2_6nmp5")
+location = 1
+orders = Array[ExtResource("1_ioqwa")]([SubResource("Resource_cmtbu"), SubResource("Resource_bygha")])
+is_connected_to = Array[int]([7, 2])
+metadata/_custom_type_script = "uid://d1exlj4eirnis"

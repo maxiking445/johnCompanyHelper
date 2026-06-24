@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StateModel" format=3 uid="uid://i2fjj54u1huo"]
+
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="1_gnnfp"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_jqqfi"]
+
+[resource]
+script = ExtResource("2_jqqfi")
+location = 3
+is_connected_to = Array[int]([0, 6])
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
