@@ -17,7 +17,7 @@ reasoning_effort="medium"
 [application]
 
 config/name="JohnCompanyHelper"
-config/features=PackedStringArray("4.6", "Forward Plus")
+config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -29,7 +29,7 @@ EnumType="*uid://c4bbtepcjxhlt"
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
 [physics]
 
