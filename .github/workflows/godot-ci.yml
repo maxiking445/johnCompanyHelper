@@ -1,0 +1,46 @@
+name: Godot CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build-check:
+    name: Test and Build Check
+    runs-on: ubuntu-latest
+
+    env:
+      GODOT_VERSION: 4.7-stable
+      GODOT_BINARY: Godot_v4.7-stable_linux.x86_64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Godot
+        run: |
+          curl -L "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/${GODOT_BINARY}.zip" -o godot.zip
+          unzip godot.zip
+          sudo mv "${GODOT_BINARY}" /usr/local/bin/godot
+          godot --version
+
+      - name: Import project
+        run: |
+          HOME=/tmp XDG_DATA_HOME=/tmp XDG_CONFIG_HOME=/tmp \
+            godot --headless --path . --import --quit
+
+      - name: Run GUT tests
+        run: |
+          HOME=/tmp XDG_DATA_HOME=/tmp XDG_CONFIG_HOME=/tmp \
+            godot --headless --path . \
+              -s addons/gut/gut_cmdln.gd \
+              -gdir=res://test \
+              -ginclude_subdirs \
+              -gexit
+
