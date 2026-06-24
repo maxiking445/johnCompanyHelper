@@ -10,7 +10,16 @@ func execute(game_state: GameState) -> void:
 	if targetState == null:
 		printerr("Location ", StateType.name(targetLocation) ," in WindfallEventRule is not defined! Please fix!")
 		return
-		
-	for writer in targetState.writers:
-		print("Writer in ", StateType.name(targetLocation) ," gains 1$")
+
+	_apply_windfall_to_state(targetState)
+
+	for connectedLocation in game_state.findConnectedLocations(targetLocation):
+		var connectedState: StateModel = game_state.findStateByLocation(connectedLocation)
+		if connectedState != null:
+			_apply_windfall_to_state(connectedState)
+
+
+func _apply_windfall_to_state(state: StateModel) -> void:
+	state.treasury_size += state.writers
+	print("Writers in ", StateType.name(state.location) ," gain ", state.writers, "$")
 		
