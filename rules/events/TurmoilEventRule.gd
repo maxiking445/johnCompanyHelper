@@ -1,14 +1,21 @@
 extends Rule
 class_name TurmoilEventRule
 
+var allreadyCascadedLocations: Array[StateType.StateType]
+# TODO Connect all TradeOrders together so we can define them better and connect them and their roots
 func execute(game_state: GameState) -> void:
 	print("Executing TurmoilEventRule ...")
 	var location: StateType.StateType = EventHelper.getTopDeckEventLocation()
 	checkLocation(game_state, location)
+	allreadyCascadedLocations.clear()
 
 func checkLocation(game_state: GameState, location:  StateType.StateType):
 	if (game_state.areAllOrderClosed(location)):
-		cascade(game_state, location)
+		if allreadyCascadedLocations.has(location):
+			print("Location already Cascaded Skip!: ", StateType.name(location))
+		else:
+			allreadyCascadedLocations.append(location)
+			cascade(game_state, location)
 	else:
 		game_state.closeNorthestOrder(location)
 		
