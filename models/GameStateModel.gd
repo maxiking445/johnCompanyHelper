@@ -35,6 +35,10 @@ func findStateByLocation(location: StateType.StateType) -> StateModel:
 	return null
 
 
+func findConnectedTradeNodes(location: StateType.StateType)-> Array[StateType.StateType]:
+	var state: StateModel = findStateByLocation(location)
+	return state.is_connected_to
+
 func findConnectedLocations(location: StateType.StateType)-> Array[StateType.StateType]:
 	var state: StateModel = findStateByLocation(location)
 	return state.is_connected_to

@@ -1,7 +1,12 @@
 [gd_resource type="Resource" script_class="OrderModel" format=3 uid="uid://uq6jqi233k4e"]
 
 [ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="1_lkyxc"]
+[ext_resource type="Resource" uid="uid://dnjapsidh5jkv" path="res://resources/tradeOrders/MARATHA_ORDER_3.tres" id="2_c5sl5"]
+[ext_resource type="Resource" uid="uid://on1y52ki8606" path="res://resources/tradeOrders/MADRAS_ORDER_1.tres" id="3_b886w"]
+[ext_resource type="Resource" uid="uid://df4h6uj7rf1cv" path="res://resources/tradeOrders/MYSORE_ORDER_2.tres" id="4_yfiek"]
 
 [resource]
 script = ExtResource("1_lkyxc")
+state = 2
+connectedOrders = Array[ExtResource("1_lkyxc")]([ExtResource("2_c5sl5"), ExtResource("3_b886w"), ExtResource("4_yfiek")])
 metadata/_custom_type_script = "uid://crcm1hwm5d582"

@@ -8,6 +8,12 @@ class_name OrderModel
 @export var connectedOrders: Array[OrderModel]
 
 
+func isClosed() -> bool:
+	return orderState == EnumTypes.OrderState.CLOSED
+
+func isOpen() -> bool:
+	return orderState == EnumTypes.OrderState.OPEN
+
 func close():
 	orderState = EnumTypes.OrderState.CLOSED
 	
