@@ -21,18 +21,7 @@ func checkLocation(game_state: GameState, location:  StateType.StateType):
 					if connectedOrder.isOpen():
 						connectedOrder.close()
 					else:
-						if (game_state.areAllOrderClosed(location)):
-							checkLocation(game_state, order.state)
-						else:
-							game_state.closeNorthestOrder(location)
-				pass
-			cascade(game_state, location)
+						checkLocation(game_state, order.state)
 	else:
 		game_state.closeNorthestOrder(location)
 		
-func cascade(game_state: GameState, location:  StateType.StateType):
-	print("Cascaded Location: ", StateType.name(location))
-	var connectedLocations: Array[StateType.StateType] =  game_state.findConnectedLocations(location)
-	for connectedLocation in connectedLocations:
-		
-		checkLocation(game_state, connectedLocation)
