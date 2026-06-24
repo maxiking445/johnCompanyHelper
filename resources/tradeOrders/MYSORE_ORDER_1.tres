@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="OrderModel" format=3 uid="uid://dv3s585mqnslw"]
+
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="1_pkxuo"]
+
+[resource]
+script = ExtResource("1_pkxuo")
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
