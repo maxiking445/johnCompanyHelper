@@ -8,7 +8,6 @@
 
 [resource]
 script = ExtResource("2_state_script")
-location = 0
 writers = 5
 orders = Array[ExtResource("1_order_script")]([ExtResource("order_1"), ExtResource("order_2"), ExtResource("order_3")])
 is_connected_to = Array[int]([7, 5, 3, 6])

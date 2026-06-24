@@ -40,7 +40,6 @@ metadata/_custom_type_script = "uid://bcb1pbdmq18c"
 
 [resource]
 script = ExtResource("2_bgbnd")
-orderGraph = ExtResource("9_order_graph")
 bombay = ExtResource("2_hvhxu")
 madras = ExtResource("5_mjn08")
 hyperbad = ExtResource("4_5obnq")
@@ -49,6 +48,7 @@ bengal = ExtResource("1_8xj7o")
 maratha = ExtResource("6_m5j6m")
 delhi = ExtResource("3_t8rmh")
 mysore = ExtResource("7_cmtbu")
+orderGraph = ExtResource("9_order_graph")
 seaWest = SubResource("Resource_5xgtk")
 seaEast = SubResource("Resource_4t2et")
 seaSouth = SubResource("Resource_0vh61")

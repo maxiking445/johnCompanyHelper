@@ -57,6 +57,7 @@ func closeNorthestOrder(location: StateType.StateType):
 	for order in state.orders:
 		if order.orderState == EnumTypes.OrderState.OPEN:
 			order.close()
+			return
 	printerr("Everythhing was already closed. This is an implentation Error. Check before!")
 	push_error("Exception!")
 

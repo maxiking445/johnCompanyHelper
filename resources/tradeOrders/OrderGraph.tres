@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="OrderGraphModel" load_steps=39 format=3]
+[gd_resource type="Resource" script_class="OrderGraphModel" format=3 uid="uid://bn8epoj0k3ux6"]
 
-[ext_resource type="Script" path="res://models/OrderGraphModel.gd" id="1_graph"]
-[ext_resource type="Script" path="res://models/OrderConnectionModel.gd" id="2_connection"]
+[ext_resource type="Script" uid="uid://c7ifbg0iuknuv" path="res://models/OrderGraphModel.gd" id="1_graph"]
+[ext_resource type="Script" uid="uid://dn2w2kplygb6h" path="res://models/OrderConnectionModel.gd" id="2_connection"]
 [ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="3_order_script"]
 [ext_resource type="Resource" uid="uid://b5ad23dcyernq" path="res://resources/tradeOrders/BENG_ORDER_1.tres" id="order_1"]
 [ext_resource type="Resource" uid="uid://bdnowg3v32ici" path="res://resources/tradeOrders/BENG_ORDER_2.tres" id="order_2"]

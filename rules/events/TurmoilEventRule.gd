@@ -21,7 +21,7 @@ func checkLocation(game_state: GameState, location:  StateType.StateType):
 					if connectedOrder.isOpen():
 						connectedOrder.close()
 					else:
-						checkLocation(game_state, order.state)
+						checkLocation(game_state, connectedOrder.state)
 	else:
 		game_state.closeNorthestOrder(location)
 		
