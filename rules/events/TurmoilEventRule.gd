@@ -17,7 +17,7 @@ func checkLocation(game_state: GameState, location:  StateType.StateType):
 			allreadyCascadedLocations.append(location)
 			var state: StateModel = game_state.findStateByLocation(location)
 			for order in state.orders:
-				for connectedOrder in order.connectedOrders:
+				for connectedOrder in game_state.findConnectedOrders(order):
 					if connectedOrder.isOpen():
 						connectedOrder.close()
 					else:

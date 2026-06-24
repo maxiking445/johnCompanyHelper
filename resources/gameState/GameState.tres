@@ -11,6 +11,7 @@
 [ext_resource type="Resource" uid="uid://4cnutbax8b8x" path="res://resources/states/MARATHA.tres" id="6_m5j6m"]
 [ext_resource type="Resource" uid="uid://cseq0ccuxgx0v" path="res://resources/states/MYSORE.tres" id="7_cmtbu"]
 [ext_resource type="Resource" uid="uid://i2fjj54u1huo" path="res://resources/states/PUNJAB.tres" id="8_bygha"]
+[ext_resource type="Resource" path="res://resources/tradeOrders/OrderGraph.tres" id="9_order_graph"]
 
 [sub_resource type="Resource" id="Resource_xw62o"]
 script = ExtResource("4_5xgtk")
@@ -39,6 +40,7 @@ metadata/_custom_type_script = "uid://bcb1pbdmq18c"
 
 [resource]
 script = ExtResource("2_bgbnd")
+orderGraph = ExtResource("9_order_graph")
 bombay = ExtResource("2_hvhxu")
 madras = ExtResource("5_mjn08")
 hyperbad = ExtResource("4_5obnq")

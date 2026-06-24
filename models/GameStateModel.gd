@@ -10,6 +10,8 @@ class_name GameState
 @export var delhi: StateModel
 @export var mysore: StateModel
 
+@export var orderGraph: Resource
+
 @export var seaWest: SeaModel
 @export var seaEast: SeaModel
 @export var seaSouth: SeaModel
@@ -42,6 +44,12 @@ func findConnectedTradeNodes(location: StateType.StateType)-> Array[StateType.St
 func findConnectedLocations(location: StateType.StateType)-> Array[StateType.StateType]:
 	var state: StateModel = findStateByLocation(location)
 	return state.is_connected_to
+
+func findConnectedOrders(order: OrderModel) -> Array[OrderModel]:
+	if orderGraph == null:
+		return []
+
+	return orderGraph.getConnectedOrders(order)
 
 func closeNorthestOrder(location: StateType.StateType):
 	var state: StateModel = findStateByLocation(location)

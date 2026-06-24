@@ -1,19 +1,13 @@
 [gd_resource type="Resource" script_class="StateModel" format=3 uid="uid://2tgevahtsjrx"]
 
-[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="1_ioqwa"]
-[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_6nmp5"]
-
-[sub_resource type="Resource" id="Resource_cmtbu"]
-script = ExtResource("1_ioqwa")
-metadata/_custom_type_script = "uid://crcm1hwm5d582"
-
-[sub_resource type="Resource" id="Resource_bygha"]
-script = ExtResource("1_ioqwa")
-metadata/_custom_type_script = "uid://crcm1hwm5d582"
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="1_order_script"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_state_script"]
+[ext_resource type="Resource" uid="uid://on1y52ki8606" path="res://resources/tradeOrders/MADRAS_ORDER_1.tres" id="order_1"]
+[ext_resource type="Resource" uid="uid://giop2bet24se" path="res://resources/tradeOrders/MADRAS_ORDER_2.tres" id="order_2"]
 
 [resource]
-script = ExtResource("2_6nmp5")
+script = ExtResource("2_state_script")
 location = 1
-orders = Array[ExtResource("1_ioqwa")]([SubResource("Resource_cmtbu"), SubResource("Resource_bygha")])
+orders = Array[ExtResource("1_order_script")]([ExtResource("order_1"), ExtResource("order_2")])
 is_connected_to = Array[int]([7, 2])
 metadata/_custom_type_script = "uid://d1exlj4eirnis"

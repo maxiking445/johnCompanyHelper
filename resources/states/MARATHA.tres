@@ -1,10 +1,14 @@
 [gd_resource type="Resource" script_class="StateModel" format=3 uid="uid://4cnutbax8b8x"]
 
-[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="1_0yvgy"]
-[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_xxrg0"]
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="1_order_script"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_state_script"]
+[ext_resource type="Resource" uid="uid://jn264xi85olj" path="res://resources/tradeOrders/MARATHA_ORDER_1.tres" id="order_1"]
+[ext_resource type="Resource" uid="uid://dd43x8yrc72kb" path="res://resources/tradeOrders/MARATHA_ORDER_2.tres" id="order_2"]
+[ext_resource type="Resource" uid="uid://dnjapsidh5jkv" path="res://resources/tradeOrders/MARATHA_ORDER_3.tres" id="order_3"]
 
 [resource]
-script = ExtResource("2_xxrg0")
+script = ExtResource("2_state_script")
 location = 5
+orders = Array[ExtResource("1_order_script")]([ExtResource("order_1"), ExtResource("order_2"), ExtResource("order_3")])
 is_connected_to = Array[int]([0, 6, 4])
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
