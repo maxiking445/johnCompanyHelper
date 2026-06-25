@@ -100,7 +100,7 @@ func test_execute_clears_cascaded_locations_after_cascade() -> void:
 
 	_rule.execute(_game_state)
 
-	assert_true(_rule.allreadyCascadedLocations.is_empty())
+	assert_true(_rule.cascadeRule.allreadyCascadedLocations.is_empty())
 
 
 func _close_all_orders(state: StateModel) -> void:

@@ -2,6 +2,7 @@ extends Rule
 class_name LooseRegionRule
 
 var lostRegionsThisRound: int = 0
+var cascadeRule := CascadeRule.new()
 
 func execute(game_state: GameState) -> void:
 	var location: StateType.StateType = EventHelper.getTopDeckEventLocation()
@@ -22,20 +23,40 @@ func execute_for_state(game_state: GameState, state: StateModel) -> void:
 		push_error("LooseRegionRule needs a valid state.")
 		return
 
+	performTarnishCommandersName(game_state, state)
+	
+	performOfficerRoute(game_state, state)
+
+	performGovernerElimination(game_state, state)
+
+	performRestoreLocalAuthority(game_state, state)
+		
+	performHumiliation(game_state)	
+
+
+func performTarnishCommandersName(game_state: GameState, state: StateModel):
 	if state.hasCommander:
 		print("Tarnish the Commander's Name. Returns half (rounding up) of the trophies their family owns to the supply ")
-
+		
+func performOfficerRoute(game_state: GameState, state: StateModel):
 	for officer_index in state.officers:
 		if RollHelper.rollD6() == 6:
 			print("Remove Officer (from left to right) Number: ", officer_index )
 			state.removeOfficer()
 
+func performGovernerElimination(game_state: GameState, state: StateModel):
 	if state.hasGovenor:
 		print("return it to the unused offices stack and return the officeholder's family member to that player's supply")
 
+func performRestoreLocalAuthority(game_state: GameState, state: StateModel):
 	state.resetUnrest()
 	state.towerLevel = 1
-	print("TODO: Close all order and/or cascade!")
-
+	
+	if game_state.areAllOrderClosed(state.location):
+		cascadeRule.execute_location(game_state, state.location)
+	else:
+		game_state.closeAllOrders(state.location)	
+		
+func performHumiliation(game_state: GameState):
 	lostRegionsThisRound = lostRegionsThisRound + 1
 	game_state.lowerCompanyStanding(lostRegionsThisRound)

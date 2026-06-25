@@ -85,6 +85,13 @@ func areAllOrderClosed(location: StateType.StateType) -> bool:
 		if order.orderState == EnumTypes.OrderState.OPEN:
 			areAllClosed = false
 	return areAllClosed
+	
+func closeAllOrders(location: StateType.StateType):
+	var state: StateModel = findStateByLocation(location)
+	for order in state.orders:
+		order.close()
+
+
 
 func lowerCompanyStanding(number: int):
 	companyStanding = companyStanding - number

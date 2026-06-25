@@ -16,6 +16,7 @@ func test_execute_for_state_resets_region_and_lowers_company_standing() -> void:
 	var state := _create_state(StateType.StateType.BOMBAY)
 	state.unrest_size = 3
 	state.towerLevel = 4
+	_game_state.states = [state]
 
 	_rule.execute_for_state(_game_state, state)
 
@@ -43,6 +44,7 @@ func test_execute_for_location_finds_state_before_losing_region() -> void:
 func test_reset_lost_regions_this_round_restarts_company_standing_penalty() -> void:
 	var first_state := _create_state(StateType.StateType.BOMBAY)
 	var second_state := _create_state(StateType.StateType.MADRAS)
+	_game_state.states = [first_state, second_state]
 
 	_rule.execute_for_state(_game_state, first_state)
 	_rule.execute_for_state(_game_state, second_state)
