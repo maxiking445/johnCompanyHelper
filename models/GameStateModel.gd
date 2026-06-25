@@ -19,7 +19,13 @@ class_name GameState
 @export var seaSouth: SeaModel
 
 var eventsToDraw: int
-var states: Array[StateModel] = [
+var states: Array[StateModel] = []
+
+func getStates() -> Array[StateModel]:
+	if not states.is_empty():
+		return states
+
+	return [
 		bombay,
 		madras,
 		hyperbad,
@@ -31,7 +37,7 @@ var states: Array[StateModel] = [
 	]
 	
 func findStateByLocation(location: StateType.StateType) -> StateModel:
-	for state in states:
+	for state in getStates():
 		if state != null && state.location == location:
 			return state
 
@@ -67,8 +73,8 @@ func closeNorthestOrder(location: StateType.StateType):
 	
 func findAllStatesWithUnrest()-> Array[StateModel]:
 	var statesWithUnrest: Array[StateModel] = []
-	for state in states:
-		if state.unrest_size > 0:
+	for state in getStates():
+		if state != null && state.unrest_size > 0:
 			statesWithUnrest.append(state)
 	return statesWithUnrest
 
