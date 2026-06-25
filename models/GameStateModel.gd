@@ -12,14 +12,14 @@ class_name GameState
 
 @export var orderGraph: Resource
 
+@export var companyStanding: int
+
 @export var seaWest: SeaModel
 @export var seaEast: SeaModel
 @export var seaSouth: SeaModel
 
 var eventsToDraw: int
-
-func findStateByLocation(location: StateType.StateType) -> StateModel:
-	var states: Array[StateModel] = [
+var states: Array[StateModel] = [
 		bombay,
 		madras,
 		hyperbad,
@@ -29,13 +29,17 @@ func findStateByLocation(location: StateType.StateType) -> StateModel:
 		delhi,
 		mysore
 	]
-
+	
+func findStateByLocation(location: StateType.StateType) -> StateModel:
 	for state in states:
 		if state != null && state.location == location:
 			return state
 
 	return null
 
+func isStateSovereign(location: StateType.StateType) -> bool:
+	var state: StateModel = findStateByLocation(location)
+	return state.isSovereign
 
 func findConnectedTradeNodes(location: StateType.StateType)-> Array[StateType.StateType]:
 	var state: StateModel = findStateByLocation(location)
@@ -60,7 +64,13 @@ func closeNorthestOrder(location: StateType.StateType):
 			return
 	printerr("Everythhing was already closed. This is an implentation Error. Check before!")
 	push_error("Exception!")
-
+	
+func findAllStatesWithUnrest()-> Array[StateModel]:
+	var statesWithUnrest: Array[StateModel] = []
+	for state in states:
+		if state.unrest_size > 0:
+			statesWithUnrest.append(state)
+	return statesWithUnrest
 
 func areAllOrderClosed(location: StateType.StateType) -> bool:
 	var state: StateModel = findStateByLocation(location)
@@ -69,3 +79,6 @@ func areAllOrderClosed(location: StateType.StateType) -> bool:
 		if order.orderState == EnumTypes.OrderState.OPEN:
 			areAllClosed = false
 	return areAllClosed
+
+func lowerCompanyStanding(number: int):
+	companyStanding = companyStanding - number

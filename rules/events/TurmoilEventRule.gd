@@ -2,7 +2,7 @@ extends Rule
 class_name TurmoilEventRule
 
 var allreadyCascadedLocations: Array[StateType.StateType]
-# TODO Connect all TradeOrders together so we can define them better and connect them and their roots
+
 func execute(game_state: GameState) -> void:
 	print("Executing TurmoilEventRule ...")
 	var location: StateType.StateType = EventHelper.getTopDeckEventLocation()
