@@ -9,7 +9,7 @@ class_name GameState
 @export var maratha: StateModel
 @export var delhi: StateModel
 @export var mysore: StateModel
-
+@export var elephant: ElephantModel
 @export var orderGraph: Resource
 
 @export var companyStanding: int

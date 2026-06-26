@@ -32,6 +32,8 @@ func execute_for_state(game_state: GameState, state: StateModel) -> void:
 	performRestoreLocalAuthority(game_state, state)
 		
 	performHumiliation(game_state)	
+	
+	state.stateHasRebelled()
 
 
 func performTarnishCommandersName(game_state: GameState, state: StateModel):

@@ -15,6 +15,7 @@ class_name StateModel
 @export var isSovereign: bool
 @export var towerLevel: int
 @export var trophyToken: int
+@export var hasRebelled: bool = false
 
 func addThropyToken():
 	trophyToken = trophyToken + 1
@@ -30,3 +31,6 @@ func exhaustTroops(number: int):
 	
 func removeOfficer():
 	officers = officers -1	
+
+func stateHasRebelled():
+	hasRebelled = true

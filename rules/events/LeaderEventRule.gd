@@ -29,4 +29,5 @@ func startRebellionIn(game_state: GameState, state: StateModel):
 		else:
 			state.exhaustTroops(attackStrength) 
 			state.resetUnrest()	
-			state.addThropyToken()
+			state.addThropyToken() 
+			print("TODO: ElephantRedirect needs to be implemented")
