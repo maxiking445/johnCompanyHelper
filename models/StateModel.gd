@@ -13,6 +13,9 @@ class_name StateModel
 @export var orders: Array[OrderModel]
 @export var is_connected_to: Array[StateType.StateType]
 @export var isSovereign: bool
+@export var isDominated: bool
+@export var isDominatedBy: StateModel
+@export var isCompanyControlled: bool
 @export var towerLevel: int
 @export var trophyToken: int
 @export var hasRebelled: bool = false
