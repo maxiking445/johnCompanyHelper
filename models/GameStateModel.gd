@@ -92,6 +92,10 @@ func closeAllOrders(location: StateType.StateType):
 		order.close()
 
 
+func openAllOrders(location: StateType.StateType):
+	var state: StateModel = findStateByLocation(location)
+	for order in state.orders:
+		order.open()
 
 func lowerCompanyStanding(number: int):
 	companyStanding = companyStanding - number

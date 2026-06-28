@@ -12,8 +12,17 @@ class_name ElephantModel
 
 @export var facing_state: StateType.StateType
 
+func getTouchingLocations()-> Array[StateType.StateType]:
+	var locations: Array[StateType.StateType] = []
+	if is_on_border():
+		locations.append(border_state_a)
+		locations.append(border_state_b)
+	elif is_inside_state():
+		locations.append(current_state)
+	return locations
 
 func placeInCenterOf(targetLocation: StateType.StateType):
+	current_state = targetLocation
 	placement = EnumTypes.ElephantPlacement.IN_STATE
 	
 	
