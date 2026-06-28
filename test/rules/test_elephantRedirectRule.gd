@@ -17,7 +17,7 @@ func before_each() -> void:
 
 
 func test_execute_does_not_change_state_when_location_has_rebelled() -> void:
-	_game_state.elephant.state = StateType.StateType.PUNJAB
+	_game_state.elephant.placeInCenterOf(StateType.StateType.PUNJAB)
 	_state.location = StateType.StateType.PUNJAB
 	_state.hasRebelled = true
 
@@ -28,7 +28,7 @@ func test_execute_does_not_change_state_when_location_has_rebelled() -> void:
 
 
 func test_execute_does_not_change_state_when_location_has_not_rebelled() -> void:
-	_game_state.elephant.state = StateType.StateType.BENGAL
+	_game_state.elephant.placeInCenterOf(StateType.StateType.BENGAL)
 	_state.location = StateType.StateType.BENGAL
 	_state.hasRebelled = false
 
