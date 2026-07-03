@@ -3,6 +3,15 @@ class_name PeaceEventRule
 
 var elephantMarchRule := ElephantMarchRule.new()
 
+"""
+PEACE EVENT
+
+If the Elephant stands on a border, open the orders connected through that
+border and add one tower level to every touching region not controlled by the
+Company. If it is wholly within a region, open all orders there and remove all
+unrest from that region. Then perform the Elephant's March.
+"""
+
 func execute(game_state: GameState) -> void:
 	print("Executing PeaceEventRule ...")
 	print("Open any orders that are connected through the border the Elephant stands on. ")

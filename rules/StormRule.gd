@@ -1,6 +1,15 @@
 class_name StormRule
 extends Rule
 
+"""
+STORM
+
+Roll the storm die to determine how many India events are drawn and which sea
+zones are affected. In every affected zone, roll once for each player-owned
+ship. Company and extra ships are ignored. Ships can escape, become damaged,
+or sink; an already damaged ship sinks when it suffers further damage.
+"""
+
 func execute(game_state: GameState) -> void:
 	var diceResult: StormDice.Face = RollHelper.rollStormDice()
 	

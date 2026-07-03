@@ -1,6 +1,16 @@
 extends Rule
 class_name LooseRegionRule
 
+"""
+REGION LOSS
+
+When the Company loses a region, tarnish the associated Commander's name,
+resolve the officer rout, eliminate its Governor, and restore local authority.
+Remove unrest, restore one tower level, close all orders (or Cascade if they
+were already closed), and lower Company Standing. Each additional region lost
+in the same resolution increases the Standing penalty by one.
+"""
+
 var lostRegionsThisRound: int = 0
 var cascadeRule := CascadeRule.new()
 

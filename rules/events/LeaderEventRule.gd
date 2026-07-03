@@ -4,6 +4,16 @@ class_name LeaderEventRule
 var attackAgainstCompanyRule := AttackAgainstCompanyRule.new()
 var rebellionRule := RebellionRule.new()
 
+"""
+LEADER EVENT
+
+Look at the region pictured on top of the draw stack. If it is sovereign, add
+one tower level. Otherwise treat the event as a Rebellion in that region, with
+the explosion number as its strength modifier. A Company-controlled target is
+resolved as an Attack against the Company; a dominated target uses the normal
+Rebellion procedure.
+"""
+
 func execute(game_state: GameState) -> void:
 	print("Executing LeaderEventRule ...")
 	var location: StateType.StateType = EventHelper.getTopDeckEventLocation()

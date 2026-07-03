@@ -1,6 +1,15 @@
 extends Rule
 class_name CascadeRule
 
+"""
+CASCADE
+
+If the affected region still has an open order, close its northernmost open
+order. If every order is already closed, follow each connected order: close an
+open connected order, or continue the Cascade from its region when it is also
+closed. A region is resolved at most once during the same Cascade.
+"""
+
 var allreadyCascadedLocations: Array[StateType.StateType]
 
 func execute(game_state: GameState) -> void:

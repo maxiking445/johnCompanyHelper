@@ -1,6 +1,16 @@
 class_name ElephantMarchRule
 extends Rule
 
+"""
+ELEPHANT'S MARCH
+
+After checking Imperial Ambition, use the region pictured on top of the draw
+stack. Put the Elephant inside a Company-controlled region. For a dominated
+region, put it on the border facing the region that dominates it, indicating a
+Rebellion. For a sovereign region, put it on the matching border indicated by
+the event shape, indicating an Invasion.
+"""
+
 func execute(game_state: GameState) -> void:
 	print("Executing ElephantMarchRule ...")
 	print("Check for Imperial Ambition if not -> topdeck region")

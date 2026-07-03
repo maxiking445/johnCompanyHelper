@@ -3,6 +3,12 @@ class_name WindfallEventRule
 
 var windfallLogMessages: Array[String] = []
 
+"""
+WINDFALL EVENT
+
+Each player takes £1 from the bank for each writer they have on an order in
+the region pictured on top of the draw stack and in every adjacent region.
+"""
 
 func execute(game_state: GameState) -> void:
 	windfallLogMessages.clear()
