@@ -30,11 +30,9 @@ func execute(game_state: GameState) -> void:
 func execute_detail(game_state: GameState, attacker: StateModel, defender: StateModel)-> void:
 	var attackStrength := calculate_attack_strength(game_state, attacker)
 	
-	var defenderStates: Array[StateModel] = []
-	if defender.isSovereign:
+	var defenderStates: Array[StateModel] = [defender]
+	if defender.isSovereign and defender.isPartOfEmpire():
 		defenderStates = game_state.getAllStatesOfEmpire(defender.partOfEmpire)
-	else:
-		defenderStates.append(defender)
 
 	var defenderStrength: int = 0
 	for defenderState in defenderStates:
