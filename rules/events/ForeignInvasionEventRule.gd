@@ -13,6 +13,10 @@ For each affected region, roll a die and use the result as the Invasion's base
 strength. A successful invasion closes its orders, removes its empire flag or
 Company control, and sets its new strength to half the invasion strength,
 rounded down.
+
+Elephant Redirect.
+If the Elephant was fully within a Companycontrolled region that was invaded, perform an Elephant's March
+using• for the shape. (Otherwise this event does not move the Elephant.)
 """
 
 func execute(game_state: GameState) -> void:

@@ -1,9 +1,12 @@
 extends Rule
 class_name AttackAgainstCompanyRule
 
+const BATTLE_RESOLVER := preload("res://rules/BattleResolver.gd")
+
 var loose_region_rule := LooseRegionRule.new()
 var elephant_redirect_rule := ElephantRedirectRule.new()
 var invasion_rule := InvasionRule.new()
+var battle_resolver := BATTLE_RESOLVER.new()
 
 """
   ATTACKS AGAINST THE COMPANY
@@ -105,15 +108,18 @@ func resolve_attack(game_state: GameState, state: StateModel, base_strength: int
 	var troops_to_exhaust := mini(attack_strength, available_troops)
 	state.exhaustTroops(troops_to_exhaust)
 
-	if troops_to_exhaust < attack_strength:
+	var winner := battle_resolver.determine_winner(
+		attack_strength, available_troops
+	)
+	if winner == BATTLE_RESOLVER.Winner.ATTACKER:
 		loose_region_rule.execute_for_state(game_state, state)
 		if game_state.elephant != null and game_state.elephant.is_inside_state():
 			elephant_redirect_rule.execute(game_state)
 		return true
-
-	state.resetUnrest()
-	state.addThropyToken()
-	return false
+	else:
+		state.resetUnrest()
+		state.addThropyToken()
+		return false
 
 
 func get_event_modifier() -> int:

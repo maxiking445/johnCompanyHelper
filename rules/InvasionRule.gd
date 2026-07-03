@@ -1,5 +1,10 @@
 extends Rule
 class_name InvasionRule
+
+const BATTLE_RESOLVER := preload("res://rules/BattleResolver.gd")
+
+var battle_resolver := BATTLE_RESOLVER.new()
+
 """
 If the attacker is a sovereign region, resolve an Invasion. Determine
 whether the attacker's strength (including the strength of any other regions
@@ -35,11 +40,13 @@ func execute_detail(game_state: GameState, attacker: StateModel, defender: State
 	for defenderState in defenderStates:
 		defenderStrength = defenderStrength + defenderState.towerLevel
 		
-	if defenderStrength >= attackStrength:
-		if attacker.towerLevel > 0:
-			attacker.removeTowerLevel()
-	else:
+	var winner := battle_resolver.determine_winner(
+		attackStrength, defenderStrength
+	)
+	if winner == BATTLE_RESOLVER.Winner.ATTACKER:
 		resolve_success(game_state, attacker, defender, defenderStates)
+	elif attacker.towerLevel > 0:
+		attacker.removeTowerLevel()
 
 
 func calculate_attack_strength(game_state: GameState, attacker: StateModel) -> int:

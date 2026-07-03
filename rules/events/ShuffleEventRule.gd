@@ -15,7 +15,6 @@ func execute(game_state: GameState) -> void:
 	print("Executing ShuffleEventRule ...")
 	var elephantMarchRule: ElephantMarchRule = elephantRule.new()
 	elephantMarchRule.execute(game_state)
-	
 	performShuffle()
 
 	

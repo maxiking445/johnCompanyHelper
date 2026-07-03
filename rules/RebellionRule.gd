@@ -1,6 +1,8 @@
 extends Rule
 class_name RebellionRule
 
+const BATTLE_RESOLVER := preload("res://rules/BattleResolver.gd")
+
 """
 If the attacker is a dominated region, resolve a Rebellion. Only the
 attacking region and the region dominating it contribute their strength.
@@ -13,6 +15,7 @@ On failure, remove one tower level from the defending capital.
 """
 
 var cascade_rule := CascadeRule.new()
+var battle_resolver := BATTLE_RESOLVER.new()
 
 func execute(game_state: GameState) -> void:
 	print("Executing RebellionRule ...")
@@ -42,7 +45,10 @@ func execute_detail( game_state: GameState, attacker: StateModel, defender: Stat
 
 	var attack_strength := calculate_attack_strength(attacker)
 	var defense_strength := defender.towerLevel
-	if attack_strength > defense_strength:
+	var winner := battle_resolver.determine_winner(
+		attack_strength, defense_strength
+	)
+	if winner == BATTLE_RESOLVER.Winner.ATTACKER:
 		resolve_success(game_state, attacker)
 	else:
 		defender.removeTowerLevel()
