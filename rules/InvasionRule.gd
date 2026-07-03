@@ -29,19 +29,9 @@ func execute(game_state: GameState) -> void:
 
 func execute_detail(game_state: GameState, attacker: StateModel, defender: StateModel)-> void:
 	var attackStrength := calculate_attack_strength(game_state, attacker)
-	
-	var defenderStates: Array[StateModel] = [defender]
-	if defender.isSovereign and defender.isPartOfEmpire():
-		defenderStates = game_state.getAllStatesOfEmpire(defender.partOfEmpire)
+	var defenderStates := get_defending_states(game_state, defender)
 
-	var defenderStrength: int = 0
-	for defenderState in defenderStates:
-		defenderStrength = defenderStrength + defenderState.towerLevel
-		
-	var winner := battle_resolver.determine_winner(
-		attackStrength, defenderStrength
-	)
-	if winner == BATTLE_RESOLVER.Winner.ATTACKER:
+	if is_invasion_successful(game_state, defender, attackStrength):
 		resolve_success(game_state, attacker, defender, defenderStates)
 	elif attacker.towerLevel > 0:
 		attacker.removeTowerLevel()
@@ -58,6 +48,37 @@ func calculate_attack_strength(game_state: GameState, attacker: StateModel) -> i
 	for attack_state in attacking_states:
 		attack_strength += attack_state.towerLevel
 	return attack_strength
+
+
+func is_invasion_successful(
+	game_state: GameState,
+	defender: StateModel,
+	attack_strength: int
+) -> bool:
+	var defense_strength := calculate_defense_strength(game_state, defender)
+	var winner := battle_resolver.determine_winner(
+		attack_strength, defense_strength
+	)
+	return winner == BATTLE_RESOLVER.Winner.ATTACKER
+
+
+func calculate_defense_strength(
+	game_state: GameState,
+	defender: StateModel
+) -> int:
+	var defense_strength := 0
+	for defending_state in get_defending_states(game_state, defender):
+		defense_strength += defending_state.towerLevel
+	return defense_strength
+
+
+func get_defending_states(
+	game_state: GameState,
+	defender: StateModel
+) -> Array[StateModel]:
+	if defender.isSovereign and defender.isPartOfEmpire():
+		return game_state.getAllStatesOfEmpire(defender.partOfEmpire)
+	return [defender]
 
 
 func resolve_success(

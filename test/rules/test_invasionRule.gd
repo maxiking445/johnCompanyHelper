@@ -58,6 +58,18 @@ func test_invasion_strength_includes_all_regions_in_attacker_empire() -> void:
 	assert_eq(_rule.calculate_attack_strength(_game_state, attacker), 4)
 
 
+func test_invasion_result_uses_complete_defending_empire_strength() -> void:
+	var defender := _create_state(StateType.StateType.DELIH, 2)
+	var ally := _create_state(StateType.StateType.BENGAL, 2)
+	defender.isSovereign = true
+	defender.partOfEmpire = EnumTypes.Empires.B
+	ally.partOfEmpire = EnumTypes.Empires.B
+	_game_state.states = [defender, ally]
+
+	assert_false(_rule.is_invasion_successful(_game_state, defender, 4))
+	assert_true(_rule.is_invasion_successful(_game_state, defender, 5))
+
+
 func _create_state(
 	location: StateType.StateType,
 	tower_level: int

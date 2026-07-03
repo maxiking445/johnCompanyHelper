@@ -1,6 +1,10 @@
 extends Rule
 class_name ForeignInvasionEventRule
 
+var attack_against_company_rule := AttackAgainstCompanyRule.new()
+var cascade_rule := CascadeRule.new()
+var invasion_rule := InvasionRule.new()
+
 """
 FOREIGN INVASION EVENT
 
@@ -14,10 +18,98 @@ strength. A successful invasion closes its orders, removes its empire flag or
 Company control, and sets its new strength to half the invasion strength,
 rounded down.
 
-Elephant Redirect.
-If the Elephant was fully within a Companycontrolled region that was invaded, perform an Elephant's March
-using• for the shape. (Otherwise this event does not move the Elephant.)
+Elephant Redirect: If the Elephant was fully within a Company-controlled
+region that was invaded, perform an Elephant's March using the circle shape.
+Otherwise this event does not move the Elephant.
 """
 
 func execute(game_state: GameState) -> void:
-	print("ForeignInvasionEventRule is not yet implemented")
+	print("Executing ForeignInvasionEventRule ...")
+	if game_state == null:
+		push_error("ForeignInvasionEventRule needs a game state.")
+		return
+
+	var affected_states := determine_affected_states_by_storm(game_state)
+	if affected_states.is_empty():
+		var fallback_state := game_state.findStateByLocation(EventHelper.getTopDeckEventLocation())
+		affected_states.append(fallback_state)
+
+	for state in affected_states:
+		_resolve_invasion(game_state, state, RollHelper.rollD6())
+
+
+func determine_affected_states_by_storm(
+	game_state: GameState
+) -> Array[StateModel]:
+	var storm_result := RollHelper.rollStormDice()
+	var locations: Array[StateType.StateType] = []
+	match storm_result:
+		StormDice.Face.SOUTH_3:
+			locations.append(StateType.StateType.MADRAS)
+		StormDice.Face.WEST_2:
+			locations.append(StateType.StateType.BOMBAY)
+		StormDice.Face.EAST_2:
+			locations.append(StateType.StateType.BENGAL)
+		StormDice.Face.STORMS_ALL:
+			locations.assign([
+				StateType.StateType.BENGAL,
+				StateType.StateType.BOMBAY,
+				StateType.StateType.MADRAS,
+			])
+
+	var affected_states: Array[StateModel] = []
+	for location in locations:
+		var state := game_state.findStateByLocation(location)
+		if state != null:
+			affected_states.append(state)
+	return affected_states
+
+
+# Keep the original method name for existing callers.
+func determineAffectesStatesByStorm(game_state: GameState) -> Array[StateModel]:
+	return determine_affected_states_by_storm(game_state)
+
+
+func _resolve_invasion(
+	game_state: GameState,
+	state: StateModel,
+	invasion_strength: int
+) -> void:
+	if state.isCompanyControlled:
+		var succeeded := attack_against_company_rule.execute_for_state(
+			game_state, state, invasion_strength
+		)
+		if succeeded:
+			apply_success(game_state, state, invasion_strength)
+		return
+
+	if invasion_rule.is_invasion_successful(
+		game_state, state, invasion_strength
+	):
+		apply_success(game_state, state, invasion_strength)
+
+
+func apply_success(
+	game_state: GameState,
+	state: StateModel,
+	invasion_strength: int
+) -> void:
+	var defeated_empire := state.partOfEmpire
+	if state.isSovereignCapital and defeated_empire != EnumTypes.Empires.NONE:
+		for empire_state in game_state.getAllStatesOfEmpire(defeated_empire):
+			empire_state.partOfEmpire = EnumTypes.Empires.NONE
+
+	state.partOfEmpire = EnumTypes.Empires.NONE
+	state.isCompanyControlled = false
+	state.isSovereign = true
+	state.isSovereignCapital = false
+	state.isDominated = false
+	state.isDominatedBy = null
+	state.towerLevel = floori(invasion_strength / 2.0)
+
+	# Region Loss already handles orders for Company-controlled targets.
+	if not state.hasRebelled:
+		if game_state.areAllOrderClosed(state.location):
+			cascade_rule.execute_location(game_state, state.location)
+		else:
+			game_state.closeAllOrders(state.location)
