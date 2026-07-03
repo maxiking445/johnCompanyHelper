@@ -13,6 +13,9 @@ class_name StateModel
 @export var orders: Array[OrderModel]
 @export var is_connected_to: Array[StateType.StateType]
 @export var isSovereign: bool
+@export var partOfEmpire: EnumTypes.Empires = EnumTypes.Empires.NONE
+@export var isSovereignCapital: bool
+
 @export var isDominated: bool
 @export var isDominatedBy: StateModel
 @export var isCompanyControlled: bool
@@ -25,6 +28,9 @@ func addThropyToken():
 
 func addTowerLevel():
 	towerLevel = towerLevel + 1
+	
+func removeTowerLevel():
+	towerLevel = towerLevel - 1
 
 func resetUnrest():
 	unrest_size = 0
@@ -37,3 +43,14 @@ func removeOfficer():
 
 func stateHasRebelled():
 	hasRebelled = true
+	
+func isPartOfEmpire() -> bool:	
+	return partOfEmpire != EnumTypes.Empires.NONE
+	
+func hasSovereignCapital() -> bool:	
+	return isSovereignCapital
+	
+func createNewEmpire(flag: EnumTypes.Empires ):	
+	partOfEmpire = flag
+	isSovereign = true
+	isSovereignCapital = true

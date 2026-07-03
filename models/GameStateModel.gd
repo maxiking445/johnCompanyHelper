@@ -99,3 +99,27 @@ func openAllOrders(location: StateType.StateType):
 
 func lowerCompanyStanding(number: int):
 	companyStanding = companyStanding - number
+
+func getAllStatesOfEmpire(empire: EnumTypes.Empires)-> Array[StateModel]:
+	var statesOfEmpire: Array[StateModel] = []
+	for state in getStates():
+		if state.partOfEmpire == empire:
+			statesOfEmpire.append(state)
+	return statesOfEmpire
+	
+func findFreeEmpireFlags():
+	var used_empires: Array[EnumTypes.Empires] = []
+	for state in getStates():
+		if state != null and state.isPartOfEmpire():
+			used_empires.append(state.partOfEmpire)
+
+	for empire in [
+		EnumTypes.Empires.A,
+		EnumTypes.Empires.B,
+		EnumTypes.Empires.C,
+	]:
+		if not used_empires.has(empire):
+			return empire
+
+	return EnumTypes.Empires.NONE
+		

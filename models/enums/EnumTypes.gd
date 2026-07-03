@@ -12,3 +12,11 @@ enum ElephantPlacement {
   	IN_STATE,
   	ON_BORDER,
   }
+
+
+enum Empires {
+  	A,
+  	B,
+	C,
+	NONE
+  }

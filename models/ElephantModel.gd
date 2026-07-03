@@ -44,3 +44,10 @@ func get_backward_state() -> StateType.StateType:
 		return border_state_b
 
 	return border_state_a
+	
+func get_facing_state() -> StateType.StateType:
+	assert(is_on_border())
+	if facing_state == border_state_a:
+		return border_state_a
+
+	return border_state_b
