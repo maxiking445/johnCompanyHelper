@@ -3,47 +3,92 @@ extends GutTest
 const ELEPHANT_REDIRECT_RULE := preload("res://rules/ElephantRedirectRule.gd")
 
 var _rule: ElephantRedirectRule
-var _game_state: TrackingGameState
-var _state: StateModel
+var _game_state: GameState
+var _rebelled_state: StateModel
 
 
 func before_each() -> void:
 	_rule = ELEPHANT_REDIRECT_RULE.new()
-	_game_state = TrackingGameState.new()
+	_game_state = GameState.new()
 	_game_state.elephant = ElephantModel.new()
-	_state = StateModel.new()
-	_game_state.returned_state = _state
+	_rebelled_state = _create_state(StateType.StateType.PUNJAB)
+	_game_state.states = [_rebelled_state]
+	EventHelper.draw_pile = []
 
 
-
-func test_execute_does_not_change_state_when_location_has_rebelled() -> void:
-	_game_state.elephant.placeInCenterOf(StateType.StateType.PUNJAB)
-	_state.location = StateType.StateType.PUNJAB
-	_state.hasRebelled = true
-
-	_rule.execute(_game_state)
-
-	assert_true(_state.hasRebelled)
-	assert_eq(_game_state.requested_locations, [StateType.StateType.PUNJAB])
+func after_each() -> void:
+	EventHelper.draw_pile.clear()
 
 
-func test_execute_does_not_change_state_when_location_has_not_rebelled() -> void:
-	_game_state.elephant.placeInCenterOf(StateType.StateType.BENGAL)
-	_state.location = StateType.StateType.BENGAL
-	_state.hasRebelled = false
+func test_rebelled_elephant_region_performs_elephant_march() -> void:
+	var destination := _create_state(StateType.StateType.BENGAL)
+	destination.isCompanyControlled = true
+	_game_state.states.append(destination)
+	_game_state.elephant.placeInCenterOf(_rebelled_state.location)
+	_rebelled_state.hasRebelled = true
+	_set_top_deck_location(destination.location)
 
 	_rule.execute(_game_state)
 
-	assert_false(_state.hasRebelled)
-	assert_eq(_game_state.requested_locations, [StateType.StateType.BENGAL])
+	assert_true(_game_state.elephant.is_inside_state())
+	assert_eq(_game_state.elephant.current_state, destination.location)
+	assert_false(_rebelled_state.hasRebelled)
 
 
-class TrackingGameState:
-	extends GameState
+func test_region_without_successful_rebellion_does_not_move_elephant() -> void:
+	_game_state.elephant.placeInCenterOf(_rebelled_state.location)
+	_rebelled_state.hasRebelled = false
 
-	var requested_locations: Array[StateType.StateType] = []
-	var returned_state: StateModel
+	_rule.execute(_game_state)
 
-	func findStateByLocation(location: StateType.StateType) -> StateModel:
-		requested_locations.append(location)
-		return returned_state
+	assert_eq(_game_state.elephant.current_state, _rebelled_state.location)
+
+
+func test_elephant_on_border_is_not_redirected() -> void:
+	_game_state.elephant.placeOnBorderOf(
+		StateType.StateType.BENGAL,
+		StateType.StateType.PUNJAB
+	)
+	_rebelled_state.hasRebelled = true
+
+	_rule.execute(_game_state)
+
+	assert_true(_game_state.elephant.is_on_border())
+	assert_eq(
+		_game_state.elephant.get_facing_state(),
+		StateType.StateType.BENGAL
+	)
+
+
+func test_foreign_invasion_redirect_uses_circle_and_restores_tile_shape() -> void:
+	var destination := _create_state(StateType.StateType.BOMBAY)
+	destination.isSovereign = true
+	destination.is_connected_to = [
+		StateType.StateType.PUNJAB,
+		StateType.StateType.MARATHA,
+	]
+	var punjab := _create_state(StateType.StateType.PUNJAB)
+	var maratha := _create_state(StateType.StateType.MARATHA)
+	_game_state.states.append_array([destination, punjab, maratha])
+	_game_state.elephant.placeInCenterOf(_rebelled_state.location)
+	_rebelled_state.hasRebelled = true
+	var event := _set_top_deck_location(destination.location)
+	event.elephantBorderIndex = 1
+
+	_rule.execute_with_circle_shape(_game_state)
+
+	assert_eq(_game_state.elephant.get_facing_state(), punjab.location)
+	assert_eq(event.elephantBorderIndex, 1)
+
+
+func _set_top_deck_location(location: StateType.StateType) -> IndiaEvent:
+	var event := IndiaEvent.new()
+	event.eventLocation = location
+	EventHelper.draw_pile = [event]
+	return event
+
+
+func _create_state(location: StateType.StateType) -> StateModel:
+	var state := StateModel.new()
+	state.location = location
+	return state

@@ -3,6 +3,7 @@ class_name LeaderEventRule
 
 var attackAgainstCompanyRule := AttackAgainstCompanyRule.new()
 var rebellionRule := RebellionRule.new()
+var elephantRedirectRule := ElephantRedirectRule.new()
 
 """
 LEADER EVENT
@@ -22,7 +23,11 @@ func execute(game_state: GameState) -> void:
 	if state.isSovereign:
 		state.addTowerLevel()
 	elif state.isCompanyControlled:
-		attackAgainstCompanyRule.execute_for_state(game_state, state)
+		var rebellion_succeeded := attackAgainstCompanyRule.execute_for_state(
+			game_state, state
+		)
+		if rebellion_succeeded:
+			elephantRedirectRule.execute(game_state)
 	elif state.isDominated and state.isDominatedBy != null:
 		rebellionRule.execute_detail(game_state, state, state.isDominatedBy)
 	else:

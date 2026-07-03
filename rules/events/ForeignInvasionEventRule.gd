@@ -4,6 +4,7 @@ class_name ForeignInvasionEventRule
 var attack_against_company_rule := AttackAgainstCompanyRule.new()
 var cascade_rule := CascadeRule.new()
 var invasion_rule := InvasionRule.new()
+var elephant_redirect_rule := ElephantRedirectRule.new()
 
 """
 FOREIGN INVASION EVENT
@@ -81,6 +82,7 @@ func _resolve_invasion(
 		)
 		if succeeded:
 			apply_success(game_state, state, invasion_strength)
+			elephant_redirect_rule.execute_with_circle_shape(game_state)
 		return
 
 	if invasion_rule.is_invasion_successful(
