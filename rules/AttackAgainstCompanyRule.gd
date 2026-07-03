@@ -3,6 +3,7 @@ class_name AttackAgainstCompanyRule
 
 var loose_region_rule := LooseRegionRule.new()
 var elephant_redirect_rule := ElephantRedirectRule.new()
+var invasion_rule := InvasionRule.new()
 
 """
   ATTACKS AGAINST THE COMPANY
@@ -60,19 +61,37 @@ func execute(game_state: GameState) -> void:
 	execute_for_state(game_state, primary_state)
 
 
-func execute_for_state(game_state: GameState, primary_state: StateModel) -> void:
+func execute_for_state(
+	game_state: GameState,
+	primary_state: StateModel,
+	base_strength = null,
+	invasion_attacker: StateModel = null
+) -> bool:
 	if game_state == null or primary_state == null:
 		push_error("AttackAgainstCompanyRule needs a game state and primary state.")
-		return
+		return false
 
 	loose_region_rule.reset_lost_regions_this_round()
-	resolve_attack(game_state, primary_state, get_event_modifier())
+	var primary_base_strength: int = (
+		get_event_modifier() if base_strength == null else base_strength
+	)
+	var primary_attack_succeeded := resolve_attack(
+		game_state, primary_state, primary_base_strength
+	)
 
+	if invasion_attacker != null:
+		if primary_attack_succeeded:
+			invasion_rule.resolve_success(
+				game_state, invasion_attacker, primary_state
+			)
+		elif invasion_attacker.towerLevel > 0:
+			invasion_attacker.removeTowerLevel()
 
 	var states_with_unrest := game_state.findAllStatesWithUnrest()
 	for state in states_with_unrest:
 		if state != primary_state:
 			resolve_attack(game_state, state, 0)
+	return primary_attack_succeeded
 
 
 # Keep the original entry point for callers that already use it.
@@ -80,7 +99,7 @@ func execute_state(game_state: GameState, primary_state: StateModel) -> void:
 	execute_for_state(game_state, primary_state)
 
 
-func resolve_attack(game_state: GameState, state: StateModel, base_strength: int) -> void:
+func resolve_attack(game_state: GameState, state: StateModel, base_strength: int) -> bool:
 	var attack_strength := maxi(0, base_strength + state.unrest_size)
 	var available_troops := maxi(0, state.troops - state.exhaustedTroops)
 	var troops_to_exhaust := mini(attack_strength, available_troops)
@@ -88,12 +107,13 @@ func resolve_attack(game_state: GameState, state: StateModel, base_strength: int
 
 	if troops_to_exhaust < attack_strength:
 		loose_region_rule.execute_for_state(game_state, state)
-		return
+		if game_state.elephant != null and game_state.elephant.is_inside_state():
+			elephant_redirect_rule.execute(game_state)
+		return true
 
 	state.resetUnrest()
 	state.addThropyToken()
-	if game_state.elephant != null:
-		elephant_redirect_rule.execute(game_state)
+	return false
 
 
 func get_event_modifier() -> int:

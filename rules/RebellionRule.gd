@@ -40,16 +40,19 @@ func execute_detail( game_state: GameState, attacker: StateModel, defender: Stat
 		push_error("The rebellion attacker must be dominated by the defender.")
 		return
 
-	var modifier := 0
-	if EventHelper.activeEvent != null:
-		modifier = EventHelper.activeEvent.modifier
-
-	var attack_strength := attacker.towerLevel + modifier
+	var attack_strength := calculate_attack_strength(attacker)
 	var defense_strength := defender.towerLevel
 	if attack_strength > defense_strength:
 		resolve_success(game_state, attacker)
 	else:
 		defender.removeTowerLevel()
+
+
+func calculate_attack_strength(attacker: StateModel) -> int:
+	var modifier := 0
+	if EventHelper.activeEvent != null:
+		modifier = EventHelper.activeEvent.modifier
+	return attacker.towerLevel + modifier
 
 
 func resolve_success(game_state: GameState, attacker: StateModel) -> void:

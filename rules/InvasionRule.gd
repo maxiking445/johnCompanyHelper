@@ -23,10 +23,7 @@ func execute(game_state: GameState) -> void:
 	printerr("Not implemented!")
 
 func execute_detail(game_state: GameState, attacker: StateModel, defender: StateModel)-> void:
-	var attackingStates: Array[StateModel]	= game_state.getAllStatesOfEmpire(attacker.partOfEmpire)
-	var attackStrength: int = EventHelper.activeEvent.modifier
-	for attackState in attackingStates:
-		attackStrength = attackStrength + attackState.towerLevel
+	var attackStrength := calculate_attack_strength(game_state, attacker)
 	
 	var defenderStates: Array[StateModel] = []
 	if defender.isSovereign:
@@ -39,15 +36,46 @@ func execute_detail(game_state: GameState, attacker: StateModel, defender: State
 		defenderStrength = defenderStrength + defenderState.towerLevel
 		
 	if defenderStrength >= attackStrength:
-		attacker.removeTowerLevel()
+		if attacker.towerLevel > 0:
+			attacker.removeTowerLevel()
 	else:
-		defender.partOfEmpire = attacker.partOfEmpire
-		if defender.hasSovereignCapital():
-			for defenderState in defenderStates:
-				defenderState.partOfEmpire = EnumTypes.Empires.NONE
-		
-		if !attacker.isPartOfEmpire():
-			var flag: EnumTypes.Empires = game_state.findFreeEmpireFlags()
-			if flag != EnumTypes.Empires.NONE:
-				attacker.createNewEmpire(flag)
+		resolve_success(game_state, attacker, defender, defenderStates)
+
+
+func calculate_attack_strength(game_state: GameState, attacker: StateModel) -> int:
+	var attacking_states: Array[StateModel] = [attacker]
+	if attacker.isPartOfEmpire():
+		attacking_states = game_state.getAllStatesOfEmpire(attacker.partOfEmpire)
+
+	var attack_strength := 0
+	if EventHelper.activeEvent != null:
+		attack_strength = EventHelper.activeEvent.modifier
+	for attack_state in attacking_states:
+		attack_strength += attack_state.towerLevel
+	return attack_strength
+
+
+func resolve_success(
+	game_state: GameState,
+	attacker: StateModel,
+	defender: StateModel,
+	defender_states: Array[StateModel] = []
+) -> void:
+	if defender_states.is_empty():
+		defender_states = [defender]
+
+	if defender.hasSovereignCapital():
+		for defender_state in defender_states:
+			defender_state.partOfEmpire = EnumTypes.Empires.NONE
+
+	if not attacker.isPartOfEmpire():
+		var flag: EnumTypes.Empires = game_state.findFreeEmpireFlags()
+		if flag != EnumTypes.Empires.NONE:
+			attacker.createNewEmpire(flag)
+
+	defender.partOfEmpire = attacker.partOfEmpire
+	defender.isSovereign = false
+	defender.isSovereignCapital = false
+	defender.isDominated = attacker.isPartOfEmpire()
+	defender.isDominatedBy = attacker if attacker.isPartOfEmpire() else null
 	

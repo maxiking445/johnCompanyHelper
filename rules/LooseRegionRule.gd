@@ -53,6 +53,12 @@ func performGovernerElimination(game_state: GameState, state: StateModel):
 func performRestoreLocalAuthority(game_state: GameState, state: StateModel):
 	state.resetUnrest()
 	state.towerLevel = 1
+	state.isCompanyControlled = false
+	state.isSovereign = true
+	state.isSovereignCapital = false
+	state.isDominated = false
+	state.isDominatedBy = null
+	state.partOfEmpire = EnumTypes.Empires.NONE
 	
 	if game_state.areAllOrderClosed(state.location):
 		cascadeRule.execute_location(game_state, state.location)
