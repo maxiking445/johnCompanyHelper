@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="MainGameIntegrationScenario" load_steps=8 format=3]
+[ext_resource type="Script" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1"]
+[ext_resource type="Resource" path="res://test/integration/scenarios/single_shuffle/StartGameState.tres" id="2"]
+[ext_resource type="Resource" path="res://test/integration/scenarios/single_shuffle/ExpectedGameState.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/events/shuffle/Shuffle_MAD.tres" id="4"]
+[ext_resource type="Resource" path="res://resources/events/turmoil/Turmoil_BOM.tres" id="5"]
+[resource]
+script = ExtResource("1")
+scenario_name = "Single Shuffle returns itself to the deck"
+start_game_state = ExtResource("2")
+expected_game_state = ExtResource("3")
+event_deck = Array[Resource]([ExtResource("4")])
+location_event = ExtResource("5")
+expected_remaining_event_count = 2

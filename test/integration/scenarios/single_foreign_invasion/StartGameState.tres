@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="GameState" load_steps=4 format=3]
+[ext_resource type="Script" path="res://models/GameStateModel.gd" id="1"]
+[ext_resource type="Script" path="res://models/StateModel.gd" id="2"]
+[ext_resource type="Script" path="res://models/OrderModel.gd" id="3"]
+[sub_resource type="Resource" id="Order"]
+script = ExtResource("3")
+orderState = 0
+state = 0
+[sub_resource type="Resource" id="Bombay"]
+script = ExtResource("2")
+location = 0
+orders = Array[Resource]([SubResource("Order")])
+is_connected_to = Array[int]([])
+isSovereign = true
+towerLevel = 1
+[resource]
+script = ExtResource("1")
+bombay = SubResource("Bombay")

@@ -41,7 +41,7 @@ func assert_scenario(scenario: MainGameIntegrationScenario) -> void:
 	_assert_game_states_equal(result, scenario.expected_game_state, scenario_name)
 	assert_eq(
 		EventHelper.draw_pile.size(),
-		1,
+		scenario.expected_remaining_event_count,
 		"%s: remaining event count" % scenario_name
 	)
 

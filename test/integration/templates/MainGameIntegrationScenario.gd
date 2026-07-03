@@ -8,5 +8,6 @@ class_name MainGameIntegrationScenario
 @export var event_deck: Array[IndiaEvent] = []
 # The next facedown tile; its back determines the location after the last draw.
 @export var location_event: IndiaEvent
+@export var expected_remaining_event_count: int = 1
 @export var d6_results: Array[int] = []
 @export var storm_dice_results: Array[StormDice.Face] = []

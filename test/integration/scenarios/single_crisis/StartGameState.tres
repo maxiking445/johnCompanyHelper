@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="GameState" load_steps=4 format=3]
+[ext_resource type="Script" path="res://models/GameStateModel.gd" id="1"]
+[ext_resource type="Script" path="res://models/StateModel.gd" id="2"]
+[ext_resource type="Script" path="res://models/ElephantModel.gd" id="3"]
+[sub_resource type="Resource" id="Bombay"]
+script = ExtResource("2")
+location = 0
+unrest_size = 1
+troops = 2
+orders = Array[Resource]([])
+is_connected_to = Array[int]([])
+isCompanyControlled = true
+[sub_resource type="Resource" id="Elephant"]
+script = ExtResource("3")
+placement = 0
+current_state = 0
+[resource]
+script = ExtResource("1")
+bombay = SubResource("Bombay")
+elephant = SubResource("Elephant")

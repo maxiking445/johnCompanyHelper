@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GameState" load_steps=3 format=3]
+[ext_resource type="Script" path="res://models/GameStateModel.gd" id="1"]
+[ext_resource type="Script" path="res://models/StateModel.gd" id="2"]
+[sub_resource type="Resource" id="Hyderabad"]
+script = ExtResource("2")
+location = 2
+writers = 2
+orders = Array[Resource]([])
+is_connected_to = Array[int]([])
+[resource]
+script = ExtResource("1")
+hyperbad = SubResource("Hyderabad")
+eventsToDraw = 2
