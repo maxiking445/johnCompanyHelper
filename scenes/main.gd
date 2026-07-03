@@ -1,36 +1,58 @@
 extends Node2D
 
-var stormRule: Resource = preload("res://rules/StormRule.gd")
-var windfallRule: Resource = preload("res://rules/events/WindfallEventRule.gd")
-var suffleRule: Resource = preload("res://rules/events/ShuffleEventRule.gd")
-var gameState: GameState = preload("res://resources/gameState/GameState.tres")
+const DEFAULT_GAME_STATE := preload("res://resources/gameState/GameState.tres")
+
+var storm_rule := StormRule.new()
+var gameState: GameState
 
 
 func _ready() -> void:
-	#test()
-	EventHelper.initEventDeck(false)
-	var stormRule: StormRule = stormRule.new()
-	stormRule.execute(gameState)
-	
-	for i in range(gameState.eventsToDraw):
-		print("Draw Event Card.")
-		var event: IndiaEvent = EventHelper.drawEvent()
-		print(event.eventName)
-		print(event.rule)
-		event.rule.execute(gameState)
+	start_normal_game()
 
-func test() -> void:
-	print("Start!")
-	
-	print(EventHelper.drawEvent())
-	print(EventHelper.draw_pile.size())
-	print(EventHelper.drawEvent())
-	print(EventHelper.draw_pile.size())
-	var stormRule: StormRule = stormRule.new()
-	stormRule.execute(gameState)
-	
-	var windfallRule: WindfallEventRule = windfallRule.new()
-	windfallRule.execute(gameState)
-	
-	var shuffleEventRule: ShuffleEventRule = suffleRule.new()
-	shuffleEventRule.execute(gameState)
+
+func start_normal_game() -> GameState:
+	gameState = DEFAULT_GAME_STATE.duplicate(true)
+	EventHelper.initEventDeck(false)
+	RollHelper.clearQueuedResults()
+	storm_rule.execute(gameState)
+	_resolve_events(gameState, gameState.eventsToDraw)
+	return gameState
+
+
+func start_test_game(
+	start_game_state: GameState,
+	event_deck: Array[IndiaEvent],
+	events_to_resolve: int,
+	d6_results: Array[int] = [],
+	storm_dice_results: Array[StormDice.Face] = []
+) -> GameState:
+	if start_game_state == null:
+		push_error("A deterministic game needs a start GameState.")
+		return null
+	if events_to_resolve < 0 or events_to_resolve > event_deck.size():
+		push_error("The deterministic event count must fit the supplied deck.")
+		return null
+
+	gameState = start_game_state.duplicate(true)
+	EventHelper.draw_pile = event_deck.duplicate()
+	EventHelper.discard_pile.clear()
+	EventHelper.activeEvent = null
+	RollHelper.clearQueuedResults()
+	RollHelper.d6_results = d6_results.duplicate()
+	RollHelper.storm_dice_results = storm_dice_results.duplicate()
+	gameState.eventsToDraw = events_to_resolve
+	_resolve_events(gameState, events_to_resolve)
+	return gameState
+
+
+func _resolve_events(target_game_state: GameState, event_count: int) -> void:
+	for event_index in range(event_count):
+		if EventHelper.draw_pile.is_empty():
+			push_error("The event deck is empty before all events were resolved.")
+			return
+
+		var event := EventHelper.drawEvent()
+		if event == null or event.rule == null:
+			push_error("Every drawn event needs an executable rule.")
+			return
+		event.rule.execute(target_game_state)

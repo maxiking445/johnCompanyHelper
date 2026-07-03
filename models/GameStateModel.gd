@@ -18,7 +18,7 @@ class_name GameState
 @export var seaEast: SeaModel
 @export var seaSouth: SeaModel
 
-var eventsToDraw: int
+@export var eventsToDraw: int
 var states: Array[StateModel] = []
 
 func getStates() -> Array[StateModel]:

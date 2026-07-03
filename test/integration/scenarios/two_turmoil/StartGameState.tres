@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="GameState" format=3 uid="uid://dbvcu7d0j5kk3"]
+
+[ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="1_game_state"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_state"]
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="3_order"]
+
+[sub_resource type="Resource" id="Order_bombay_1"]
+script = ExtResource("3_order")
+value = 3
+
+[sub_resource type="Resource" id="Order_bombay_2"]
+script = ExtResource("3_order")
+value = 4
+
+[sub_resource type="Resource" id="State_bombay"]
+script = ExtResource("2_state")
+writers = 2
+troops = 2
+orders = Array[ExtResource("3_order")]([SubResource("Order_bombay_1"), SubResource("Order_bombay_2")])
+isCompanyControlled = true
+
+[resource]
+script = ExtResource("1_game_state")
+bombay = SubResource("State_bombay")
+companyStanding = 5
