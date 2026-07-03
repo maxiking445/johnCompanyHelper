@@ -101,7 +101,7 @@ func resolve_success(
 
 	defender.partOfEmpire = attacker.partOfEmpire
 	defender.isSovereign = false
-	defender.isSovereignCapital = false
+	defender.isEmpireCapital = false
 	defender.isDominated = attacker.isPartOfEmpire()
 	defender.isDominatedBy = attacker if attacker.isPartOfEmpire() else null
 	

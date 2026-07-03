@@ -122,4 +122,13 @@ func findFreeEmpireFlags():
 			return empire
 
 	return EnumTypes.Empires.NONE
+
+func findEmpireCapital( state: StateModel) -> StateModel:
+	if state.isEmpireCapital or not state.isPartOfEmpire():
+		return state
+	for empire_state in getAllStatesOfEmpire(state.partOfEmpire):
+		if empire_state.isSovereignCapital:
+			return empire_state
+	push_error("There is no valid SovereignCapital")
+	return null
 		

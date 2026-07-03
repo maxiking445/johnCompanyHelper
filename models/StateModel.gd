@@ -14,7 +14,7 @@ class_name StateModel
 @export var is_connected_to: Array[StateType.StateType]
 @export var isSovereign: bool
 @export var partOfEmpire: EnumTypes.Empires = EnumTypes.Empires.NONE
-@export var isSovereignCapital: bool
+@export var isEmpireCapital: bool
 
 @export var isDominated: bool
 @export var isDominatedBy: StateModel
@@ -48,9 +48,9 @@ func isPartOfEmpire() -> bool:
 	return partOfEmpire != EnumTypes.Empires.NONE
 	
 func hasSovereignCapital() -> bool:	
-	return isSovereignCapital
+	return isEmpireCapital
 	
 func createNewEmpire(flag: EnumTypes.Empires ):	
 	partOfEmpire = flag
 	isSovereign = true
-	isSovereignCapital = true
+	isEmpireCapital = true

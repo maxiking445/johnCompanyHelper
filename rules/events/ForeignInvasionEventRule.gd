@@ -95,14 +95,14 @@ func apply_success(
 	invasion_strength: int
 ) -> void:
 	var defeated_empire := state.partOfEmpire
-	if state.isSovereignCapital and defeated_empire != EnumTypes.Empires.NONE:
+	if state.isEmpireCapital and defeated_empire != EnumTypes.Empires.NONE:
 		for empire_state in game_state.getAllStatesOfEmpire(defeated_empire):
 			empire_state.partOfEmpire = EnumTypes.Empires.NONE
 
 	state.partOfEmpire = EnumTypes.Empires.NONE
 	state.isCompanyControlled = false
 	state.isSovereign = true
-	state.isSovereignCapital = false
+	state.isEmpireCapital = false
 	state.isDominated = false
 	state.isDominatedBy = null
 	state.towerLevel = floori(invasion_strength / 2.0)

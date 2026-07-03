@@ -65,7 +65,7 @@ func performRestoreLocalAuthority(game_state: GameState, state: StateModel):
 	state.towerLevel = 1
 	state.isCompanyControlled = false
 	state.isSovereign = true
-	state.isSovereignCapital = false
+	state.isEmpireCapital = false
 	state.isDominated = false
 	state.isDominatedBy = null
 	state.partOfEmpire = EnumTypes.Empires.NONE

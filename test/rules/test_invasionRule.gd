@@ -28,7 +28,7 @@ func test_stronger_sovereign_attacker_creates_new_empire() -> void:
 	_rule.execute_detail(_game_state, attacker, defender)
 
 	assert_eq(attacker.partOfEmpire, EnumTypes.Empires.A)
-	assert_true(attacker.isSovereignCapital)
+	assert_true(attacker.isEmpireCapital)
 	assert_eq(defender.partOfEmpire, EnumTypes.Empires.A)
 	assert_true(defender.isDominated)
 	assert_eq(defender.isDominatedBy, attacker)

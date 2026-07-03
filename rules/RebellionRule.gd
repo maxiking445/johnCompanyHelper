@@ -63,7 +63,7 @@ func calculate_attack_strength(attacker: StateModel) -> int:
 
 func resolve_success(game_state: GameState, attacker: StateModel) -> void:
 	attacker.isSovereign = true
-	attacker.isSovereignCapital = false
+	attacker.isEmpireCapital = false
 	attacker.partOfEmpire = EnumTypes.Empires.NONE
 	attacker.isDominated = false
 	attacker.isDominatedBy = null
