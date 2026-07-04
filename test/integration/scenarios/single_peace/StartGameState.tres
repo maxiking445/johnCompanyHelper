@@ -1,23 +1,26 @@
-[gd_resource type="Resource" script_class="GameState" load_steps=5 format=3]
-[ext_resource type="Script" path="res://models/GameStateModel.gd" id="1"]
-[ext_resource type="Script" path="res://models/StateModel.gd" id="2"]
-[ext_resource type="Script" path="res://models/OrderModel.gd" id="3"]
-[ext_resource type="Script" path="res://models/ElephantModel.gd" id="4"]
+[gd_resource type="Resource" script_class="GameState" format=3 uid="uid://en6gudpqmq7j"]
+
+[ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="1"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2"]
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="3"]
+[ext_resource type="Script" uid="uid://db2idjntwxbuh" path="res://models/ElephantModel.gd" id="4"]
+
+[sub_resource type="Resource" id="Elephant"]
+script = ExtResource("4")
+current_state = 1
+
 [sub_resource type="Resource" id="Order"]
 script = ExtResource("3")
 orderState = 1
 state = 1
+
 [sub_resource type="Resource" id="Madras"]
 script = ExtResource("2")
 location = 1
 unrest_size = 2
-orders = Array[Resource]([SubResource("Order")])
-is_connected_to = Array[int]([])
+orders = Array[ExtResource("3")]([SubResource("Order")])
 isCompanyControlled = true
-[sub_resource type="Resource" id="Elephant"]
-script = ExtResource("4")
-placement = 0
-current_state = 1
+
 [resource]
 script = ExtResource("1")
 madras = SubResource("Madras")

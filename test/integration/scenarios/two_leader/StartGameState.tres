@@ -1,13 +1,14 @@
-[gd_resource type="Resource" script_class="GameState" load_steps=3 format=3]
-[ext_resource type="Script" path="res://models/GameStateModel.gd" id="1"]
-[ext_resource type="Script" path="res://models/StateModel.gd" id="2"]
+[gd_resource type="Resource" script_class="GameState" format=3 uid="uid://dpingfrared2e"]
+
+[ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="1"]
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="1_8x2w1"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2"]
+
 [sub_resource type="Resource" id="Bombay"]
 script = ExtResource("2")
-location = 0
-orders = Array[Resource]([])
-is_connected_to = Array[int]([])
 isSovereign = true
 towerLevel = 1
+
 [resource]
 script = ExtResource("1")
 bombay = SubResource("Bombay")

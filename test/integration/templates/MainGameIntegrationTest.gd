@@ -3,7 +3,11 @@ extends GutTest
 const MAIN := preload("res://scenes/main.gd")
 
 
-func assert_scenario(scenario: MainGameIntegrationScenario) -> void:
+func test_scenario() -> void:
+	_run_scenario(get("scenario") as MainGameIntegrationScenario)
+
+
+func _run_scenario(scenario: MainGameIntegrationScenario) -> void:
 	assert_not_null(scenario, "Integration scenario")
 	if scenario == null:
 		return

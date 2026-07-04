@@ -16,7 +16,7 @@ func isOpen() -> bool:
 func close():
 	orderState = EnumTypes.OrderState.CLOSED
 	if hasWriterOnOrder():
-		print("Removed Writer from Order because it has been closed!")
+		print("Removed Writer from Order in State:" + str(orderState) + "because it has been closed!")
 		removeWriterFromOrder()
 	
 
