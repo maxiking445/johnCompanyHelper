@@ -81,7 +81,7 @@ func _assert_states_equal(
 	scenario_name: String
 ) -> void:
 	var fields := [
-		"location", "writers", "unrest_size", "hasCommander", "officers",
+		"location", "unrest_size", "hasCommander", "officers",
 		"troops", "exhaustedTroops", "hasGovenor", "treasury_size",
 		"is_connected_to", "isSovereign", "partOfEmpire", "isEmpireCapital",
 		"isDominated", "isCompanyControlled", "towerLevel", "trophyToken",
@@ -103,6 +103,7 @@ func _assert_states_equal(
 		assert_eq(actual.orders[index].orderState, expected.orders[index].orderState, "%s state" % order_label)
 		assert_eq(actual.orders[index].value, expected.orders[index].value, "%s value" % order_label)
 		assert_eq(actual.orders[index].state, expected.orders[index].state, "%s location" % order_label)
+		assert_eq(actual.orders[index].hasWriter, expected.orders[index].hasWriter, "%s writer" % order_label)
 
 
 func _assert_elephants_equal(

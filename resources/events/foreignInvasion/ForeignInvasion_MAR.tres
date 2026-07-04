@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="IndiaEvent" load_steps=4 format=3 uid="uid://cgn64wvgpnghp"]
+[gd_resource type="Resource" script_class="IndiaEvent" format=3 uid="uid://cgn64wvgpnghp"]
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_73j00"]
-[ext_resource type="Script" path="res://rules/events/ForeignInvasionEventRule.gd" id="2_rule"]
+[ext_resource type="Script" uid="uid://bg3ss66uav2xb" path="res://rules/events/ForeignInvasionEventRule.gd" id="2_rule"]
 
 [sub_resource type="Resource" id="ForeignInvasionRule"]
 script = ExtResource("2_rule")

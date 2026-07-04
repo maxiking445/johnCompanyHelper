@@ -1,12 +1,22 @@
-[gd_resource type="Resource" script_class="GameState" load_steps=3 format=3]
-[ext_resource type="Script" path="res://models/GameStateModel.gd" id="1"]
-[ext_resource type="Script" path="res://models/StateModel.gd" id="2"]
+[gd_resource type="Resource" script_class="GameState" format=3 uid="uid://br5l8x8e4vn1c"]
+
+[ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="1"]
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="1_gvxaj"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2"]
+
+[sub_resource type="Resource" id="Order_1"]
+script = ExtResource("1_gvxaj")
+hasWriter = true
+
+[sub_resource type="Resource" id="Order_2"]
+script = ExtResource("1_gvxaj")
+hasWriter = true
+
 [sub_resource type="Resource" id="Hyderabad"]
 script = ExtResource("2")
 location = 2
-writers = 2
-orders = Array[Resource]([])
-is_connected_to = Array[int]([])
+orders = Array[ExtResource("1_gvxaj")]([SubResource("Order_1"), SubResource("Order_2")])
+
 [resource]
 script = ExtResource("1")
 hyperbad = SubResource("Hyderabad")

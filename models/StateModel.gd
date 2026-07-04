@@ -2,7 +2,7 @@ extends Resource
 class_name StateModel
 
 @export var location: StateType.StateType
-@export var writers: int
+
 @export var unrest_size: int
 @export var hasCommander: bool
 @export var officers: int
@@ -54,3 +54,10 @@ func createNewEmpire(flag: EnumTypes.Empires ):
 	partOfEmpire = flag
 	isSovereign = true
 	isEmpireCapital = true
+	
+func getWritersAmountInState()-> int:
+	var writers: int = 0
+	for order in orders:
+		if order.hasWriterOnOrder():
+			writers = writers + 1
+	return writers			

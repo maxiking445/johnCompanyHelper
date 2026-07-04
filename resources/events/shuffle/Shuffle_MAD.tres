@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="IndiaEvent" load_steps=4 format=3 uid="uid://clmuhghqeq8iu"]
+[gd_resource type="Resource" script_class="IndiaEvent" format=3 uid="uid://clmuhghqeq8iu"]
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_c3kj8"]
 [ext_resource type="Script" uid="uid://4yaohaaiqpdq" path="res://rules/events/ShuffleEventRule.gd" id="1_rttjq"]

@@ -7,10 +7,10 @@
 [sub_resource type="Resource" id="Order_bombay"]
 script = ExtResource("3_order")
 value = 3
+hasWriter = true
 
 [sub_resource type="Resource" id="State_bombay"]
 script = ExtResource("2_state")
-writers = 1
 troops = 2
 orders = Array[ExtResource("3_order")]([SubResource("Order_bombay")])
 isCompanyControlled = true

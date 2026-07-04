@@ -1,7 +1,7 @@
 extends Rule
 class_name WindfallEventRule
 
-var windfallLogMessages: Array[String] = []
+
 
 """
 WINDFALL EVENT
@@ -11,7 +11,6 @@ the region pictured on top of the draw stack and in every adjacent region.
 """
 
 func execute(game_state: GameState) -> void:
-	windfallLogMessages.clear()
 	print("Executing WinfdallEventRule ...")
 	var targetLocation: StateType.StateType  = EventHelper.getTopDeckEventLocation()
 	print("Target of Event is ", StateType.name(targetLocation))
@@ -30,8 +29,7 @@ func execute(game_state: GameState) -> void:
 
 
 func _apply_windfall_to_state(state: StateModel) -> void:
-	for writer_index in state.writers:
+	for writer_index in state.getWritersAmountInState():
 		var message := "Writer in %s gains 1$" % StateType.name(state.location)
-		windfallLogMessages.append(message)
 		print(message)
 		
