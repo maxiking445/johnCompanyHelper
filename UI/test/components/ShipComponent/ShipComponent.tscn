@@ -1,0 +1,116 @@
+[gd_scene format=3 uid="uid://bloc4y5ufoc2j"]
+
+[ext_resource type="Script" uid="uid://cdldnjc1nx6ew" path="res://UI/test/components/ShipComponent/ship_component.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bd3hul8w131gh" path="res://UI/test/assets/extraShip.png" id="2_extra"]
+[ext_resource type="LabelSettings" uid="uid://c030cjdlbdqw5" path="res://font/black_default.tres" id="3_jml6e"]
+[ext_resource type="Texture2D" uid="uid://s6o6linfuwh2" path="res://UI/test/assets/playerShip.png" id="3_player"]
+[ext_resource type="Texture2D" uid="uid://b47aq8husj076" path="res://UI/test/assets/companyShip.png" id="4_company"]
+[ext_resource type="Texture2D" uid="uid://c4awdk7caad8m" path="res://UI/test/assets/playerShipsDamaged.png" id="5_damaged_player"]
+
+[node name="ShipComponent" type="Node2D" unique_id=1523750226]
+script = ExtResource("1_script")
+
+[node name="ShipList" type="VBoxContainer" parent="." unique_id=1088826920]
+offset_right = 132.0
+offset_bottom = 104.0
+theme_override_constants/separation = 4
+
+[node name="Extra" type="HBoxContainer" parent="ShipList" unique_id=126771194]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="ShipList/Extra" unique_id=1218001438]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("2_extra")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Type" type="Label" parent="ShipList/Extra" unique_id=1364941588]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Extra"
+label_settings = ExtResource("3_jml6e")
+vertical_alignment = 1
+
+[node name="ExtraCount" type="Label" parent="ShipList/Extra" unique_id=2070497328]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = ExtResource("3_jml6e")
+vertical_alignment = 1
+
+[node name="Player" type="HBoxContainer" parent="ShipList" unique_id=2676645]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="ShipList/Player" unique_id=1932370035]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("3_player")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Type" type="Label" parent="ShipList/Player" unique_id=1573600172]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Player"
+label_settings = ExtResource("3_jml6e")
+vertical_alignment = 1
+
+[node name="PlayerCount" type="Label" parent="ShipList/Player" unique_id=1779248979]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = ExtResource("3_jml6e")
+vertical_alignment = 1
+
+[node name="DamagedPlayer" type="HBoxContainer" parent="ShipList" unique_id=1765965119]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="ShipList/DamagedPlayer" unique_id=1871436296]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("5_damaged_player")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Type" type="Label" parent="ShipList/DamagedPlayer" unique_id=1118995419]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Damaged Player"
+label_settings = ExtResource("3_jml6e")
+vertical_alignment = 1
+
+[node name="DamagedPlayerCount" type="Label" parent="ShipList/DamagedPlayer" unique_id=1478264560]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = ExtResource("3_jml6e")
+vertical_alignment = 1
+
+[node name="Company" type="HBoxContainer" parent="ShipList" unique_id=1490385400]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="ShipList/Company" unique_id=1756089808]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("4_company")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Type" type="Label" parent="ShipList/Company" unique_id=1493674833]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Company"
+label_settings = ExtResource("3_jml6e")
+vertical_alignment = 1
+
+[node name="CompanyCount" type="Label" parent="ShipList/Company" unique_id=1816010040]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+label_settings = ExtResource("3_jml6e")
+vertical_alignment = 1

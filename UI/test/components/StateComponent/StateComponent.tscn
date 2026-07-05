@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://d0o0qukt7ldnc"]
+
+[ext_resource type="Script" uid="uid://dy6wxibdycq67" path="res://UI/test/components/StateComponent/state_component.gd" id="1_4kbvl"]
+[ext_resource type="PackedScene" uid="uid://ch02pmyjr1qmh" path="res://UI/test/components/KeyValueTextComponent/KeyValueTextComponent.tscn" id="2_7tmy0"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_yo5bs"]
+font_color = Color(0.61509585, 0, 0.11213223, 1)
+
+[node name="StateComponent" type="Node2D" unique_id=976036685]
+script = ExtResource("1_4kbvl")
+
+[node name="HoverArea" type="Control" parent="." unique_id=773649685]
+custom_minimum_size = Vector2(120, 28)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 120.0
+offset_bottom = 28.0
+mouse_default_cursor_shape = 2
+
+[node name="Label" type="Label" parent="HoverArea" unique_id=81153428]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "NO STATE"
+label_settings = SubResource("LabelSettings_yo5bs")
+
+[node name="KeyValueTextComponent" parent="." unique_id=1519146366 instance=ExtResource("2_7tmy0")]
+z_index = 10
+position = Vector2(14, 25)
+
+[connection signal="mouse_entered" from="HoverArea" to="." method="_on_hover_area_mouse_entered"]
+[connection signal="mouse_exited" from="HoverArea" to="." method="_on_hover_area_mouse_exited"]

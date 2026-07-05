@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://ch02pmyjr1qmh"]
+
+[ext_resource type="Script" uid="uid://p2smj8bve1el" path="res://UI/test/components/KeyValueTextComponent/key_value_text_component.gd" id="1_gd5x2"]
+
+[node name="KeyValueTextComponent" type="Control" unique_id=1286624327]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_gd5x2")
+data_entries = {
+"TEst": "ste"
+}
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1719139676]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1702279947]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="DataEntry0" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1684951798]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+
+[node name="DataEntryTitle" type="Label" parent="PanelContainer/VBoxContainer/DataEntry0" unique_id=293900521]
+layout_mode = 2
+text = "TowerLevel:"
+
+[node name="DataEntryValue" type="Label" parent="PanelContainer/VBoxContainer/DataEntry0" unique_id=2092446080]
+layout_mode = 2
+text = "0"

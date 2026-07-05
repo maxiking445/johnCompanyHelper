@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://dsm4v3e6034yv"]
+
+[ext_resource type="Script" uid="uid://cd7xeg0xatbta" path="res://UI/test/ui_game_state_visualiser.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://dui214eot1ehw" path="res://test/integration/scenarios/single_turmoil/ExpectedGameState.tres" id="2_h46l8"]
+[ext_resource type="PackedScene" uid="uid://bloc4y5ufoc2j" path="res://UI/test/components/ShipComponent/ShipComponent.tscn" id="3_h46l8"]
+[ext_resource type="Texture2D" uid="uid://cya76l5w10q7e" path="res://UI/test/assets/map.jpg" id="3_xqgvp"]
+[ext_resource type="PackedScene" uid="uid://b4mbx70anlblu" path="res://UI/test/components/tradeOrderComponent/TradeOrder.tscn" id="4_ub78g"]
+[ext_resource type="PackedScene" uid="uid://d0o0qukt7ldnc" path="res://UI/test/components/StateComponent/StateComponent.tscn" id="7_nfqf3"]
+
+[node name="UiGameStateVisualiser" type="Node2D" unique_id=339786545]
+script = ExtResource("1_script")
+game_state = ExtResource("2_h46l8")
+metadata/_edit_lock_ = true
+
+[node name="Map" type="Sprite2D" parent="." unique_id=132020120]
+position = Vector2(839, 448)
+scale = Vector2(0.2331481, 0.23314808)
+texture = ExtResource("3_xqgvp")
+
+[node name="SeaNodes" type="Node2D" parent="." unique_id=1190470706]
+
+[node name="WestSea" parent="SeaNodes" unique_id=1523750226 instance=ExtResource("3_h46l8")]
+position = Vector2(412, 594)
+
+[node name="SouthSea" parent="SeaNodes" unique_id=1055327166 instance=ExtResource("3_h46l8")]
+position = Vector2(929, 660)
+
+[node name="EastSea" parent="SeaNodes" unique_id=1035367439 instance=ExtResource("3_h46l8")]
+position = Vector2(1040, 429)
+
+[node name="TradeOrders" type="Node2D" parent="." unique_id=131253881]
+
+[node name="Madras" type="Node2D" parent="TradeOrders" unique_id=935517654]
+
+[node name="TradeOrder1" parent="TradeOrders/Madras" unique_id=254993254 instance=ExtResource("4_ub78g")]
+position = Vector2(837, 606)
+tradeOrderStatus = 1
+hasWriter = false
+
+[node name="TradeOrder2" parent="TradeOrders/Madras" unique_id=397533947 instance=ExtResource("4_ub78g")]
+position = Vector2(792, 677)
+tradeOrderStatus = 1
+hasWriter = false
+
+[node name="Madras" parent="." unique_id=976036685 instance=ExtResource("7_nfqf3")]
+z_index = 10
+position = Vector2(792, 568)
+state_name = "Madras"
+
+[node name="SwitchButton" type="Button" parent="." unique_id=1116895022]
+offset_left = 67.0
+offset_top = 850.0
+offset_right = 126.0
+offset_bottom = 881.0
+text = "Switch"
+
+[connection signal="pressed" from="SwitchButton" to="." method="_on_button_pressed"]

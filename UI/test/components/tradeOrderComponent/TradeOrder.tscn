@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://b4mbx70anlblu"]
+
+[ext_resource type="Script" uid="uid://bgy6s566mlcrk" path="res://UI/test/components/tradeOrderComponent/trade_order.gd" id="1_edq46"]
+[ext_resource type="Texture2D" uid="uid://bxnx1apabawde" path="res://UI/test/assets/writer.png" id="2_2r4hk"]
+[ext_resource type="Texture2D" uid="uid://dsqqmf6naqatl" path="res://UI/test/assets/order_closed.png" id="2_joddc"]
+
+[node name="TradeOrder" type="Node2D" unique_id=254993254]
+script = ExtResource("1_edq46")
+hasWriter = null
+
+[node name="ClosedSprite" type="Sprite2D" parent="." unique_id=1094717812]
+position = Vector2(24.559784, 27.463982)
+scale = Vector2(0.20471807, 0.20550336)
+texture = ExtResource("2_joddc")
+
+[node name="WriterSprite" type="Sprite2D" parent="." unique_id=1825442007]
+position = Vector2(23.5, 26.532606)
+scale = Vector2(0.19565217, 0.19565214)
+texture = ExtResource("2_2r4hk")

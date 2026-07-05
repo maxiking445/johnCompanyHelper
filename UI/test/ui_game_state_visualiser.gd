@@ -1,0 +1,96 @@
+@tool
+extends Node2D
+class_name UIGameStateVisualiser
+
+
+@export var game_state: GameState:
+	set(value):
+		game_state = value
+		if is_node_ready() and not _showing_expected:
+			update_components()
+
+@export var expected_game_state: GameState:
+	set(value):
+		expected_game_state = value
+		if is_node_ready() and _showing_expected:
+			update_components()
+
+var _showing_expected := false
+
+
+func _ready() -> void:
+	update_components()
+	update_button_text()
+
+
+func update_components() -> void:
+	update_state_components()
+	update_sea_nodes()
+
+func update_state_components() -> void:
+	var states := _states_by_name()
+	for node in find_children("*", "StateComponent", true, false):
+		var component := node as StateComponent
+		var state_key := component.state_name.strip_edges().to_lower()
+		component.stateModel = states.get(state_key)
+
+
+func update_sea_nodes() -> void:
+	var state := _active_game_state()
+	_update_sea_node("SeaNodes/WestSea", state.seaWest if state != null else null)
+	_update_sea_node("SeaNodes/SouthSea", state.seaSouth if state != null else null)
+	_update_sea_node("SeaNodes/EastSea", state.seaEast if state != null else null)
+
+
+func _update_sea_node(path: NodePath, sea: SeaModel) -> void:
+	var component = get_node_or_null(path)
+	if component == null:
+		return
+
+	var counts := [0, 0, 0, 0] # Extra, Player, Damaged Player, Company
+	if sea != null:
+		for ship in sea.ships:
+			if ship == null:
+				continue
+			if ship.shipType == ShipTypes.ShipType.EXTRA:
+				counts[0] += 1
+			elif ship.shipType == ShipTypes.ShipType.COMPANY:
+				counts[3] += 1
+			elif ship.isFlipped:
+				counts[2] += 1
+			else:
+				counts[1] += 1
+
+	component.set_counts(counts[0], counts[1], counts[2], counts[3])
+
+
+func _states_by_name() -> Dictionary:
+	var state := _active_game_state()
+	if state == null:
+		return {}
+
+	return {
+		"bombay": state.bombay,
+		"madras": state.madras,
+		"hyperbad": state.hyperbad,
+		"punjab": state.punjab,
+		"bengal": state.bengal,
+		"maratha": state.maratha,
+		"delhi": state.delhi,
+		"delih": state.delhi,
+		"mysore": state.mysore,
+	}
+
+
+func _on_button_pressed() -> void:
+	_showing_expected = not _showing_expected
+	update_components()
+	update_button_text()
+
+
+func _active_game_state() -> GameState:
+	return expected_game_state if _showing_expected else game_state
+
+
+func update_button_text() -> void:
+	$SwitchButton.text = "Show Current" if _showing_expected else "Show Expected"
