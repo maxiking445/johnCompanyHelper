@@ -1,17 +1,158 @@
 [gd_scene format=3 uid="uid://dsm4v3e6034yv"]
 
 [ext_resource type="Script" uid="uid://cd7xeg0xatbta" path="res://UI/test/ui_game_state_visualiser.gd" id="1_script"]
-[ext_resource type="Resource" uid="uid://dui214eot1ehw" path="res://test/integration/scenarios/single_turmoil/ExpectedGameState.tres" id="2_h46l8"]
-[ext_resource type="Resource" uid="uid://cbmkbyaqqkluu" path="res://test/integration/scenarios/single_turmoil/StartGameState.tres" id="2_nfqf3"]
+[ext_resource type="Resource" uid="uid://c3l20qglju636" path="res://test/integration/scenarios/full_turmoil/StartGameState.tres" id="2_4jcy5"]
 [ext_resource type="PackedScene" uid="uid://bloc4y5ufoc2j" path="res://UI/test/components/ShipComponent/ShipComponent.tscn" id="3_h46l8"]
+[ext_resource type="Resource" uid="uid://du0kbjp686ktt" path="res://test/integration/scenarios/full_turmoil/ExpectedGameState.tres" id="3_vld4c"]
 [ext_resource type="Texture2D" uid="uid://cya76l5w10q7e" path="res://UI/test/assets/map.jpg" id="3_xqgvp"]
 [ext_resource type="PackedScene" uid="uid://b4mbx70anlblu" path="res://UI/test/components/tradeOrderComponent/TradeOrder.tscn" id="4_ub78g"]
 [ext_resource type="PackedScene" uid="uid://d0o0qukt7ldnc" path="res://UI/test/components/StateComponent/StateComponent.tscn" id="7_nfqf3"]
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="7_ywv2t"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="8_iihx4"]
+
+[sub_resource type="Resource" id="Order_MAD_1"]
+script = ExtResource("7_ywv2t")
+value = 2
+state = 1
+
+[sub_resource type="Resource" id="Order_MAD_2"]
+script = ExtResource("7_ywv2t")
+value = 1
+state = 1
+
+[sub_resource type="Resource" id="State_MAD"]
+script = ExtResource("8_iihx4")
+location = 1
+hasCommander = true
+officers = 2
+troops = 3
+orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_MAD_1"), SubResource("Order_MAD_2")])
+is_connected_to = Array[int]([7, 2])
+
+[sub_resource type="Resource" id="Order_BOM_1"]
+script = ExtResource("7_ywv2t")
+value = 3
+hasWriter = true
+
+[sub_resource type="Resource" id="Order_BOM_2"]
+script = ExtResource("7_ywv2t")
+value = 2
+
+[sub_resource type="Resource" id="Order_BOM_3"]
+script = ExtResource("7_ywv2t")
+value = 1
+
+[sub_resource type="Resource" id="State_BOM"]
+script = ExtResource("8_iihx4")
+unrest_size = 1
+troops = 2
+treasury_size = 3
+orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_BOM_1"), SubResource("Order_BOM_2"), SubResource("Order_BOM_3")])
+is_connected_to = Array[int]([7, 5, 3, 6])
+isCompanyControlled = true
+towerLevel = 1
+
+[sub_resource type="Resource" id="Order_PUN_1"]
+script = ExtResource("7_ywv2t")
+value = 3
+state = 3
+
+[sub_resource type="Resource" id="State_PUN"]
+script = ExtResource("8_iihx4")
+location = 3
+hasGovenor = true
+treasury_size = 2
+orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_PUN_1")])
+is_connected_to = Array[int]([0, 6])
+
+[sub_resource type="Resource" id="Order_DEL_1"]
+script = ExtResource("7_ywv2t")
+value = 3
+state = 6
+
+[sub_resource type="Resource" id="Order_DEL_2"]
+script = ExtResource("7_ywv2t")
+value = 2
+state = 6
+
+[sub_resource type="Resource" id="Order_DEL_3"]
+script = ExtResource("7_ywv2t")
+value = 1
+state = 6
+
+[sub_resource type="Resource" id="State_DEL"]
+script = ExtResource("8_iihx4")
+location = 6
+treasury_size = 4
+orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_DEL_1"), SubResource("Order_DEL_2"), SubResource("Order_DEL_3")])
+is_connected_to = Array[int]([0, 5])
+trophyToken = 1
+
+[sub_resource type="Resource" id="Order_BEN_1"]
+script = ExtResource("7_ywv2t")
+value = 2
+state = 4
+
+[sub_resource type="Resource" id="Order_BEN_2"]
+script = ExtResource("7_ywv2t")
+value = 1
+state = 4
+
+[sub_resource type="Resource" id="State_BEN"]
+script = ExtResource("8_iihx4")
+location = 4
+troops = 2
+exhaustedTroops = 1
+orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_BEN_1"), SubResource("Order_BEN_2")])
+is_connected_to = Array[int]([5])
+
+[sub_resource type="Resource" id="Order_MAR_1"]
+script = ExtResource("7_ywv2t")
+value = 3
+state = 5
+
+[sub_resource type="Resource" id="Order_MAR_2"]
+script = ExtResource("7_ywv2t")
+value = 2
+state = 5
+
+[sub_resource type="Resource" id="Order_MAR_3"]
+script = ExtResource("7_ywv2t")
+value = 1
+state = 5
+
+[sub_resource type="Resource" id="State_MAR"]
+script = ExtResource("8_iihx4")
+location = 5
+officers = 1
+troops = 4
+orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_MAR_1"), SubResource("Order_MAR_2"), SubResource("Order_MAR_3")])
+is_connected_to = Array[int]([0, 6, 4])
+isSovereign = true
+partOfEmpire = 0
+isEmpireCapital = true
+
+[sub_resource type="Resource" id="Order_MYS_1"]
+script = ExtResource("7_ywv2t")
+value = 2
+state = 7
+
+[sub_resource type="Resource" id="Order_MYS_2"]
+script = ExtResource("7_ywv2t")
+value = 1
+state = 7
+
+[sub_resource type="Resource" id="State_MYS"]
+script = ExtResource("8_iihx4")
+location = 7
+unrest_size = 1
+orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_MYS_1"), SubResource("Order_MYS_2")])
+is_connected_to = Array[int]([0, 2, 1])
 
 [node name="UiGameStateVisualiser" type="Node2D" unique_id=339786545]
 script = ExtResource("1_script")
-game_state = ExtResource("2_nfqf3")
-expected_game_state = ExtResource("2_h46l8")
+game_state = ExtResource("2_4jcy5")
+expected_game_state = ExtResource("3_vld4c")
 metadata/_edit_lock_ = true
 
 [node name="Map" type="Sprite2D" parent="." unique_id=132020120]
@@ -24,43 +165,154 @@ metadata/_edit_lock_ = true
 
 [node name="WestSea" parent="SeaNodes" unique_id=1523750226 instance=ExtResource("3_h46l8")]
 position = Vector2(412, 594)
+extra_ships = 1
 
 [node name="SouthSea" parent="SeaNodes" unique_id=1055327166 instance=ExtResource("3_h46l8")]
 position = Vector2(929, 660)
+company_ships = 1
 
 [node name="EastSea" parent="SeaNodes" unique_id=1035367439 instance=ExtResource("3_h46l8")]
 position = Vector2(1040, 429)
-
-[node name="TradeOrders" type="Node2D" parent="." unique_id=131253881]
-
-[node name="Madras" type="Node2D" parent="TradeOrders" unique_id=935517654]
-
-[node name="TradeOrder1" parent="TradeOrders/Madras" unique_id=254993254 instance=ExtResource("4_ub78g")]
-position = Vector2(837, 606)
-tradeOrderStatus = 1
-hasWriter = false
-
-[node name="TradeOrder2" parent="TradeOrders/Madras" unique_id=397533947 instance=ExtResource("4_ub78g")]
-position = Vector2(792, 677)
-tradeOrderStatus = 1
-hasWriter = false
+player_ships = 1
+damaged_player_ships = 1
 
 [node name="Madras" parent="." unique_id=976036685 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(792, 568)
 state_name = "Madras"
+stateModel = SubResource("State_MAD")
+
+[node name="TradeOrder1" parent="Madras" unique_id=254993254 instance=ExtResource("4_ub78g")]
+position = Vector2(45, 38)
+orderModel = SubResource("Order_MAD_1")
+tradeOrderStatus = 1
+
+[node name="TradeOrder2" parent="Madras" unique_id=397533947 instance=ExtResource("4_ub78g")]
+position = Vector2(0, 109)
+orderModel = SubResource("Order_MAD_2")
+tradeOrderStatus = 1
 
 [node name="Bombay" parent="." unique_id=860924127 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(501, 221)
 state_name = "Bombay"
+stateModel = SubResource("State_BOM")
+
+[node name="TradeOrder1" parent="Bombay" unique_id=1149008009 instance=ExtResource("4_ub78g")]
+position = Vector2(49, -70)
+orderModel = SubResource("Order_BOM_1")
+tradeOrderStatus = 1
+
+[node name="TradeOrder2" parent="Bombay" unique_id=1375326550 instance=ExtResource("4_ub78g")]
+position = Vector2(111, 49)
+orderModel = SubResource("Order_BOM_2")
+tradeOrderStatus = 1
+
+[node name="TradeOrder3" parent="Bombay" unique_id=996740099 instance=ExtResource("4_ub78g")]
+position = Vector2(30, 145)
+orderModel = SubResource("Order_BOM_3")
+tradeOrderStatus = 1
+
+[node name="Punjab" parent="." unique_id=320295851 instance=ExtResource("7_nfqf3")]
+z_index = 10
+position = Vector2(424, 33)
+state_name = "Punjab"
+stateModel = SubResource("State_PUN")
+
+[node name="TradeOrder1" parent="Punjab" unique_id=1848986787 instance=ExtResource("4_ub78g")]
+position = Vector2(97, 19)
+orderModel = SubResource("Order_PUN_1")
+tradeOrderStatus = 1
+
+[node name="Delhi" parent="." unique_id=1240419331 instance=ExtResource("7_nfqf3")]
+z_index = 10
+position = Vector2(660, 62)
+state_name = "Delih"
+stateModel = SubResource("State_DEL")
+
+[node name="TradeOrder1" parent="Delhi" unique_id=2059909582 instance=ExtResource("4_ub78g")]
+position = Vector2(60, -22)
+orderModel = SubResource("Order_DEL_1")
+tradeOrderStatus = 1
+
+[node name="TradeOrder2" parent="Delhi" unique_id=2067773317 instance=ExtResource("4_ub78g")]
+position = Vector2(188, 25)
+orderModel = SubResource("Order_DEL_2")
+tradeOrderStatus = 1
+
+[node name="TradeOrder3" parent="Delhi" unique_id=1845676917 instance=ExtResource("4_ub78g")]
+position = Vector2(12, 50)
+orderModel = SubResource("Order_DEL_3")
+tradeOrderStatus = 1
+
+[node name="Bengal" parent="." unique_id=964637510 instance=ExtResource("7_nfqf3")]
+z_index = 10
+position = Vector2(1055, 66)
+state_name = "Bengal"
+stateModel = SubResource("State_BEN")
+
+[node name="TradeOrder1" parent="Bengal" unique_id=2009264296 instance=ExtResource("4_ub78g")]
+position = Vector2(-31, 118)
+orderModel = SubResource("Order_BEN_1")
+tradeOrderStatus = 1
+
+[node name="TradeOrder2" parent="Bengal" unique_id=1204339038 instance=ExtResource("4_ub78g")]
+position = Vector2(111, 206)
+orderModel = SubResource("Order_BEN_2")
+tradeOrderStatus = 1
+
+[node name="Maratha" parent="." unique_id=296362532 instance=ExtResource("7_nfqf3")]
+z_index = 10
+position = Vector2(816, 168)
+state_name = "Maratha"
+stateModel = SubResource("State_MAR")
+
+[node name="TradeOrder1" parent="Maratha" unique_id=1350500739 instance=ExtResource("4_ub78g")]
+position = Vector2(52, 11)
+orderModel = SubResource("Order_MAR_1")
+tradeOrderStatus = 1
+
+[node name="TradeOrder2" parent="Maratha" unique_id=1321096633 instance=ExtResource("4_ub78g")]
+position = Vector2(-90, 112)
+orderModel = SubResource("Order_MAR_2")
+tradeOrderStatus = 1
+
+[node name="TradeOrder3" parent="Maratha" unique_id=1011564923 instance=ExtResource("4_ub78g")]
+position = Vector2(128, 174)
+orderModel = SubResource("Order_MAR_3")
+tradeOrderStatus = 1
+
+[node name="Hyperbad" parent="." unique_id=828023437 instance=ExtResource("7_nfqf3")]
+z_index = 10
+position = Vector2(685, 389)
+state_name = "Hyperbad"
+
+[node name="TradeOrder1" parent="Hyperbad" unique_id=93655973 instance=ExtResource("4_ub78g")]
+position = Vector2(129, 70)
+tradeOrderStatus = 1
+
+[node name="Mysore" parent="." unique_id=2027831930 instance=ExtResource("7_nfqf3")]
+z_index = 10
+position = Vector2(570, 540)
+state_name = "Mysore"
+stateModel = SubResource("State_MYS")
+
+[node name="TradeOrder1" parent="Mysore" unique_id=291754330 instance=ExtResource("4_ub78g")]
+position = Vector2(129, 70)
+orderModel = SubResource("Order_MYS_1")
+tradeOrderStatus = 1
+
+[node name="TradeOrder2" parent="Mysore" unique_id=996947322 instance=ExtResource("4_ub78g")]
+position = Vector2(73, -15)
+orderModel = SubResource("Order_MYS_2")
+tradeOrderStatus = 1
 
 [node name="SwitchButton" type="Button" parent="." unique_id=1116895022]
 offset_left = 67.0
 offset_top = 850.0
 offset_right = 126.0
 offset_bottom = 881.0
-text = "Switch"
+text = "Show Expected"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=203692711]
 offset_left = 23.0
@@ -70,17 +322,45 @@ offset_bottom = 823.0
 
 [node name="EventListDropDown" type="MenuButton" parent="HBoxContainer" unique_id=780277404]
 layout_mode = 2
-text = "Event"
+text = "Windfall"
 switch_on_hover = true
-item_count = 1
+item_count = 7
+popup/item_0/text = "Windfall"
 popup/item_0/id = 0
+popup/item_1/text = "Crisis"
+popup/item_1/id = 1
+popup/item_2/text = "Foreign Invasion"
+popup/item_2/id = 2
+popup/item_3/text = "Leader"
+popup/item_3/id = 3
+popup/item_4/text = "Peace"
+popup/item_4/id = 4
+popup/item_5/text = "Shuffle"
+popup/item_5/id = 5
+popup/item_6/text = "Turmoil"
+popup/item_6/id = 6
 
 [node name="TargetLocationDropDown" type="MenuButton" parent="HBoxContainer" unique_id=636064799]
 layout_mode = 2
-text = "Location"
+text = "BOMBAY"
 switch_on_hover = true
-item_count = 1
+item_count = 8
+popup/item_0/text = "BOMBAY"
 popup/item_0/id = 0
+popup/item_1/text = "MADRAS"
+popup/item_1/id = 1
+popup/item_2/text = "HYPERBAD"
+popup/item_2/id = 2
+popup/item_3/text = "PUNJAB"
+popup/item_3/id = 3
+popup/item_4/text = "BENGAL"
+popup/item_4/id = 4
+popup/item_5/text = "MARATHA"
+popup/item_5/id = 5
+popup/item_6/text = "DELHI"
+popup/item_6/id = 6
+popup/item_7/text = "MYSORE"
+popup/item_7/id = 7
 
 [node name="ExecuteEventButton" type="Button" parent="HBoxContainer" unique_id=713345818]
 layout_mode = 2

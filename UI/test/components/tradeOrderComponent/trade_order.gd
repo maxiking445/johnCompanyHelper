@@ -1,5 +1,13 @@
 @tool
 extends Node2D
+class_name TradeOrderComponent
+
+
+@export var orderModel: OrderModel:
+	set(value):
+		orderModel = value
+		if is_node_ready():
+			updateUI()
 
 
 @export var tradeOrderStatus: EnumTypes.OrderState:
@@ -20,5 +28,14 @@ func _ready() -> void:
 
 
 func updateUI() -> void:
-	$ClosedSprite.visible = tradeOrderStatus == EnumTypes.OrderState.CLOSED
-	$WriterSprite.visible = (hasWriter)
+	if orderModel == null:
+		$ClosedSprite.hide()
+		$WriterSprite.hide()
+		$Label.show()
+		return
+
+	var status := orderModel.orderState if orderModel != null else tradeOrderStatus
+	var writer := orderModel.hasWriter if orderModel != null else hasWriter
+	$ClosedSprite.visible = status == EnumTypes.OrderState.CLOSED
+	$WriterSprite.visible = writer
+	$Label.hide()

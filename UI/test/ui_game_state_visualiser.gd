@@ -36,6 +36,7 @@ func _ready() -> void:
 func update_components() -> void:
 	update_state_components()
 	update_sea_nodes()
+	update_trade_orders()
 
 func update_state_components() -> void:
 	var states := _states_by_name()
@@ -72,6 +73,21 @@ func _update_sea_node(path: NodePath, sea: SeaModel) -> void:
 				counts[1] += 1
 
 	component.set_counts(counts[0], counts[1], counts[2], counts[3])
+
+
+func update_trade_orders() -> void:
+	for node in find_children("*", "StateComponent", true, false):
+		var state_component := node as StateComponent
+		var state := state_component.stateModel
+		var order_index := 0
+		for child in state_component.get_children():
+			if child is not TradeOrderComponent:
+				continue
+			var component := child as TradeOrderComponent
+			var has_order := state != null and order_index < state.orders.size()
+			component.show()
+			component.orderModel = state.orders[order_index] if has_order else null
+			order_index += 1
 
 
 func _states_by_name() -> Dictionary:

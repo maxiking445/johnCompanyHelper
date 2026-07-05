@@ -4,16 +4,26 @@
 [ext_resource type="Texture2D" uid="uid://bxnx1apabawde" path="res://UI/test/assets/writer.png" id="2_2r4hk"]
 [ext_resource type="Texture2D" uid="uid://dsqqmf6naqatl" path="res://UI/test/assets/order_closed.png" id="2_joddc"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_v2ds7"]
+font_color = Color(0.6158353, 0, 0.19025928, 1)
+
 [node name="TradeOrder" type="Node2D" unique_id=254993254]
 script = ExtResource("1_edq46")
-hasWriter = null
 
 [node name="ClosedSprite" type="Sprite2D" parent="." unique_id=1094717812]
+visible = false
 position = Vector2(24.559784, 27.463982)
 scale = Vector2(0.20471807, 0.20550336)
 texture = ExtResource("2_joddc")
 
 [node name="WriterSprite" type="Sprite2D" parent="." unique_id=1825442007]
+visible = false
 position = Vector2(23.5, 26.532606)
 scale = Vector2(0.19565217, 0.19565214)
 texture = ExtResource("2_2r4hk")
+
+[node name="Label" type="Label" parent="." unique_id=691011454]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "ND!"
+label_settings = SubResource("LabelSettings_v2ds7")

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="MainGameIntegrationScenario" format=3 uid="uid://bwbdytwu0onk1"]
+
+[ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_event"]
+[ext_resource type="Script" uid="uid://bg5wa3rxccvni" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="2_scenario"]
+[ext_resource type="Resource" uid="uid://c3l20qglju636" path="res://test/integration/scenarios/full_turmoil/StartGameState.tres" id="3_start"]
+[ext_resource type="Resource" uid="uid://b1xpv34retfi0" path="res://resources/events/turmoil/Turmoil_BOM.tres" id="5_event"]
+
+[sub_resource type="Resource" id="Resource_5s76n"]
+metadata/__load_path__ = "res://test/integration/scenarios/full_turmoil/ExpectedGameState.tres"
+
+[resource]
+script = ExtResource("2_scenario")
+scenario_name = "Full GameState: Turmoil closes Bombay's northernmost order"
+start_game_state = ExtResource("3_start")
+expected_game_state = SubResource("Resource_5s76n")
+event_deck = Array[ExtResource("1_event")]([ExtResource("5_event")])
+location_event = ExtResource("5_event")
