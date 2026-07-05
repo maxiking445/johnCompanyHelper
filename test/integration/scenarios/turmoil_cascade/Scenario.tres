@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MainGameIntegrationScenario" format=3]
+
+[ext_resource type="Script" path="res://models/events/IndiaEvent.gd" id="1_event"]
+[ext_resource type="Script" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="2_scenario"]
+[ext_resource type="Resource" path="res://test/integration/scenarios/turmoil_cascade/StartGameState.tres" id="3_start"]
+[ext_resource type="Resource" path="res://test/integration/scenarios/turmoil_cascade/ExpectedGameState.tres" id="4_expected"]
+[ext_resource type="Resource" path="res://resources/events/turmoil/Turmoil_BOM.tres" id="5_event"]
+
+[resource]
+script = ExtResource("2_scenario")
+scenario_name = "Turmoil cascades from closed Bombay into four neighboring states"
+start_game_state = ExtResource("3_start")
+expected_game_state = ExtResource("4_expected")
+event_deck = Array[ExtResource("1_event")]([ExtResource("5_event")])
+location_event = ExtResource("5_event")

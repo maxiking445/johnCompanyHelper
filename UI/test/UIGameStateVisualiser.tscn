@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dsm4v3e6034yv"]
 
 [ext_resource type="Script" uid="uid://cd7xeg0xatbta" path="res://UI/test/ui_game_state_visualiser.gd" id="1_script"]
-[ext_resource type="Resource" uid="uid://c3l20qglju636" path="res://test/integration/scenarios/full_turmoil/StartGameState.tres" id="2_4jcy5"]
+[ext_resource type="Resource" uid="uid://e7fc4e5o7sdy" path="res://test/integration/scenarios/turmoil_cascade/StartGameState.tres" id="2_4jcy5"]
 [ext_resource type="PackedScene" uid="uid://bloc4y5ufoc2j" path="res://UI/test/components/ShipComponent/ShipComponent.tscn" id="3_h46l8"]
 [ext_resource type="Resource" uid="uid://du0kbjp686ktt" path="res://test/integration/scenarios/full_turmoil/ExpectedGameState.tres" id="3_vld4c"]
 [ext_resource type="Texture2D" uid="uid://cya76l5w10q7e" path="res://UI/test/assets/map.jpg" id="3_xqgvp"]
@@ -10,12 +10,12 @@
 [ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="7_ywv2t"]
 [ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="8_iihx4"]
 
-[sub_resource type="Resource" id="Order_MAD_1"]
+[sub_resource type="Resource" id="MAD_1"]
 script = ExtResource("7_ywv2t")
 value = 2
 state = 1
 
-[sub_resource type="Resource" id="Order_MAD_2"]
+[sub_resource type="Resource" id="MAD_2"]
 script = ExtResource("7_ywv2t")
 value = 1
 state = 1
@@ -26,74 +26,69 @@ location = 1
 hasCommander = true
 officers = 2
 troops = 3
-orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_MAD_1"), SubResource("Order_MAD_2")])
+orders = Array[ExtResource("7_ywv2t")]([SubResource("MAD_1"), SubResource("MAD_2")])
 is_connected_to = Array[int]([7, 2])
 
-[sub_resource type="Resource" id="Order_BOM_1"]
+[sub_resource type="Resource" id="BOM_1"]
 script = ExtResource("7_ywv2t")
+orderState = 1
 value = 3
-hasWriter = true
 
-[sub_resource type="Resource" id="Order_BOM_2"]
+[sub_resource type="Resource" id="BOM_2"]
 script = ExtResource("7_ywv2t")
+orderState = 1
 value = 2
 
-[sub_resource type="Resource" id="Order_BOM_3"]
+[sub_resource type="Resource" id="BOM_3"]
 script = ExtResource("7_ywv2t")
+orderState = 1
 value = 1
 
 [sub_resource type="Resource" id="State_BOM"]
 script = ExtResource("8_iihx4")
-unrest_size = 1
-troops = 2
-treasury_size = 3
-orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_BOM_1"), SubResource("Order_BOM_2"), SubResource("Order_BOM_3")])
+orders = Array[ExtResource("7_ywv2t")]([SubResource("BOM_1"), SubResource("BOM_2"), SubResource("BOM_3")])
 is_connected_to = Array[int]([7, 5, 3, 6])
-isCompanyControlled = true
-towerLevel = 1
 
-[sub_resource type="Resource" id="Order_PUN_1"]
+[sub_resource type="Resource" id="PUN_1"]
 script = ExtResource("7_ywv2t")
-value = 3
+value = 2
 state = 3
+hasWriter = true
 
 [sub_resource type="Resource" id="State_PUN"]
 script = ExtResource("8_iihx4")
 location = 3
-hasGovenor = true
-treasury_size = 2
-orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_PUN_1")])
+orders = Array[ExtResource("7_ywv2t")]([SubResource("PUN_1")])
 is_connected_to = Array[int]([0, 6])
 
-[sub_resource type="Resource" id="Order_DEL_1"]
+[sub_resource type="Resource" id="DEL_1"]
 script = ExtResource("7_ywv2t")
 value = 3
 state = 6
 
-[sub_resource type="Resource" id="Order_DEL_2"]
+[sub_resource type="Resource" id="DEL_2"]
 script = ExtResource("7_ywv2t")
 value = 2
 state = 6
 
-[sub_resource type="Resource" id="Order_DEL_3"]
+[sub_resource type="Resource" id="DEL_3"]
 script = ExtResource("7_ywv2t")
 value = 1
 state = 6
+hasWriter = true
 
 [sub_resource type="Resource" id="State_DEL"]
 script = ExtResource("8_iihx4")
 location = 6
-treasury_size = 4
-orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_DEL_1"), SubResource("Order_DEL_2"), SubResource("Order_DEL_3")])
+orders = Array[ExtResource("7_ywv2t")]([SubResource("DEL_1"), SubResource("DEL_2"), SubResource("DEL_3")])
 is_connected_to = Array[int]([0, 5])
-trophyToken = 1
 
-[sub_resource type="Resource" id="Order_BEN_1"]
+[sub_resource type="Resource" id="BEN_1"]
 script = ExtResource("7_ywv2t")
 value = 2
 state = 4
 
-[sub_resource type="Resource" id="Order_BEN_2"]
+[sub_resource type="Resource" id="BEN_2"]
 script = ExtResource("7_ywv2t")
 value = 1
 state = 4
@@ -103,20 +98,21 @@ script = ExtResource("8_iihx4")
 location = 4
 troops = 2
 exhaustedTroops = 1
-orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_BEN_1"), SubResource("Order_BEN_2")])
+orders = Array[ExtResource("7_ywv2t")]([SubResource("BEN_1"), SubResource("BEN_2")])
 is_connected_to = Array[int]([5])
 
-[sub_resource type="Resource" id="Order_MAR_1"]
+[sub_resource type="Resource" id="MAR_1"]
 script = ExtResource("7_ywv2t")
 value = 3
 state = 5
 
-[sub_resource type="Resource" id="Order_MAR_2"]
+[sub_resource type="Resource" id="MAR_2"]
 script = ExtResource("7_ywv2t")
 value = 2
 state = 5
+hasWriter = true
 
-[sub_resource type="Resource" id="Order_MAR_3"]
+[sub_resource type="Resource" id="MAR_3"]
 script = ExtResource("7_ywv2t")
 value = 1
 state = 5
@@ -124,20 +120,28 @@ state = 5
 [sub_resource type="Resource" id="State_MAR"]
 script = ExtResource("8_iihx4")
 location = 5
-officers = 1
-troops = 4
-orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_MAR_1"), SubResource("Order_MAR_2"), SubResource("Order_MAR_3")])
+orders = Array[ExtResource("7_ywv2t")]([SubResource("MAR_1"), SubResource("MAR_2"), SubResource("MAR_3")])
 is_connected_to = Array[int]([0, 6, 4])
-isSovereign = true
-partOfEmpire = 0
-isEmpireCapital = true
 
-[sub_resource type="Resource" id="Order_MYS_1"]
+[sub_resource type="Resource" id="HYP_1"]
+script = ExtResource("7_ywv2t")
+value = 2
+state = 2
+
+[sub_resource type="Resource" id="State_HYP"]
+script = ExtResource("8_iihx4")
+location = 2
+unrest_size = 2
+orders = Array[ExtResource("7_ywv2t")]([SubResource("HYP_1")])
+is_connected_to = Array[int]([1, 7, 5])
+
+[sub_resource type="Resource" id="MYS_1"]
 script = ExtResource("7_ywv2t")
 value = 2
 state = 7
+hasWriter = true
 
-[sub_resource type="Resource" id="Order_MYS_2"]
+[sub_resource type="Resource" id="MYS_2"]
 script = ExtResource("7_ywv2t")
 value = 1
 state = 7
@@ -145,8 +149,7 @@ state = 7
 [sub_resource type="Resource" id="State_MYS"]
 script = ExtResource("8_iihx4")
 location = 7
-unrest_size = 1
-orders = Array[ExtResource("7_ywv2t")]([SubResource("Order_MYS_1"), SubResource("Order_MYS_2")])
+orders = Array[ExtResource("7_ywv2t")]([SubResource("MYS_1"), SubResource("MYS_2")])
 is_connected_to = Array[int]([0, 2, 1])
 
 [node name="UiGameStateVisualiser" type="Node2D" unique_id=339786545]
@@ -184,12 +187,12 @@ stateModel = SubResource("State_MAD")
 
 [node name="TradeOrder1" parent="Madras" unique_id=254993254 instance=ExtResource("4_ub78g")]
 position = Vector2(45, 38)
-orderModel = SubResource("Order_MAD_1")
+orderModel = SubResource("MAD_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Madras" unique_id=397533947 instance=ExtResource("4_ub78g")]
 position = Vector2(0, 109)
-orderModel = SubResource("Order_MAD_2")
+orderModel = SubResource("MAD_2")
 tradeOrderStatus = 1
 
 [node name="Bombay" parent="." unique_id=860924127 instance=ExtResource("7_nfqf3")]
@@ -200,17 +203,17 @@ stateModel = SubResource("State_BOM")
 
 [node name="TradeOrder1" parent="Bombay" unique_id=1149008009 instance=ExtResource("4_ub78g")]
 position = Vector2(49, -70)
-orderModel = SubResource("Order_BOM_1")
+orderModel = SubResource("BOM_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Bombay" unique_id=1375326550 instance=ExtResource("4_ub78g")]
 position = Vector2(111, 49)
-orderModel = SubResource("Order_BOM_2")
+orderModel = SubResource("BOM_2")
 tradeOrderStatus = 1
 
 [node name="TradeOrder3" parent="Bombay" unique_id=996740099 instance=ExtResource("4_ub78g")]
 position = Vector2(30, 145)
-orderModel = SubResource("Order_BOM_3")
+orderModel = SubResource("BOM_3")
 tradeOrderStatus = 1
 
 [node name="Punjab" parent="." unique_id=320295851 instance=ExtResource("7_nfqf3")]
@@ -221,7 +224,7 @@ stateModel = SubResource("State_PUN")
 
 [node name="TradeOrder1" parent="Punjab" unique_id=1848986787 instance=ExtResource("4_ub78g")]
 position = Vector2(97, 19)
-orderModel = SubResource("Order_PUN_1")
+orderModel = SubResource("PUN_1")
 tradeOrderStatus = 1
 
 [node name="Delhi" parent="." unique_id=1240419331 instance=ExtResource("7_nfqf3")]
@@ -232,17 +235,17 @@ stateModel = SubResource("State_DEL")
 
 [node name="TradeOrder1" parent="Delhi" unique_id=2059909582 instance=ExtResource("4_ub78g")]
 position = Vector2(60, -22)
-orderModel = SubResource("Order_DEL_1")
+orderModel = SubResource("DEL_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Delhi" unique_id=2067773317 instance=ExtResource("4_ub78g")]
 position = Vector2(188, 25)
-orderModel = SubResource("Order_DEL_2")
+orderModel = SubResource("DEL_2")
 tradeOrderStatus = 1
 
 [node name="TradeOrder3" parent="Delhi" unique_id=1845676917 instance=ExtResource("4_ub78g")]
 position = Vector2(12, 50)
-orderModel = SubResource("Order_DEL_3")
+orderModel = SubResource("DEL_3")
 tradeOrderStatus = 1
 
 [node name="Bengal" parent="." unique_id=964637510 instance=ExtResource("7_nfqf3")]
@@ -253,12 +256,12 @@ stateModel = SubResource("State_BEN")
 
 [node name="TradeOrder1" parent="Bengal" unique_id=2009264296 instance=ExtResource("4_ub78g")]
 position = Vector2(-31, 118)
-orderModel = SubResource("Order_BEN_1")
+orderModel = SubResource("BEN_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Bengal" unique_id=1204339038 instance=ExtResource("4_ub78g")]
 position = Vector2(111, 206)
-orderModel = SubResource("Order_BEN_2")
+orderModel = SubResource("BEN_2")
 tradeOrderStatus = 1
 
 [node name="Maratha" parent="." unique_id=296362532 instance=ExtResource("7_nfqf3")]
@@ -269,26 +272,28 @@ stateModel = SubResource("State_MAR")
 
 [node name="TradeOrder1" parent="Maratha" unique_id=1350500739 instance=ExtResource("4_ub78g")]
 position = Vector2(52, 11)
-orderModel = SubResource("Order_MAR_1")
+orderModel = SubResource("MAR_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Maratha" unique_id=1321096633 instance=ExtResource("4_ub78g")]
 position = Vector2(-90, 112)
-orderModel = SubResource("Order_MAR_2")
+orderModel = SubResource("MAR_2")
 tradeOrderStatus = 1
 
 [node name="TradeOrder3" parent="Maratha" unique_id=1011564923 instance=ExtResource("4_ub78g")]
 position = Vector2(128, 174)
-orderModel = SubResource("Order_MAR_3")
+orderModel = SubResource("MAR_3")
 tradeOrderStatus = 1
 
 [node name="Hyperbad" parent="." unique_id=828023437 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(685, 389)
 state_name = "Hyperbad"
+stateModel = SubResource("State_HYP")
 
 [node name="TradeOrder1" parent="Hyperbad" unique_id=93655973 instance=ExtResource("4_ub78g")]
 position = Vector2(129, 70)
+orderModel = SubResource("HYP_1")
 tradeOrderStatus = 1
 
 [node name="Mysore" parent="." unique_id=2027831930 instance=ExtResource("7_nfqf3")]
@@ -299,12 +304,12 @@ stateModel = SubResource("State_MYS")
 
 [node name="TradeOrder1" parent="Mysore" unique_id=291754330 instance=ExtResource("4_ub78g")]
 position = Vector2(129, 70)
-orderModel = SubResource("Order_MYS_1")
+orderModel = SubResource("MYS_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Mysore" unique_id=996947322 instance=ExtResource("4_ub78g")]
 position = Vector2(73, -15)
-orderModel = SubResource("Order_MYS_2")
+orderModel = SubResource("MYS_2")
 tradeOrderStatus = 1
 
 [node name="SwitchButton" type="Button" parent="." unique_id=1116895022]
