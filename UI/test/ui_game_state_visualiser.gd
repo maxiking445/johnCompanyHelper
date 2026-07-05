@@ -2,6 +2,15 @@
 extends Node2D
 class_name UIGameStateVisualiser
 
+const MAIN := preload("res://scenes/main.gd")
+const INDIA_EVENTS: IndiaEvents = preload("res://resources/events/IndiaEvents.tres")
+
+@onready var event_dropdown: MenuButton = $HBoxContainer/EventListDropDown
+@onready var location_dropdown: MenuButton = $HBoxContainer/TargetLocationDropDown
+
+var _events: Array[IndiaEvent] = []
+var _selected_event := 0
+var _selected_location: StateType.StateType = StateType.StateType.BOMBAY
 
 @export var game_state: GameState:
 	set(value):
@@ -19,6 +28,7 @@ var _showing_expected := false
 
 
 func _ready() -> void:
+	_initialize_dropdowns()
 	update_components()
 	update_button_text()
 
@@ -94,3 +104,65 @@ func _active_game_state() -> GameState:
 
 func update_button_text() -> void:
 	$SwitchButton.text = "Show Current" if _showing_expected else "Show Expected"
+
+
+func _on_execute_event_button_pressed() -> void:
+	if game_state == null or _events.is_empty():
+		push_error("Select an event and provide a GameState first.")
+		return
+
+	var main := MAIN.new()
+	var result := main.execute_event(
+		game_state,
+		_events[_selected_event],
+		_selected_location
+	)
+	main.free()
+
+	if result != null:
+		_showing_expected = false
+		game_state = result
+		update_button_text()
+
+
+func _initialize_dropdowns() -> void:
+	var event_popup := event_dropdown.get_popup()
+	var location_popup := location_dropdown.get_popup()
+	event_popup.clear()
+	location_popup.clear()
+	_events.clear()
+
+	var known_event_names := {}
+	for event in INDIA_EVENTS.events:
+		if event == null or known_event_names.has(event.eventName):
+			continue
+		known_event_names[event.eventName] = true
+		_events.append(event)
+		event_popup.add_item(event.eventName, _events.size() - 1)
+
+	for location in StateType.StateType.values():
+		location_popup.add_item(_location_name(location), location)
+
+	if not event_popup.id_pressed.is_connected(_on_event_selected):
+		event_popup.id_pressed.connect(_on_event_selected)
+	if not location_popup.id_pressed.is_connected(_on_location_selected):
+		location_popup.id_pressed.connect(_on_location_selected)
+
+	if not _events.is_empty():
+		_on_event_selected(0)
+	_on_location_selected(StateType.StateType.BOMBAY)
+
+
+func _on_event_selected(id: int) -> void:
+	_selected_event = id
+	event_dropdown.text = _events[id].eventName
+
+
+func _on_location_selected(id: int) -> void:
+	_selected_location = id as StateType.StateType
+	location_dropdown.text = _location_name(id)
+
+
+func _location_name(location: StateType.StateType) -> String:
+	var location_name := StateType.name(location)
+	return "DELHI" if location_name == "DELIH" else location_name

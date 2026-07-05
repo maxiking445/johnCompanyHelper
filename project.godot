@@ -26,7 +26,6 @@ RollHelper="*uid://r52i3x4je7ks"
 RuleManager="*uid://2mqvwogrcldj"
 EventHelper="*uid://bfevtfxx3bcu8"
 EnumType="*uid://c4bbtepcjxhlt"
-EventService="*res://scripts/EventService.gd"
 
 [display]
 

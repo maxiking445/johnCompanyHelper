@@ -45,6 +45,26 @@ func start_test_game(
 	return gameState
 
 
+func execute_event(
+	start_game_state: GameState,
+	event: IndiaEvent,
+	location: StateType.StateType
+) -> GameState:
+	if start_game_state == null or event == null or event.rule == null:
+		push_error("Executing an event needs a GameState and a valid event.")
+		return null
+
+	gameState = start_game_state.duplicate(true)
+	var location_event := IndiaEvent.new()
+	location_event.eventLocation = location
+	EventHelper.draw_pile = [location_event]
+	EventHelper.discard_pile = [event]
+	EventHelper.activeEvent = event
+	event.rule.execute(gameState)
+	EventHelper.eventHandled()
+	return gameState
+
+
 func _resolve_events(target_game_state: GameState, event_count: int) -> void:
 	for event_index in range(event_count):
 		if EventHelper.draw_pile.is_empty():
