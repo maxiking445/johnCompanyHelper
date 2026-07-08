@@ -10,6 +10,7 @@ enum StateType {
 	MARATHA,
 	DELIH,
 	MYSORE,
+	NONE
 }
 
 static func name(state: StateType.StateType) -> String:

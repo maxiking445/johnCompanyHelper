@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://gnmseuqe4pjp" path="res://models/ElephantBorderMarkerModel.gd" id="1_udy00"]
 [ext_resource type="Script" uid="uid://cocpt2un3qt6b" path="res://models/BoardMapModel.gd" id="2_dxx1y"]
+[ext_resource type="Resource" uid="uid://bn8epoj0k3ux6" path="res://resources/tradeOrders/OrderGraph.tres" id="2_t22iq"]
 
 [sub_resource type="Resource" id="Resource_kyeet"]
 script = ExtResource("1_udy00")
@@ -146,4 +147,5 @@ metadata/_custom_type_script = "uid://gnmseuqe4pjp"
 [resource]
 script = ExtResource("2_dxx1y")
 elephantBorderMarker = Array[ExtResource("1_udy00")]([SubResource("Resource_kyeet"), SubResource("Resource_xrfi3"), SubResource("Resource_33pm3"), SubResource("Resource_5erva"), SubResource("Resource_8r8oy"), SubResource("Resource_0234q"), SubResource("Resource_d823m"), SubResource("Resource_cx771"), SubResource("Resource_8vw3s"), SubResource("Resource_o4kwo"), SubResource("Resource_ugcup"), SubResource("Resource_3qp7n"), SubResource("Resource_y8jja"), SubResource("Resource_bffrk"), SubResource("Resource_qnyqw"), SubResource("Resource_gm0m1"), SubResource("Resource_qj4cp"), SubResource("Resource_7pn26"), SubResource("Resource_xjfpb"), SubResource("Resource_udy00"), SubResource("Resource_dxx1y")])
+orderGraph = ExtResource("2_t22iq")
 metadata/_custom_type_script = "uid://cocpt2un3qt6b"

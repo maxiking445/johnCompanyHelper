@@ -13,8 +13,17 @@ func hasMatchingShape(shape: EnumTypes.ElephantMarker)-> bool:
 			matches = true
 	return matches
 
+func isState(askedState: StateType.StateType)-> bool:
+	if state == askedState:
+		return true
+	return false
 
-func getStateThatMatcheShape(shape: EnumTypes.ElephantMarker)-> StateType.StateType:
+func isBorderingState(askedState: StateType.StateType)-> bool:
+	if state_bordering == askedState:
+		return true
+	return false
+
+func getBorderStateThatMatcheShape(shape: EnumTypes.ElephantMarker)-> StateType.StateType:
 	var foundState: StateType.StateType 
 	for marker in shapes:
 		if marker == shape:

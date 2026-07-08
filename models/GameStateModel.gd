@@ -10,7 +10,6 @@ class_name GameState
 @export var delhi: StateModel
 @export var mysore: StateModel
 @export var elephant: ElephantModel
-@export var orderGraph: Resource
 
 @export var companyStanding: int
 
@@ -55,11 +54,6 @@ func findConnectedLocations(location: StateType.StateType)-> Array[StateType.Sta
 	var state: StateModel = findStateByLocation(location)
 	return state.is_connected_to
 
-func findConnectedOrders(order: OrderModel) -> Array[OrderModel]:
-	if orderGraph == null:
-		return []
-
-	return orderGraph.getConnectedOrders(order)
 
 func closeNorthestOrder(location: StateType.StateType):
 	var state: StateModel = findStateByLocation(location)

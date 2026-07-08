@@ -109,12 +109,12 @@ func _close_all_orders(state: StateModel) -> void:
 
 
 func _open_all_orders() -> void:
-	for order in _game_state.orderGraph.orders:
+	for order in BoardMap.boardMap.orderGraph.orders:
 		order.open()
 
 
 func _find_order_by_path(path: String) -> OrderModel:
-	for order in _game_state.orderGraph.orders:
+	for order in BoardMap.boardMap.orderGraph.orders:
 		if order.resource_path == path:
 			return order
 
