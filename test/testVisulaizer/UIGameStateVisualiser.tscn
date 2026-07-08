@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://dsm4v3e6034yv"]
 
-[ext_resource type="Script" uid="uid://cd7xeg0xatbta" path="res://UI/test/ui_game_state_visualiser.gd" id="1_script"]
-[ext_resource type="Resource" uid="uid://e7fc4e5o7sdy" path="res://test/integration/scenarios/turmoil_cascade/StartGameState.tres" id="2_4jcy5"]
-[ext_resource type="PackedScene" uid="uid://bloc4y5ufoc2j" path="res://UI/test/components/ShipComponent/ShipComponent.tscn" id="3_h46l8"]
-[ext_resource type="Resource" uid="uid://du0kbjp686ktt" path="res://test/integration/scenarios/full_turmoil/ExpectedGameState.tres" id="3_vld4c"]
-[ext_resource type="Texture2D" uid="uid://cya76l5w10q7e" path="res://UI/test/assets/map.jpg" id="3_xqgvp"]
-[ext_resource type="PackedScene" uid="uid://b4mbx70anlblu" path="res://UI/test/components/tradeOrderComponent/TradeOrder.tscn" id="4_ub78g"]
-[ext_resource type="PackedScene" uid="uid://d0o0qukt7ldnc" path="res://UI/test/components/StateComponent/StateComponent.tscn" id="7_nfqf3"]
+[ext_resource type="Script" uid="uid://cd7xeg0xatbta" path="res://test/testVisulaizer/ui_game_state_visualiser.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://c8wl8gw0jc1wu" path="res://test/integration/scenarios/full_turmoil_cascade/StartGameState.tres" id="2_4jcy5"]
+[ext_resource type="PackedScene" uid="uid://bloc4y5ufoc2j" path="res://test/testVisulaizer/components/ShipComponent/ShipComponent.tscn" id="3_h46l8"]
+[ext_resource type="Resource" uid="uid://cut5lk4lquwf7" path="res://test/integration/scenarios/full_turmoil_cascade/ExpectedGameState.tres" id="3_vld4c"]
+[ext_resource type="Texture2D" uid="uid://cya76l5w10q7e" path="res://test/testVisulaizer/assets/map.jpg" id="3_xqgvp"]
+[ext_resource type="PackedScene" uid="uid://b4mbx70anlblu" path="res://test/testVisulaizer/components/tradeOrderComponent/TradeOrder.tscn" id="4_ub78g"]
+[ext_resource type="PackedScene" uid="uid://d0o0qukt7ldnc" path="res://test/testVisulaizer/components/StateComponent/StateComponent.tscn" id="7_nfqf3"]
 [ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="7_ywv2t"]
 [ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="8_iihx4"]
 
@@ -23,43 +23,33 @@ state = 1
 [sub_resource type="Resource" id="State_MAD"]
 script = ExtResource("8_iihx4")
 location = 1
-hasCommander = true
-officers = 2
-troops = 3
 orders = Array[ExtResource("7_ywv2t")]([SubResource("MAD_1"), SubResource("MAD_2")])
-is_connected_to = Array[int]([7, 2])
 
 [sub_resource type="Resource" id="BOM_1"]
 script = ExtResource("7_ywv2t")
-orderState = 1
 value = 3
 
 [sub_resource type="Resource" id="BOM_2"]
 script = ExtResource("7_ywv2t")
-orderState = 1
 value = 2
 
 [sub_resource type="Resource" id="BOM_3"]
 script = ExtResource("7_ywv2t")
-orderState = 1
 value = 1
 
 [sub_resource type="Resource" id="State_BOM"]
 script = ExtResource("8_iihx4")
 orders = Array[ExtResource("7_ywv2t")]([SubResource("BOM_1"), SubResource("BOM_2"), SubResource("BOM_3")])
-is_connected_to = Array[int]([7, 5, 3, 6])
 
 [sub_resource type="Resource" id="PUN_1"]
 script = ExtResource("7_ywv2t")
-value = 2
+value = 3
 state = 3
-hasWriter = true
 
 [sub_resource type="Resource" id="State_PUN"]
 script = ExtResource("8_iihx4")
 location = 3
 orders = Array[ExtResource("7_ywv2t")]([SubResource("PUN_1")])
-is_connected_to = Array[int]([0, 6])
 
 [sub_resource type="Resource" id="DEL_1"]
 script = ExtResource("7_ywv2t")
@@ -75,13 +65,11 @@ state = 6
 script = ExtResource("7_ywv2t")
 value = 1
 state = 6
-hasWriter = true
 
 [sub_resource type="Resource" id="State_DEL"]
 script = ExtResource("8_iihx4")
 location = 6
 orders = Array[ExtResource("7_ywv2t")]([SubResource("DEL_1"), SubResource("DEL_2"), SubResource("DEL_3")])
-is_connected_to = Array[int]([0, 5])
 
 [sub_resource type="Resource" id="BEN_1"]
 script = ExtResource("7_ywv2t")
@@ -96,10 +84,7 @@ state = 4
 [sub_resource type="Resource" id="State_BEN"]
 script = ExtResource("8_iihx4")
 location = 4
-troops = 2
-exhaustedTroops = 1
 orders = Array[ExtResource("7_ywv2t")]([SubResource("BEN_1"), SubResource("BEN_2")])
-is_connected_to = Array[int]([5])
 
 [sub_resource type="Resource" id="MAR_1"]
 script = ExtResource("7_ywv2t")
@@ -110,7 +95,6 @@ state = 5
 script = ExtResource("7_ywv2t")
 value = 2
 state = 5
-hasWriter = true
 
 [sub_resource type="Resource" id="MAR_3"]
 script = ExtResource("7_ywv2t")
@@ -121,7 +105,6 @@ state = 5
 script = ExtResource("8_iihx4")
 location = 5
 orders = Array[ExtResource("7_ywv2t")]([SubResource("MAR_1"), SubResource("MAR_2"), SubResource("MAR_3")])
-is_connected_to = Array[int]([0, 6, 4])
 
 [sub_resource type="Resource" id="HYP_1"]
 script = ExtResource("7_ywv2t")
@@ -131,15 +114,12 @@ state = 2
 [sub_resource type="Resource" id="State_HYP"]
 script = ExtResource("8_iihx4")
 location = 2
-unrest_size = 2
 orders = Array[ExtResource("7_ywv2t")]([SubResource("HYP_1")])
-is_connected_to = Array[int]([1, 7, 5])
 
 [sub_resource type="Resource" id="MYS_1"]
 script = ExtResource("7_ywv2t")
 value = 2
 state = 7
-hasWriter = true
 
 [sub_resource type="Resource" id="MYS_2"]
 script = ExtResource("7_ywv2t")
@@ -150,7 +130,6 @@ state = 7
 script = ExtResource("8_iihx4")
 location = 7
 orders = Array[ExtResource("7_ywv2t")]([SubResource("MYS_1"), SubResource("MYS_2")])
-is_connected_to = Array[int]([0, 2, 1])
 
 [node name="UiGameStateVisualiser" type="Node2D" unique_id=339786545]
 script = ExtResource("1_script")
@@ -168,16 +147,12 @@ metadata/_edit_lock_ = true
 
 [node name="WestSea" parent="SeaNodes" unique_id=1523750226 instance=ExtResource("3_h46l8")]
 position = Vector2(412, 594)
-extra_ships = 1
 
 [node name="SouthSea" parent="SeaNodes" unique_id=1055327166 instance=ExtResource("3_h46l8")]
 position = Vector2(929, 660)
-company_ships = 1
 
 [node name="EastSea" parent="SeaNodes" unique_id=1035367439 instance=ExtResource("3_h46l8")]
 position = Vector2(1040, 429)
-player_ships = 1
-damaged_player_ships = 1
 
 [node name="Madras" parent="." unique_id=976036685 instance=ExtResource("7_nfqf3")]
 z_index = 10

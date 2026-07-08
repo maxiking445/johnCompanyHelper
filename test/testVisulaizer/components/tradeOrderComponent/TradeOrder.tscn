@@ -1,26 +1,26 @@
 [gd_scene format=3 uid="uid://b4mbx70anlblu"]
 
-[ext_resource type="Script" uid="uid://bgy6s566mlcrk" path="res://UI/test/components/tradeOrderComponent/trade_order.gd" id="1_edq46"]
-[ext_resource type="Texture2D" uid="uid://bxnx1apabawde" path="res://UI/test/assets/writer.png" id="2_2r4hk"]
-[ext_resource type="Texture2D" uid="uid://dsqqmf6naqatl" path="res://UI/test/assets/order_closed.png" id="2_joddc"]
+[ext_resource type="Script" uid="uid://bgy6s566mlcrk" path="res://test/testVisulaizer/components/tradeOrderComponent/trade_order.gd" id="1_n07co"]
+[ext_resource type="Texture2D" uid="uid://dsqqmf6naqatl" path="res://test/testVisulaizer/assets/order_closed.png" id="2_7njkd"]
+[ext_resource type="Texture2D" uid="uid://bxnx1apabawde" path="res://test/testVisulaizer/assets/writer.png" id="3_4foqs"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_v2ds7"]
 font_color = Color(0.6158353, 0, 0.19025928, 1)
 
 [node name="TradeOrder" type="Node2D" unique_id=254993254]
-script = ExtResource("1_edq46")
+script = ExtResource("1_n07co")
 
 [node name="ClosedSprite" type="Sprite2D" parent="." unique_id=1094717812]
 visible = false
 position = Vector2(24.559784, 27.463982)
 scale = Vector2(0.20471807, 0.20550336)
-texture = ExtResource("2_joddc")
+texture = ExtResource("2_7njkd")
 
 [node name="WriterSprite" type="Sprite2D" parent="." unique_id=1825442007]
 visible = false
 position = Vector2(23.5, 26.532606)
 scale = Vector2(0.19565217, 0.19565214)
-texture = ExtResource("2_2r4hk")
+texture = ExtResource("3_4foqs")
 
 [node name="Label" type="Label" parent="." unique_id=691011454]
 offset_right = 40.0

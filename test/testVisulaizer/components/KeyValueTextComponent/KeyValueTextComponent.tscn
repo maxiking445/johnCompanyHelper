@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://ch02pmyjr1qmh"]
 
-[ext_resource type="Script" uid="uid://p2smj8bve1el" path="res://UI/test/components/KeyValueTextComponent/key_value_text_component.gd" id="1_gd5x2"]
+[ext_resource type="Script" uid="uid://p2smj8bve1el" path="res://test/testVisulaizer/components/KeyValueTextComponent/key_value_text_component.gd" id="1_ig4ep"]
 
 [node name="KeyValueTextComponent" type="Control" unique_id=1286624327]
 layout_mode = 3
 anchors_preset = 0
-script = ExtResource("1_gd5x2")
+script = ExtResource("1_ig4ep")
 data_entries = {
 "TEst": "ste"
 }
