@@ -13,6 +13,12 @@ enum ElephantPlacement {
   	ON_BORDER,
   }
 
+enum ElephantMarker {
+  	SQUARE,
+  	CIRCLE,
+	RECTANGLE
+  }
+
 
 enum Empires {
   	A,
