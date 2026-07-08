@@ -16,7 +16,7 @@ enum ElephantPlacement {
 enum ElephantMarker {
   	SQUARE,
   	CIRCLE,
-	RECTANGLE
+	TRIANGLE
   }
 
 

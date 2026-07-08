@@ -130,7 +130,20 @@ state = 4
 state_bordering = 5
 metadata/_custom_type_script = "uid://gnmseuqe4pjp"
 
+[sub_resource type="Resource" id="Resource_udy00"]
+script = ExtResource("1_udy00")
+shapes = Array[int]([2, 1])
+state = 3
+metadata/_custom_type_script = "uid://gnmseuqe4pjp"
+
+[sub_resource type="Resource" id="Resource_dxx1y"]
+script = ExtResource("1_udy00")
+shapes = Array[int]([0])
+state = 3
+state_bordering = 6
+metadata/_custom_type_script = "uid://gnmseuqe4pjp"
+
 [resource]
 script = ExtResource("2_dxx1y")
-elephantBorderMarker = Array[ExtResource("1_udy00")]([SubResource("Resource_kyeet"), SubResource("Resource_xrfi3"), SubResource("Resource_33pm3"), SubResource("Resource_5erva"), SubResource("Resource_8r8oy"), SubResource("Resource_0234q"), SubResource("Resource_d823m"), SubResource("Resource_cx771"), SubResource("Resource_8vw3s"), SubResource("Resource_o4kwo"), SubResource("Resource_ugcup"), SubResource("Resource_3qp7n"), SubResource("Resource_y8jja"), SubResource("Resource_bffrk"), SubResource("Resource_qnyqw"), SubResource("Resource_gm0m1"), SubResource("Resource_qj4cp"), SubResource("Resource_7pn26"), SubResource("Resource_xjfpb")])
+elephantBorderMarker = Array[ExtResource("1_udy00")]([SubResource("Resource_kyeet"), SubResource("Resource_xrfi3"), SubResource("Resource_33pm3"), SubResource("Resource_5erva"), SubResource("Resource_8r8oy"), SubResource("Resource_0234q"), SubResource("Resource_d823m"), SubResource("Resource_cx771"), SubResource("Resource_8vw3s"), SubResource("Resource_o4kwo"), SubResource("Resource_ugcup"), SubResource("Resource_3qp7n"), SubResource("Resource_y8jja"), SubResource("Resource_bffrk"), SubResource("Resource_qnyqw"), SubResource("Resource_gm0m1"), SubResource("Resource_qj4cp"), SubResource("Resource_7pn26"), SubResource("Resource_xjfpb"), SubResource("Resource_udy00"), SubResource("Resource_dxx1y")])
 metadata/_custom_type_script = "uid://cocpt2un3qt6b"
