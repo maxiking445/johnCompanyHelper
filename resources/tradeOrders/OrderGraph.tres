@@ -2,126 +2,107 @@
 
 [ext_resource type="Script" uid="uid://c7ifbg0iuknuv" path="res://models/OrderGraphModel.gd" id="1_graph"]
 [ext_resource type="Script" uid="uid://dn2w2kplygb6h" path="res://models/OrderConnectionModel.gd" id="2_connection"]
-[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="3_order_script"]
-[ext_resource type="Resource" uid="uid://b5ad23dcyernq" path="res://resources/tradeOrders/BENG_ORDER_1.tres" id="order_1"]
-[ext_resource type="Resource" uid="uid://bdnowg3v32ici" path="res://resources/tradeOrders/BENG_ORDER_2.tres" id="order_2"]
-[ext_resource type="Resource" uid="uid://brmu0lkji3dr" path="res://resources/tradeOrders/BOMBAY_ORDER_1.tres" id="order_3"]
-[ext_resource type="Resource" uid="uid://c70ipgcd663i7" path="res://resources/tradeOrders/BOMBAY_ORDER_2.tres" id="order_4"]
-[ext_resource type="Resource" uid="uid://54rwf8hqh5lb" path="res://resources/tradeOrders/BOMBAY_ORDER_3.tres" id="order_5"]
-[ext_resource type="Resource" uid="uid://dc5cnf0bm3gvj" path="res://resources/tradeOrders/DELIH_ORDER_1.tres" id="order_6"]
-[ext_resource type="Resource" uid="uid://j8f8i8je78fu" path="res://resources/tradeOrders/DELIH_ORDER_2.tres" id="order_7"]
-[ext_resource type="Resource" uid="uid://ygclvw16of1n" path="res://resources/tradeOrders/DELIH_ORDER_3.tres" id="order_8"]
-[ext_resource type="Resource" uid="uid://uq6jqi233k4e" path="res://resources/tradeOrders/HYPERBAD_ORDER_1.tres" id="order_9"]
-[ext_resource type="Resource" uid="uid://on1y52ki8606" path="res://resources/tradeOrders/MADRAS_ORDER_1.tres" id="order_10"]
-[ext_resource type="Resource" uid="uid://giop2bet24se" path="res://resources/tradeOrders/MADRAS_ORDER_2.tres" id="order_11"]
-[ext_resource type="Resource" uid="uid://jn264xi85olj" path="res://resources/tradeOrders/MARATHA_ORDER_1.tres" id="order_12"]
-[ext_resource type="Resource" uid="uid://dd43x8yrc72kb" path="res://resources/tradeOrders/MARATHA_ORDER_2.tres" id="order_13"]
-[ext_resource type="Resource" uid="uid://dnjapsidh5jkv" path="res://resources/tradeOrders/MARATHA_ORDER_3.tres" id="order_14"]
-[ext_resource type="Resource" uid="uid://dv3s585mqnslw" path="res://resources/tradeOrders/MYSORE_ORDER_1.tres" id="order_15"]
-[ext_resource type="Resource" uid="uid://df4h6uj7rf1cv" path="res://resources/tradeOrders/MYSORE_ORDER_2.tres" id="order_16"]
-[ext_resource type="Resource" uid="uid://cgsckpiqw85h7" path="res://resources/tradeOrders/PUNJAB_ORDER_1.tres" id="order_17"]
 
 [sub_resource type="Resource" id="Connection_1"]
 script = ExtResource("2_connection")
-from = ExtResource("order_1")
-to = ExtResource("order_2")
+from_id = &"BEN_1"
+to_id = &"BEN_2"
 
 [sub_resource type="Resource" id="Connection_2"]
 script = ExtResource("2_connection")
-from = ExtResource("order_1")
-to = ExtResource("order_12")
+from_id = &"BEN_1"
+to_id = &"MAR_1"
 
 [sub_resource type="Resource" id="Connection_3"]
 script = ExtResource("2_connection")
-from = ExtResource("order_1")
-to = ExtResource("order_14")
+from_id = &"BEN_1"
+to_id = &"MAR_3"
 
 [sub_resource type="Resource" id="Connection_4"]
 script = ExtResource("2_connection")
-from = ExtResource("order_3")
-to = ExtResource("order_8")
+from_id = &"BOM_1"
+to_id = &"DEL_3"
 
 [sub_resource type="Resource" id="Connection_5"]
 script = ExtResource("2_connection")
-from = ExtResource("order_3")
-to = ExtResource("order_5")
+from_id = &"BOM_1"
+to_id = &"BOM_3"
 
 [sub_resource type="Resource" id="Connection_6"]
 script = ExtResource("2_connection")
-from = ExtResource("order_4")
-to = ExtResource("order_5")
+from_id = &"BOM_2"
+to_id = &"BOM_3"
 
 [sub_resource type="Resource" id="Connection_7"]
 script = ExtResource("2_connection")
-from = ExtResource("order_4")
-to = ExtResource("order_13")
+from_id = &"BOM_2"
+to_id = &"MAR_2"
 
 [sub_resource type="Resource" id="Connection_8"]
 script = ExtResource("2_connection")
-from = ExtResource("order_5")
-to = ExtResource("order_15")
+from_id = &"BOM_3"
+to_id = &"MYS_1"
 
 [sub_resource type="Resource" id="Connection_9"]
 script = ExtResource("2_connection")
-from = ExtResource("order_6")
-to = ExtResource("order_17")
+from_id = &"DEL_1"
+to_id = &"PUN_1"
 
 [sub_resource type="Resource" id="Connection_10"]
 script = ExtResource("2_connection")
-from = ExtResource("order_6")
-to = ExtResource("order_8")
+from_id = &"DEL_1"
+to_id = &"DEL_3"
 
 [sub_resource type="Resource" id="Connection_11"]
 script = ExtResource("2_connection")
-from = ExtResource("order_7")
-to = ExtResource("order_12")
+from_id = &"DEL_2"
+to_id = &"MAR_1"
 
 [sub_resource type="Resource" id="Connection_12"]
 script = ExtResource("2_connection")
-from = ExtResource("order_7")
-to = ExtResource("order_8")
+from_id = &"DEL_2"
+to_id = &"DEL_3"
 
 [sub_resource type="Resource" id="Connection_13"]
 script = ExtResource("2_connection")
-from = ExtResource("order_9")
-to = ExtResource("order_14")
+from_id = &"HYP_1"
+to_id = &"MAR_3"
 
 [sub_resource type="Resource" id="Connection_14"]
 script = ExtResource("2_connection")
-from = ExtResource("order_9")
-to = ExtResource("order_10")
+from_id = &"HYP_1"
+to_id = &"MAD_1"
 
 [sub_resource type="Resource" id="Connection_15"]
 script = ExtResource("2_connection")
-from = ExtResource("order_9")
-to = ExtResource("order_16")
+from_id = &"HYP_1"
+to_id = &"MYS_2"
 
 [sub_resource type="Resource" id="Connection_16"]
 script = ExtResource("2_connection")
-from = ExtResource("order_10")
-to = ExtResource("order_11")
+from_id = &"MAD_1"
+to_id = &"MAD_2"
 
 [sub_resource type="Resource" id="Connection_17"]
 script = ExtResource("2_connection")
-from = ExtResource("order_11")
-to = ExtResource("order_16")
+from_id = &"MAD_2"
+to_id = &"MYS_2"
 
 [sub_resource type="Resource" id="Connection_18"]
 script = ExtResource("2_connection")
-from = ExtResource("order_13")
-to = ExtResource("order_14")
+from_id = &"MAR_2"
+to_id = &"MAR_3"
 
 [sub_resource type="Resource" id="Connection_19"]
 script = ExtResource("2_connection")
-from = ExtResource("order_15")
-to = ExtResource("order_16")
+from_id = &"MYS_1"
+to_id = &"MYS_2"
 
 [sub_resource type="Resource" id="Connection_20"]
 script = ExtResource("2_connection")
-from = ExtResource("order_17")
-to = ExtResource("order_3")
+from_id = &"PUN_1"
+to_id = &"BOM_1"
 
 [resource]
 script = ExtResource("1_graph")
-orders = Array[ExtResource("3_order_script")]([ExtResource("order_1"), ExtResource("order_2"), ExtResource("order_3"), ExtResource("order_4"), ExtResource("order_5"), ExtResource("order_6"), ExtResource("order_7"), ExtResource("order_8"), ExtResource("order_9"), ExtResource("order_10"), ExtResource("order_11"), ExtResource("order_12"), ExtResource("order_13"), ExtResource("order_14"), ExtResource("order_15"), ExtResource("order_16"), ExtResource("order_17")])
 connections = Array[Resource]([SubResource("Connection_1"), SubResource("Connection_2"), SubResource("Connection_3"), SubResource("Connection_4"), SubResource("Connection_5"), SubResource("Connection_6"), SubResource("Connection_7"), SubResource("Connection_8"), SubResource("Connection_9"), SubResource("Connection_10"), SubResource("Connection_11"), SubResource("Connection_12"), SubResource("Connection_13"), SubResource("Connection_14"), SubResource("Connection_15"), SubResource("Connection_16"), SubResource("Connection_17"), SubResource("Connection_18"), SubResource("Connection_19"), SubResource("Connection_20")])

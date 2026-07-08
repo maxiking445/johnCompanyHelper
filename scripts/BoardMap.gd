@@ -4,11 +4,11 @@ const boardMap: BoardMapModel = preload("res://resources/boardMap.tres")
 
 
 
-func findConnectedOrders(order: OrderModel) -> Array[OrderModel]:
+func findConnectedOrderIds(order_id: StringName) -> Array[StringName]:
 	if boardMap.orderGraph == null:
 		return []
 
-	return boardMap.orderGraph.getConnectedOrders(order)
+	return boardMap.orderGraph.getConnectedOrderIds(order_id)
 
 
 func findTheStateWhichTheElephantWillBorderWith(state: StateType.StateType, shape: EnumTypes.ElephantMarker) -> StateType.StateType:

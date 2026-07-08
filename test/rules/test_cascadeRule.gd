@@ -27,10 +27,10 @@ func test_execute_location_closes_next_open_order_when_location_has_open_orders(
 
 func test_execute_location_cascades_to_connected_orders_when_location_is_closed() -> void:
 	_close_all_orders(_game_state.bombay)
-	var delhi_order := _find_order_by_path("res://resources/tradeOrders/DELIH_ORDER_3.tres")
-	var punjab_order := _find_order_by_path("res://resources/tradeOrders/PUNJAB_ORDER_1.tres")
-	var maratha_order := _find_order_by_path("res://resources/tradeOrders/MARATHA_ORDER_2.tres")
-	var mysore_order := _find_order_by_path("res://resources/tradeOrders/MYSORE_ORDER_1.tres")
+	var delhi_order := _game_state.findOrderById(&"DEL_3")
+	var punjab_order := _game_state.findOrderById(&"PUN_1")
+	var maratha_order := _game_state.findOrderById(&"MAR_2")
+	var mysore_order := _game_state.findOrderById(&"MYS_1")
 
 	_rule.execute_location(_game_state, StateType.StateType.BOMBAY)
 
@@ -47,13 +47,6 @@ func _close_all_orders(state: StateModel) -> void:
 
 
 func _open_all_orders() -> void:
-	for order in BoardMap.boardMap.orderGraph.orders:
-		order.open()
-
-
-func _find_order_by_path(path: String) -> OrderModel:
-	for order in BoardMap.boardMap.orderGraph.orders:
-		if order.resource_path == path:
-			return order
-
-	return null
+	for state in _game_state.getStates():
+		for order in state.orders:
+			order.open()

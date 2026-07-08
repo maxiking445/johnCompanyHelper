@@ -11,11 +11,13 @@
 
 [sub_resource type="Resource" id="BEN_1"]
 script = ExtResource("3_order")
+id = &"BEN_1"
 value = 2
 state = 4
 
 [sub_resource type="Resource" id="BEN_2"]
 script = ExtResource("3_order")
+id = &"BEN_2"
 value = 1
 state = 4
 
@@ -29,16 +31,19 @@ is_connected_to = Array[int]([5])
 
 [sub_resource type="Resource" id="BOM_1"]
 script = ExtResource("3_order")
+id = &"BOM_1"
 orderState = 1
 value = 3
 
 [sub_resource type="Resource" id="BOM_2"]
 script = ExtResource("3_order")
+id = &"BOM_2"
 orderState = 1
 value = 2
 
 [sub_resource type="Resource" id="BOM_3"]
 script = ExtResource("3_order")
+id = &"BOM_3"
 orderState = 1
 value = 1
 
@@ -49,16 +54,19 @@ is_connected_to = Array[int]([7, 5, 3, 6])
 
 [sub_resource type="Resource" id="DEL_1"]
 script = ExtResource("3_order")
+id = &"DEL_1"
 value = 3
 state = 6
 
 [sub_resource type="Resource" id="DEL_2"]
 script = ExtResource("3_order")
+id = &"DEL_2"
 value = 2
 state = 6
 
 [sub_resource type="Resource" id="DEL_3"]
 script = ExtResource("3_order")
+id = &"DEL_3"
 value = 1
 state = 6
 hasWriter = true
@@ -75,6 +83,7 @@ current_state = 1
 
 [sub_resource type="Resource" id="HYP_1"]
 script = ExtResource("3_order")
+id = &"HYP_1"
 value = 2
 state = 2
 
@@ -87,11 +96,13 @@ is_connected_to = Array[int]([1, 7, 5])
 
 [sub_resource type="Resource" id="MAD_1"]
 script = ExtResource("3_order")
+id = &"MAD_1"
 value = 2
 state = 1
 
 [sub_resource type="Resource" id="MAD_2"]
 script = ExtResource("3_order")
+id = &"MAD_2"
 value = 1
 state = 1
 
@@ -106,17 +117,20 @@ is_connected_to = Array[int]([7, 2])
 
 [sub_resource type="Resource" id="MAR_1"]
 script = ExtResource("3_order")
+id = &"MAR_1"
 value = 3
 state = 5
 
 [sub_resource type="Resource" id="MAR_2"]
 script = ExtResource("3_order")
+id = &"MAR_2"
 value = 2
 state = 5
 hasWriter = true
 
 [sub_resource type="Resource" id="MAR_3"]
 script = ExtResource("3_order")
+id = &"MAR_3"
 value = 1
 state = 5
 
@@ -128,12 +142,14 @@ is_connected_to = Array[int]([0, 6, 4])
 
 [sub_resource type="Resource" id="MYS_1"]
 script = ExtResource("3_order")
+id = &"MYS_1"
 value = 2
 state = 7
 hasWriter = true
 
 [sub_resource type="Resource" id="MYS_2"]
 script = ExtResource("3_order")
+id = &"MYS_2"
 value = 1
 state = 7
 
@@ -145,39 +161,40 @@ is_connected_to = Array[int]([0, 2, 1])
 
 [sub_resource type="Resource" id="Connection_BOM1_DEL3"]
 script = ExtResource("5_connection")
-from = SubResource("BOM_1")
-to = SubResource("DEL_3")
+from_id = &"BOM_1"
+to_id = &"DEL_3"
 
 [sub_resource type="Resource" id="Connection_BOM1_BOM3"]
 script = ExtResource("5_connection")
-from = SubResource("BOM_1")
-to = SubResource("BOM_3")
+from_id = &"BOM_1"
+to_id = &"BOM_3"
 
 [sub_resource type="Resource" id="PUN_1"]
 script = ExtResource("3_order")
+id = &"PUN_1"
 value = 2
 state = 3
 hasWriter = true
 
 [sub_resource type="Resource" id="Connection_BOM1_PUN1"]
 script = ExtResource("5_connection")
-from = SubResource("BOM_1")
-to = SubResource("PUN_1")
+from_id = &"BOM_1"
+to_id = &"PUN_1"
 
 [sub_resource type="Resource" id="Connection_BOM2_BOM3"]
 script = ExtResource("5_connection")
-from = SubResource("BOM_2")
-to = SubResource("BOM_3")
+from_id = &"BOM_2"
+to_id = &"BOM_3"
 
 [sub_resource type="Resource" id="Connection_BOM2_MAR2"]
 script = ExtResource("5_connection")
-from = SubResource("BOM_2")
-to = SubResource("MAR_2")
+from_id = &"BOM_2"
+to_id = &"MAR_2"
 
 [sub_resource type="Resource" id="Connection_BOM3_MYS1"]
 script = ExtResource("5_connection")
-from = SubResource("BOM_3")
-to = SubResource("MYS_1")
+from_id = &"BOM_3"
+to_id = &"MYS_1"
 
 [sub_resource type="Resource" id="OrderGraph"]
 script = ExtResource("4_graph")

@@ -4,5 +4,6 @@
 
 [resource]
 script = ExtResource("1_order")
+id = &"HYP_1"
 state = 2
 metadata/_custom_type_script = "uid://crcm1hwm5d582"

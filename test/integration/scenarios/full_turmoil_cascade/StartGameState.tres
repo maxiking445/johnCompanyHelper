@@ -8,11 +8,13 @@
 
 [sub_resource type="Resource" id="BEN_1"]
 script = ExtResource("3_order")
+id = &"BEN_1"
 value = 2
 state = 4
 
 [sub_resource type="Resource" id="BEN_2"]
 script = ExtResource("3_order")
+id = &"BEN_2"
 value = 1
 state = 4
 
@@ -23,14 +25,17 @@ orders = Array[ExtResource("3_order")]([SubResource("BEN_1"), SubResource("BEN_2
 
 [sub_resource type="Resource" id="BOM_1"]
 script = ExtResource("3_order")
+id = &"BOM_1"
 value = 3
 
 [sub_resource type="Resource" id="BOM_2"]
 script = ExtResource("3_order")
+id = &"BOM_2"
 value = 2
 
 [sub_resource type="Resource" id="BOM_3"]
 script = ExtResource("3_order")
+id = &"BOM_3"
 value = 1
 
 [sub_resource type="Resource" id="State_BOM"]
@@ -39,16 +44,19 @@ orders = Array[ExtResource("3_order")]([SubResource("BOM_1"), SubResource("BOM_2
 
 [sub_resource type="Resource" id="DEL_1"]
 script = ExtResource("3_order")
+id = &"DEL_1"
 value = 3
 state = 6
 
 [sub_resource type="Resource" id="DEL_2"]
 script = ExtResource("3_order")
+id = &"DEL_2"
 value = 2
 state = 6
 
 [sub_resource type="Resource" id="DEL_3"]
 script = ExtResource("3_order")
+id = &"DEL_3"
 value = 1
 state = 6
 
@@ -59,6 +67,7 @@ orders = Array[ExtResource("3_order")]([SubResource("DEL_1"), SubResource("DEL_2
 
 [sub_resource type="Resource" id="HYP_1"]
 script = ExtResource("3_order")
+id = &"HYP_1"
 value = 2
 state = 2
 
@@ -69,11 +78,13 @@ orders = Array[ExtResource("3_order")]([SubResource("HYP_1")])
 
 [sub_resource type="Resource" id="MAD_1"]
 script = ExtResource("3_order")
+id = &"MAD_1"
 value = 2
 state = 1
 
 [sub_resource type="Resource" id="MAD_2"]
 script = ExtResource("3_order")
+id = &"MAD_2"
 value = 1
 state = 1
 
@@ -84,16 +95,19 @@ orders = Array[ExtResource("3_order")]([SubResource("MAD_1"), SubResource("MAD_2
 
 [sub_resource type="Resource" id="MAR_1"]
 script = ExtResource("3_order")
+id = &"MAR_1"
 value = 3
 state = 5
 
 [sub_resource type="Resource" id="MAR_2"]
 script = ExtResource("3_order")
+id = &"MAR_2"
 value = 2
 state = 5
 
 [sub_resource type="Resource" id="MAR_3"]
 script = ExtResource("3_order")
+id = &"MAR_3"
 value = 1
 state = 5
 
@@ -104,11 +118,13 @@ orders = Array[ExtResource("3_order")]([SubResource("MAR_1"), SubResource("MAR_2
 
 [sub_resource type="Resource" id="MYS_1"]
 script = ExtResource("3_order")
+id = &"MYS_1"
 value = 2
 state = 7
 
 [sub_resource type="Resource" id="MYS_2"]
 script = ExtResource("3_order")
+id = &"MYS_2"
 value = 1
 state = 7
 
@@ -119,108 +135,109 @@ orders = Array[ExtResource("3_order")]([SubResource("MYS_1"), SubResource("MYS_2
 
 [sub_resource type="Resource" id="Connection_1"]
 script = ExtResource("5_connection")
-from = SubResource("BEN_1")
-to = SubResource("BEN_2")
+from_id = &"BEN_1"
+to_id = &"BEN_2"
 
 [sub_resource type="Resource" id="Connection_2"]
 script = ExtResource("5_connection")
-from = SubResource("BEN_1")
-to = SubResource("MAR_1")
+from_id = &"BEN_1"
+to_id = &"MAR_1"
 
 [sub_resource type="Resource" id="Connection_3"]
 script = ExtResource("5_connection")
-from = SubResource("BEN_1")
-to = SubResource("MAR_3")
+from_id = &"BEN_1"
+to_id = &"MAR_3"
 
 [sub_resource type="Resource" id="Connection_4"]
 script = ExtResource("5_connection")
-from = SubResource("BOM_1")
-to = SubResource("DEL_3")
+from_id = &"BOM_1"
+to_id = &"DEL_3"
 
 [sub_resource type="Resource" id="Connection_5"]
 script = ExtResource("5_connection")
-from = SubResource("BOM_1")
-to = SubResource("BOM_3")
+from_id = &"BOM_1"
+to_id = &"BOM_3"
 
 [sub_resource type="Resource" id="Connection_6"]
 script = ExtResource("5_connection")
-from = SubResource("BOM_2")
-to = SubResource("BOM_3")
+from_id = &"BOM_2"
+to_id = &"BOM_3"
 
 [sub_resource type="Resource" id="Connection_7"]
 script = ExtResource("5_connection")
-from = SubResource("BOM_2")
-to = SubResource("MAR_2")
+from_id = &"BOM_2"
+to_id = &"MAR_2"
 
 [sub_resource type="Resource" id="Connection_8"]
 script = ExtResource("5_connection")
-from = SubResource("BOM_3")
-to = SubResource("MYS_1")
+from_id = &"BOM_3"
+to_id = &"MYS_1"
 
 [sub_resource type="Resource" id="PUN_1"]
 script = ExtResource("3_order")
+id = &"PUN_1"
 value = 3
 state = 3
 
 [sub_resource type="Resource" id="Connection_9"]
 script = ExtResource("5_connection")
-from = SubResource("DEL_1")
-to = SubResource("PUN_1")
+from_id = &"DEL_1"
+to_id = &"PUN_1"
 
 [sub_resource type="Resource" id="Connection_10"]
 script = ExtResource("5_connection")
-from = SubResource("DEL_1")
-to = SubResource("DEL_3")
+from_id = &"DEL_1"
+to_id = &"DEL_3"
 
 [sub_resource type="Resource" id="Connection_11"]
 script = ExtResource("5_connection")
-from = SubResource("DEL_2")
-to = SubResource("MAR_1")
+from_id = &"DEL_2"
+to_id = &"MAR_1"
 
 [sub_resource type="Resource" id="Connection_12"]
 script = ExtResource("5_connection")
-from = SubResource("DEL_2")
-to = SubResource("DEL_3")
+from_id = &"DEL_2"
+to_id = &"DEL_3"
 
 [sub_resource type="Resource" id="Connection_13"]
 script = ExtResource("5_connection")
-from = SubResource("HYP_1")
-to = SubResource("MAR_3")
+from_id = &"HYP_1"
+to_id = &"MAR_3"
 
 [sub_resource type="Resource" id="Connection_14"]
 script = ExtResource("5_connection")
-from = SubResource("HYP_1")
-to = SubResource("MAD_1")
+from_id = &"HYP_1"
+to_id = &"MAD_1"
 
 [sub_resource type="Resource" id="Connection_15"]
 script = ExtResource("5_connection")
-from = SubResource("HYP_1")
-to = SubResource("MYS_2")
+from_id = &"HYP_1"
+to_id = &"MYS_2"
 
 [sub_resource type="Resource" id="Connection_16"]
 script = ExtResource("5_connection")
-from = SubResource("MAD_1")
-to = SubResource("MAD_2")
+from_id = &"MAD_1"
+to_id = &"MAD_2"
 
 [sub_resource type="Resource" id="Connection_17"]
 script = ExtResource("5_connection")
-from = SubResource("MAD_2")
-to = SubResource("MYS_2")
+from_id = &"MAD_2"
+to_id = &"MYS_2"
 
 [sub_resource type="Resource" id="Connection_18"]
 script = ExtResource("5_connection")
-from = SubResource("MAR_2")
-to = SubResource("MAR_3")
+from_id = &"MAR_2"
+to_id = &"MAR_3"
 
 [sub_resource type="Resource" id="Connection_19"]
 script = ExtResource("5_connection")
-from = SubResource("MYS_1")
-to = SubResource("MYS_2")
+from_id = &"MYS_1"
+to_id = &"MYS_2"
 
 [sub_resource type="Resource" id="Connection_20"]
 script = ExtResource("5_connection")
-from = SubResource("PUN_1")
-to = SubResource("BOM_1")
+from_id = &"PUN_1"
+to_id = &"BOM_1"
 
 [sub_resource type="Resource" id="OrderGraph"]
 script = ExtResource("4_graph")

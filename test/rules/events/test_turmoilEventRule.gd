@@ -47,9 +47,9 @@ func test_execute_closes_next_open_order_when_first_order_is_already_closed() ->
 
 
 func test_execute_does_not_cascade_when_event_location_still_has_open_orders() -> void:
-	var delhi_order := _find_order_by_path("res://resources/tradeOrders/DELIH_ORDER_3.tres")
-	var punjab_order := _find_order_by_path("res://resources/tradeOrders/PUNJAB_ORDER_1.tres")
-	var mysore_order := _find_order_by_path("res://resources/tradeOrders/MYSORE_ORDER_1.tres")
+	var delhi_order := _game_state.findOrderById(&"DEL_3")
+	var punjab_order := _game_state.findOrderById(&"PUN_1")
+	var mysore_order := _game_state.findOrderById(&"MYS_1")
 
 	_rule.execute(_game_state)
 
@@ -61,10 +61,10 @@ func test_execute_does_not_cascade_when_event_location_still_has_open_orders() -
 func test_execute_cascades_to_connected_region_orders_when_location_is_already_closed() -> void:
 	_close_all_orders(_game_state.bombay)
 
-	var delhi_order := _find_order_by_path("res://resources/tradeOrders/DELIH_ORDER_3.tres")
-	var punjab_order := _find_order_by_path("res://resources/tradeOrders/PUNJAB_ORDER_1.tres")
-	var maratha_order := _find_order_by_path("res://resources/tradeOrders/MARATHA_ORDER_2.tres")
-	var mysore_order := _find_order_by_path("res://resources/tradeOrders/MYSORE_ORDER_1.tres")
+	var delhi_order := _game_state.findOrderById(&"DEL_3")
+	var punjab_order := _game_state.findOrderById(&"PUN_1")
+	var maratha_order := _game_state.findOrderById(&"MAR_2")
+	var mysore_order := _game_state.findOrderById(&"MYS_1")
 
 	assert_true(delhi_order.isOpen())
 	assert_true(punjab_order.isOpen())
@@ -83,8 +83,8 @@ func test_execute_recursively_cascades_when_connected_order_is_already_closed() 
 	_close_all_orders(_game_state.bombay)
 	_close_all_orders(_game_state.delhi)
 
-	var punjab_order := _find_order_by_path("res://resources/tradeOrders/PUNJAB_ORDER_1.tres")
-	var maratha_order := _find_order_by_path("res://resources/tradeOrders/MARATHA_ORDER_1.tres")
+	var punjab_order := _game_state.findOrderById(&"PUN_1")
+	var maratha_order := _game_state.findOrderById(&"MAR_1")
 
 	assert_true(punjab_order.isOpen())
 	assert_true(maratha_order.isOpen())
@@ -109,13 +109,6 @@ func _close_all_orders(state: StateModel) -> void:
 
 
 func _open_all_orders() -> void:
-	for order in BoardMap.boardMap.orderGraph.orders:
-		order.open()
-
-
-func _find_order_by_path(path: String) -> OrderModel:
-	for order in BoardMap.boardMap.orderGraph.orders:
-		if order.resource_path == path:
-			return order
-
-	return null
+	for state in _game_state.getStates():
+		for order in state.orders:
+			order.open()

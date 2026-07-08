@@ -42,6 +42,16 @@ func findStateByLocation(location: StateType.StateType) -> StateModel:
 
 	return null
 
+func findOrderById(order_id: StringName) -> OrderModel:
+	for state in getStates():
+		if state == null:
+			continue
+		for order in state.orders:
+			if order.id == order_id:
+				return order
+
+	return null
+
 func isStateSovereign(location: StateType.StateType) -> bool:
 	var state: StateModel = findStateByLocation(location)
 	return state.isSovereign

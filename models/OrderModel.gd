@@ -2,6 +2,7 @@ extends Resource
 class_name OrderModel
 
 
+@export var id: StringName
 @export var orderState: EnumTypes.OrderState
 @export var value: int
 @export var state: StateType.StateType
