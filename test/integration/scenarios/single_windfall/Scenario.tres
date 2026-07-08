@@ -1,12 +1,15 @@
-[gd_resource type="Resource" script_class="MainGameIntegrationScenario" load_steps=7 format=3]
-[ext_resource type="Script" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1"]
-[ext_resource type="Resource" path="res://test/integration/scenarios/single_windfall/StartGameState.tres" id="2"]
-[ext_resource type="Resource" path="res://test/integration/scenarios/single_windfall/ExpectedGameState.tres" id="3"]
-[ext_resource type="Resource" path="res://resources/events/windfall/Windfall_HYP.tres" id="4"]
+[gd_resource type="Resource" script_class="MainGameIntegrationScenario" format=3 uid="uid://lnqtnps7rv88"]
+
+[ext_resource type="Script" uid="uid://bg5wa3rxccvni" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1"]
+[ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_kwhd5"]
+[ext_resource type="Resource" uid="uid://bwktl0vqx86pv" path="res://test/integration/scenarios/single_windfall/StartGameState.tres" id="2"]
+[ext_resource type="Resource" uid="uid://br5l8x8e4vn1c" path="res://test/integration/scenarios/single_windfall/ExpectedGameState.tres" id="3"]
+[ext_resource type="Resource" uid="uid://jtgvqovn44ex" path="res://resources/events/windfall/Windfall_HYP.tres" id="4"]
+
 [resource]
 script = ExtResource("1")
 scenario_name = "Single Windfall resolves Hyderabad writers"
 start_game_state = ExtResource("2")
 expected_game_state = ExtResource("3")
-event_deck = Array[Resource]([ExtResource("4")])
+event_deck = Array[ExtResource("1_kwhd5")]([ExtResource("4")])
 location_event = ExtResource("4")

@@ -1,12 +1,15 @@
-[gd_resource type="Resource" script_class="MainGameIntegrationScenario" load_steps=7 format=3]
-[ext_resource type="Script" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1"]
-[ext_resource type="Resource" path="res://test/integration/scenarios/single_peace/StartGameState.tres" id="2"]
-[ext_resource type="Resource" path="res://test/integration/scenarios/single_peace/ExpectedGameState.tres" id="3"]
-[ext_resource type="Resource" path="res://resources/events/peace/Peace_MAD.tres" id="4"]
+[gd_resource type="Resource" script_class="MainGameIntegrationScenario" format=3 uid="uid://ckrdqpitlkr6l"]
+
+[ext_resource type="Script" uid="uid://bg5wa3rxccvni" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1"]
+[ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_nb5it"]
+[ext_resource type="Resource" uid="uid://en6gudpqmq7j" path="res://test/integration/scenarios/single_peace/StartGameState.tres" id="2"]
+[ext_resource type="Resource" uid="uid://cvtdm7jmap44y" path="res://test/integration/scenarios/single_peace/ExpectedGameState.tres" id="3"]
+[ext_resource type="Resource" uid="uid://ngx7ti8q8l6a" path="res://resources/events/peace/Peace_MAD.tres" id="4"]
+
 [resource]
 script = ExtResource("1")
 scenario_name = "Single Peace opens Madras and removes unrest"
 start_game_state = ExtResource("2")
 expected_game_state = ExtResource("3")
-event_deck = Array[Resource]([ExtResource("4")])
+event_deck = Array[ExtResource("1_nb5it")]([ExtResource("4")])
 location_event = ExtResource("4")

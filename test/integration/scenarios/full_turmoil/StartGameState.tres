@@ -6,7 +6,6 @@
 [ext_resource type="Script" uid="uid://bcb1pbdmq18c" path="res://models/SeaModel.gd" id="4_sea"]
 [ext_resource type="Script" uid="uid://cooqoytdy5ufp" path="res://models/ShipModel.gd" id="5_ship"]
 [ext_resource type="Script" uid="uid://db2idjntwxbuh" path="res://models/ElephantModel.gd" id="6_elephant"]
-[ext_resource type="Resource" uid="uid://bn8epoj0k3ux6" path="res://resources/tradeOrders/OrderGraph.tres" id="7_graph"]
 
 [sub_resource type="Resource" id="Order_BEN_1"]
 script = ExtResource("3_order")
@@ -204,7 +203,6 @@ maratha = SubResource("State_MAR")
 delhi = SubResource("State_DEL")
 mysore = SubResource("State_MYS")
 elephant = SubResource("Elephant")
-orderGraph = ExtResource("7_graph")
 companyStanding = 5
 seaWest = SubResource("Sea_West")
 seaEast = SubResource("Sea_East")

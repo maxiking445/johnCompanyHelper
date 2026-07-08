@@ -1,12 +1,15 @@
-[gd_resource type="Resource" script_class="MainGameIntegrationScenario" load_steps=7 format=3]
-[ext_resource type="Script" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1"]
-[ext_resource type="Resource" path="res://test/integration/scenarios/two_leader/StartGameState.tres" id="2"]
-[ext_resource type="Resource" path="res://test/integration/scenarios/two_leader/ExpectedGameState.tres" id="3"]
-[ext_resource type="Resource" path="res://resources/events/leader/Leader_BOM.tres" id="4"]
+[gd_resource type="Resource" script_class="MainGameIntegrationScenario" format=3 uid="uid://dlt6n5hmwocet"]
+
+[ext_resource type="Script" uid="uid://bg5wa3rxccvni" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1"]
+[ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_1yu75"]
+[ext_resource type="Resource" uid="uid://dpingfrared2e" path="res://test/integration/scenarios/two_leader/StartGameState.tres" id="2"]
+[ext_resource type="Resource" uid="uid://bvkkc131qsdsy" path="res://test/integration/scenarios/two_leader/ExpectedGameState.tres" id="3"]
+[ext_resource type="Resource" uid="uid://0pc4w6ahip65" path="res://resources/events/leader/Leader_BOM.tres" id="4"]
+
 [resource]
 script = ExtResource("1")
 scenario_name = "Two Leader events increase sovereign Bombay twice"
 start_game_state = ExtResource("2")
 expected_game_state = ExtResource("3")
-event_deck = Array[Resource]([ExtResource("4"), ExtResource("4")])
+event_deck = Array[ExtResource("1_1yu75")]([ExtResource("4"), ExtResource("4")])
 location_event = ExtResource("4")

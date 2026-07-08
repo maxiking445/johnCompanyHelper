@@ -3,8 +3,6 @@
 [ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="1_game"]
 [ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_state"]
 [ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="3_order"]
-[ext_resource type="Script" uid="uid://c7ifbg0iuknuv" path="res://models/OrderGraphModel.gd" id="4_graph"]
-[ext_resource type="Script" uid="uid://dn2w2kplygb6h" path="res://models/OrderConnectionModel.gd" id="5_connection"]
 [ext_resource type="Script" uid="uid://bcb1pbdmq18c" path="res://models/SeaModel.gd" id="6_sea"]
 [ext_resource type="Script" uid="uid://cooqoytdy5ufp" path="res://models/ShipModel.gd" id="7_ship"]
 [ext_resource type="Script" uid="uid://db2idjntwxbuh" path="res://models/ElephantModel.gd" id="8_elephant"]
@@ -159,47 +157,12 @@ location = 7
 orders = Array[ExtResource("3_order")]([SubResource("MYS_1"), SubResource("MYS_2")])
 is_connected_to = Array[int]([0, 2, 1])
 
-[sub_resource type="Resource" id="Connection_BOM1_DEL3"]
-script = ExtResource("5_connection")
-from_id = &"BOM_1"
-to_id = &"DEL_3"
-
-[sub_resource type="Resource" id="Connection_BOM1_BOM3"]
-script = ExtResource("5_connection")
-from_id = &"BOM_1"
-to_id = &"BOM_3"
-
 [sub_resource type="Resource" id="PUN_1"]
 script = ExtResource("3_order")
 id = &"PUN_1"
 value = 2
 state = 3
 hasWriter = true
-
-[sub_resource type="Resource" id="Connection_BOM1_PUN1"]
-script = ExtResource("5_connection")
-from_id = &"BOM_1"
-to_id = &"PUN_1"
-
-[sub_resource type="Resource" id="Connection_BOM2_BOM3"]
-script = ExtResource("5_connection")
-from_id = &"BOM_2"
-to_id = &"BOM_3"
-
-[sub_resource type="Resource" id="Connection_BOM2_MAR2"]
-script = ExtResource("5_connection")
-from_id = &"BOM_2"
-to_id = &"MAR_2"
-
-[sub_resource type="Resource" id="Connection_BOM3_MYS1"]
-script = ExtResource("5_connection")
-from_id = &"BOM_3"
-to_id = &"MYS_1"
-
-[sub_resource type="Resource" id="OrderGraph"]
-script = ExtResource("4_graph")
-orders = Array[ExtResource("3_order")]([SubResource("BOM_1"), SubResource("BOM_2"), SubResource("BOM_3"), SubResource("MAD_1"), SubResource("MAD_2"), SubResource("HYP_1"), SubResource("PUN_1"), SubResource("BEN_1"), SubResource("BEN_2"), SubResource("MAR_1"), SubResource("MAR_2"), SubResource("MAR_3"), SubResource("DEL_1"), SubResource("DEL_2"), SubResource("DEL_3"), SubResource("MYS_1"), SubResource("MYS_2")])
-connections = Array[Resource]([SubResource("Connection_BOM1_DEL3"), SubResource("Connection_BOM1_BOM3"), SubResource("Connection_BOM1_PUN1"), SubResource("Connection_BOM2_BOM3"), SubResource("Connection_BOM2_MAR2"), SubResource("Connection_BOM3_MYS1")])
 
 [sub_resource type="Resource" id="State_PUN"]
 script = ExtResource("2_state")
@@ -248,7 +211,6 @@ maratha = SubResource("State_MAR")
 delhi = SubResource("State_DEL")
 mysore = SubResource("State_MYS")
 elephant = SubResource("Elephant")
-orderGraph = SubResource("OrderGraph")
 companyStanding = 5
 seaWest = SubResource("Sea_West")
 seaEast = SubResource("Sea_East")

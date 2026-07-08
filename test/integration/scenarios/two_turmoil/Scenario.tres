@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="MainGameIntegrationScenario" format=3 uid="uid://dedfmjmc5vfrt"]
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_7px31"]
-[ext_resource type="Script" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1_scenario"]
+[ext_resource type="Script" uid="uid://bg5wa3rxccvni" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1_scenario"]
 [ext_resource type="Resource" uid="uid://dbvcu7d0j5kk3" path="res://test/integration/scenarios/two_turmoil/StartGameState.tres" id="2_start"]
 [ext_resource type="Resource" uid="uid://la3hk4uv0yqs" path="res://test/integration/scenarios/two_turmoil/ExpectedGameState.tres" id="3_expected"]
 [ext_resource type="Resource" uid="uid://dj2ytbmfjxyo7" path="res://resources/events/turmoil/Turmoil_DEL.tres" id="4_event"]

@@ -1,12 +1,15 @@
-[gd_resource type="Resource" script_class="MainGameIntegrationScenario" load_steps=7 format=3]
-[ext_resource type="Script" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1"]
-[ext_resource type="Resource" path="res://test/integration/scenarios/two_crisis/StartGameState.tres" id="2"]
-[ext_resource type="Resource" path="res://test/integration/scenarios/two_crisis/ExpectedGameState.tres" id="3"]
-[ext_resource type="Resource" path="res://resources/events/crisis/Crisis_BOM.tres" id="4"]
+[gd_resource type="Resource" script_class="MainGameIntegrationScenario" format=3 uid="uid://ck543e5w512nk"]
+
+[ext_resource type="Script" uid="uid://bg5wa3rxccvni" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1"]
+[ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_ri0dj"]
+[ext_resource type="Resource" uid="uid://beeyf2uw1e6ee" path="res://test/integration/scenarios/two_crisis/StartGameState.tres" id="2"]
+[ext_resource type="Resource" uid="uid://c5qsj3ak7eq55" path="res://test/integration/scenarios/two_crisis/ExpectedGameState.tres" id="3"]
+[ext_resource type="Resource" uid="uid://13bjruvj062t" path="res://resources/events/crisis/Crisis_BOM.tres" id="4"]
+
 [resource]
 script = ExtResource("1")
 scenario_name = "Two Crisis events are defended in Company Bombay"
 start_game_state = ExtResource("2")
 expected_game_state = ExtResource("3")
-event_deck = Array[Resource]([ExtResource("4"), ExtResource("4")])
+event_deck = Array[ExtResource("1_ri0dj")]([ExtResource("4"), ExtResource("4")])
 location_event = ExtResource("4")

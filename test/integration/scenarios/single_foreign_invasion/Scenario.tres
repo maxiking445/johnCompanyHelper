@@ -1,14 +1,17 @@
-[gd_resource type="Resource" script_class="MainGameIntegrationScenario" load_steps=7 format=3]
-[ext_resource type="Script" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1"]
-[ext_resource type="Resource" path="res://test/integration/scenarios/single_foreign_invasion/StartGameState.tres" id="2"]
-[ext_resource type="Resource" path="res://test/integration/scenarios/single_foreign_invasion/ExpectedGameState.tres" id="3"]
-[ext_resource type="Resource" path="res://resources/events/foreignInvasion/ForeignInvasion_MAR.tres" id="4"]
+[gd_resource type="Resource" script_class="MainGameIntegrationScenario" format=3 uid="uid://dkdivfdqtwcpy"]
+
+[ext_resource type="Script" uid="uid://bg5wa3rxccvni" path="res://test/integration/templates/MainGameIntegrationScenario.gd" id="1"]
+[ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_73d5w"]
+[ext_resource type="Resource" uid="uid://bn46ps1gxe8s" path="res://test/integration/scenarios/single_foreign_invasion/StartGameState.tres" id="2"]
+[ext_resource type="Resource" uid="uid://kic556brdut" path="res://test/integration/scenarios/single_foreign_invasion/ExpectedGameState.tres" id="3"]
+[ext_resource type="Resource" uid="uid://cgn64wvgpnghp" path="res://resources/events/foreignInvasion/ForeignInvasion_MAR.tres" id="4"]
+
 [resource]
 script = ExtResource("1")
 scenario_name = "Single Foreign Invasion captures Bombay"
 start_game_state = ExtResource("2")
 expected_game_state = ExtResource("3")
-event_deck = Array[Resource]([ExtResource("4")])
+event_deck = Array[ExtResource("1_73d5w")]([ExtResource("4")])
 location_event = ExtResource("4")
 d6_results = Array[int]([3])
 storm_dice_results = Array[int]([4])

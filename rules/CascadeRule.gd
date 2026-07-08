@@ -30,7 +30,7 @@ func checkLocation(game_state: GameState, location:  StateType.StateType):
 			allreadyCascadedLocations.append(location)
 			var state: StateModel = game_state.findStateByLocation(location)
 			for order in state.orders:
-				for connected_order_id in BoardMap.findConnectedOrderIds(order.id):
+				for connected_order_id in BoardMap.boardMap.findConnectedOrderIds(order.id):
 					var connectedOrder := game_state.findOrderById(connected_order_id)
 					if connectedOrder == null:
 						push_error("Connected order not found: %s" % connected_order_id)
