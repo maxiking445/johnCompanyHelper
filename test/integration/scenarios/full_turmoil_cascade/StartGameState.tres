@@ -1,0 +1,245 @@
+[gd_resource type="Resource" script_class="GameState" format=3 uid="uid://c8wl8gw0jc1wu"]
+
+[ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="1_game"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_state"]
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="3_order"]
+[ext_resource type="Script" uid="uid://c7ifbg0iuknuv" path="res://models/OrderGraphModel.gd" id="4_graph"]
+[ext_resource type="Script" uid="uid://dn2w2kplygb6h" path="res://models/OrderConnectionModel.gd" id="5_connection"]
+
+[sub_resource type="Resource" id="BEN_1"]
+script = ExtResource("3_order")
+value = 2
+state = 4
+
+[sub_resource type="Resource" id="BEN_2"]
+script = ExtResource("3_order")
+value = 1
+state = 4
+
+[sub_resource type="Resource" id="State_BEN"]
+script = ExtResource("2_state")
+location = 4
+orders = Array[ExtResource("3_order")]([SubResource("BEN_1"), SubResource("BEN_2")])
+
+[sub_resource type="Resource" id="BOM_1"]
+script = ExtResource("3_order")
+value = 3
+
+[sub_resource type="Resource" id="BOM_2"]
+script = ExtResource("3_order")
+value = 2
+
+[sub_resource type="Resource" id="BOM_3"]
+script = ExtResource("3_order")
+value = 1
+
+[sub_resource type="Resource" id="State_BOM"]
+script = ExtResource("2_state")
+orders = Array[ExtResource("3_order")]([SubResource("BOM_1"), SubResource("BOM_2"), SubResource("BOM_3")])
+
+[sub_resource type="Resource" id="DEL_1"]
+script = ExtResource("3_order")
+value = 3
+state = 6
+
+[sub_resource type="Resource" id="DEL_2"]
+script = ExtResource("3_order")
+value = 2
+state = 6
+
+[sub_resource type="Resource" id="DEL_3"]
+script = ExtResource("3_order")
+value = 1
+state = 6
+
+[sub_resource type="Resource" id="State_DEL"]
+script = ExtResource("2_state")
+location = 6
+orders = Array[ExtResource("3_order")]([SubResource("DEL_1"), SubResource("DEL_2"), SubResource("DEL_3")])
+
+[sub_resource type="Resource" id="HYP_1"]
+script = ExtResource("3_order")
+value = 2
+state = 2
+
+[sub_resource type="Resource" id="State_HYP"]
+script = ExtResource("2_state")
+location = 2
+orders = Array[ExtResource("3_order")]([SubResource("HYP_1")])
+
+[sub_resource type="Resource" id="MAD_1"]
+script = ExtResource("3_order")
+value = 2
+state = 1
+
+[sub_resource type="Resource" id="MAD_2"]
+script = ExtResource("3_order")
+value = 1
+state = 1
+
+[sub_resource type="Resource" id="State_MAD"]
+script = ExtResource("2_state")
+location = 1
+orders = Array[ExtResource("3_order")]([SubResource("MAD_1"), SubResource("MAD_2")])
+
+[sub_resource type="Resource" id="MAR_1"]
+script = ExtResource("3_order")
+value = 3
+state = 5
+
+[sub_resource type="Resource" id="MAR_2"]
+script = ExtResource("3_order")
+value = 2
+state = 5
+
+[sub_resource type="Resource" id="MAR_3"]
+script = ExtResource("3_order")
+value = 1
+state = 5
+
+[sub_resource type="Resource" id="State_MAR"]
+script = ExtResource("2_state")
+location = 5
+orders = Array[ExtResource("3_order")]([SubResource("MAR_1"), SubResource("MAR_2"), SubResource("MAR_3")])
+
+[sub_resource type="Resource" id="MYS_1"]
+script = ExtResource("3_order")
+value = 2
+state = 7
+
+[sub_resource type="Resource" id="MYS_2"]
+script = ExtResource("3_order")
+value = 1
+state = 7
+
+[sub_resource type="Resource" id="State_MYS"]
+script = ExtResource("2_state")
+location = 7
+orders = Array[ExtResource("3_order")]([SubResource("MYS_1"), SubResource("MYS_2")])
+
+[sub_resource type="Resource" id="Connection_1"]
+script = ExtResource("5_connection")
+from = SubResource("BEN_1")
+to = SubResource("BEN_2")
+
+[sub_resource type="Resource" id="Connection_2"]
+script = ExtResource("5_connection")
+from = SubResource("BEN_1")
+to = SubResource("MAR_1")
+
+[sub_resource type="Resource" id="Connection_3"]
+script = ExtResource("5_connection")
+from = SubResource("BEN_1")
+to = SubResource("MAR_3")
+
+[sub_resource type="Resource" id="Connection_4"]
+script = ExtResource("5_connection")
+from = SubResource("BOM_1")
+to = SubResource("DEL_3")
+
+[sub_resource type="Resource" id="Connection_5"]
+script = ExtResource("5_connection")
+from = SubResource("BOM_1")
+to = SubResource("BOM_3")
+
+[sub_resource type="Resource" id="Connection_6"]
+script = ExtResource("5_connection")
+from = SubResource("BOM_2")
+to = SubResource("BOM_3")
+
+[sub_resource type="Resource" id="Connection_7"]
+script = ExtResource("5_connection")
+from = SubResource("BOM_2")
+to = SubResource("MAR_2")
+
+[sub_resource type="Resource" id="Connection_8"]
+script = ExtResource("5_connection")
+from = SubResource("BOM_3")
+to = SubResource("MYS_1")
+
+[sub_resource type="Resource" id="PUN_1"]
+script = ExtResource("3_order")
+value = 3
+state = 3
+
+[sub_resource type="Resource" id="Connection_9"]
+script = ExtResource("5_connection")
+from = SubResource("DEL_1")
+to = SubResource("PUN_1")
+
+[sub_resource type="Resource" id="Connection_10"]
+script = ExtResource("5_connection")
+from = SubResource("DEL_1")
+to = SubResource("DEL_3")
+
+[sub_resource type="Resource" id="Connection_11"]
+script = ExtResource("5_connection")
+from = SubResource("DEL_2")
+to = SubResource("MAR_1")
+
+[sub_resource type="Resource" id="Connection_12"]
+script = ExtResource("5_connection")
+from = SubResource("DEL_2")
+to = SubResource("DEL_3")
+
+[sub_resource type="Resource" id="Connection_13"]
+script = ExtResource("5_connection")
+from = SubResource("HYP_1")
+to = SubResource("MAR_3")
+
+[sub_resource type="Resource" id="Connection_14"]
+script = ExtResource("5_connection")
+from = SubResource("HYP_1")
+to = SubResource("MAD_1")
+
+[sub_resource type="Resource" id="Connection_15"]
+script = ExtResource("5_connection")
+from = SubResource("HYP_1")
+to = SubResource("MYS_2")
+
+[sub_resource type="Resource" id="Connection_16"]
+script = ExtResource("5_connection")
+from = SubResource("MAD_1")
+to = SubResource("MAD_2")
+
+[sub_resource type="Resource" id="Connection_17"]
+script = ExtResource("5_connection")
+from = SubResource("MAD_2")
+to = SubResource("MYS_2")
+
+[sub_resource type="Resource" id="Connection_18"]
+script = ExtResource("5_connection")
+from = SubResource("MAR_2")
+to = SubResource("MAR_3")
+
+[sub_resource type="Resource" id="Connection_19"]
+script = ExtResource("5_connection")
+from = SubResource("MYS_1")
+to = SubResource("MYS_2")
+
+[sub_resource type="Resource" id="Connection_20"]
+script = ExtResource("5_connection")
+from = SubResource("PUN_1")
+to = SubResource("BOM_1")
+
+[sub_resource type="Resource" id="OrderGraph"]
+script = ExtResource("4_graph")
+orders = Array[ExtResource("3_order")]([SubResource("BEN_1"), SubResource("BEN_2"), SubResource("BOM_1"), SubResource("BOM_2"), SubResource("BOM_3"), SubResource("DEL_1"), SubResource("DEL_2"), SubResource("DEL_3"), SubResource("HYP_1"), SubResource("MAD_1"), SubResource("MAD_2"), SubResource("MAR_1"), SubResource("MAR_2"), SubResource("MAR_3"), SubResource("MYS_1"), SubResource("MYS_2"), SubResource("PUN_1")])
+connections = Array[Resource]([SubResource("Connection_1"), SubResource("Connection_2"), SubResource("Connection_3"), SubResource("Connection_4"), SubResource("Connection_5"), SubResource("Connection_6"), SubResource("Connection_7"), SubResource("Connection_8"), SubResource("Connection_9"), SubResource("Connection_10"), SubResource("Connection_11"), SubResource("Connection_12"), SubResource("Connection_13"), SubResource("Connection_14"), SubResource("Connection_15"), SubResource("Connection_16"), SubResource("Connection_17"), SubResource("Connection_18"), SubResource("Connection_19"), SubResource("Connection_20")])
+
+[sub_resource type="Resource" id="State_PUN"]
+script = ExtResource("2_state")
+location = 3
+orders = Array[ExtResource("3_order")]([SubResource("PUN_1")])
+
+[resource]
+script = ExtResource("1_game")
+bombay = SubResource("State_BOM")
+madras = SubResource("State_MAD")
+hyperbad = SubResource("State_HYP")
+punjab = SubResource("State_PUN")
+bengal = SubResource("State_BEN")
+maratha = SubResource("State_MAR")
+delhi = SubResource("State_DEL")
+mysore = SubResource("State_MYS")
+orderGraph = SubResource("OrderGraph")

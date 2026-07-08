@@ -1,0 +1,155 @@
+[gd_resource type="Resource" script_class="GameState" format=3 uid="uid://cut5lk4lquwf7"]
+
+[ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="1_game"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_state"]
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="3_order"]
+
+[sub_resource type="Resource" id="BEN_1"]
+script = ExtResource("3_order")
+orderState = 1
+value = 2
+state = 4
+
+[sub_resource type="Resource" id="BEN_2"]
+script = ExtResource("3_order")
+orderState = 1
+value = 1
+state = 4
+
+[sub_resource type="Resource" id="State_BEN"]
+script = ExtResource("2_state")
+location = 4
+orders = Array[ExtResource("3_order")]([SubResource("BEN_1"), SubResource("BEN_2")])
+
+[sub_resource type="Resource" id="BOM_1"]
+script = ExtResource("3_order")
+orderState = 1
+value = 3
+
+[sub_resource type="Resource" id="BOM_2"]
+script = ExtResource("3_order")
+orderState = 1
+value = 2
+
+[sub_resource type="Resource" id="BOM_3"]
+script = ExtResource("3_order")
+orderState = 1
+value = 1
+
+[sub_resource type="Resource" id="State_BOM"]
+script = ExtResource("2_state")
+orders = Array[ExtResource("3_order")]([SubResource("BOM_1"), SubResource("BOM_2"), SubResource("BOM_3")])
+
+[sub_resource type="Resource" id="DEL_1"]
+script = ExtResource("3_order")
+orderState = 1
+value = 3
+state = 6
+
+[sub_resource type="Resource" id="DEL_2"]
+script = ExtResource("3_order")
+orderState = 1
+value = 2
+state = 6
+
+[sub_resource type="Resource" id="DEL_3"]
+script = ExtResource("3_order")
+orderState = 1
+value = 1
+state = 6
+
+[sub_resource type="Resource" id="State_DEL"]
+script = ExtResource("2_state")
+location = 6
+orders = Array[ExtResource("3_order")]([SubResource("DEL_1"), SubResource("DEL_2"), SubResource("DEL_3")])
+
+[sub_resource type="Resource" id="HYP_1"]
+script = ExtResource("3_order")
+orderState = 1
+value = 2
+state = 2
+
+[sub_resource type="Resource" id="State_HYP"]
+script = ExtResource("2_state")
+location = 2
+orders = Array[ExtResource("3_order")]([SubResource("HYP_1")])
+
+[sub_resource type="Resource" id="MAD_1"]
+script = ExtResource("3_order")
+orderState = 1
+value = 2
+state = 1
+
+[sub_resource type="Resource" id="MAD_2"]
+script = ExtResource("3_order")
+orderState = 1
+value = 1
+state = 1
+
+[sub_resource type="Resource" id="State_MAD"]
+script = ExtResource("2_state")
+location = 1
+orders = Array[ExtResource("3_order")]([SubResource("MAD_1"), SubResource("MAD_2")])
+
+[sub_resource type="Resource" id="MAR_1"]
+script = ExtResource("3_order")
+orderState = 1
+value = 3
+state = 5
+
+[sub_resource type="Resource" id="MAR_2"]
+script = ExtResource("3_order")
+orderState = 1
+value = 2
+state = 5
+
+[sub_resource type="Resource" id="MAR_3"]
+script = ExtResource("3_order")
+orderState = 1
+value = 1
+state = 5
+
+[sub_resource type="Resource" id="State_MAR"]
+script = ExtResource("2_state")
+location = 5
+orders = Array[ExtResource("3_order")]([SubResource("MAR_1"), SubResource("MAR_2"), SubResource("MAR_3")])
+
+[sub_resource type="Resource" id="MYS_1"]
+script = ExtResource("3_order")
+orderState = 1
+value = 2
+state = 7
+
+[sub_resource type="Resource" id="MYS_2"]
+script = ExtResource("3_order")
+orderState = 1
+value = 1
+state = 7
+
+[sub_resource type="Resource" id="State_MYS"]
+script = ExtResource("2_state")
+location = 7
+orders = Array[ExtResource("3_order")]([SubResource("MYS_1"), SubResource("MYS_2")])
+
+[sub_resource type="Resource" id="PUN_1"]
+script = ExtResource("3_order")
+orderState = 1
+value = 3
+state = 3
+
+[sub_resource type="Resource" id="State_PUN"]
+script = ExtResource("2_state")
+location = 3
+orders = Array[ExtResource("3_order")]([SubResource("PUN_1")])
+
+[resource]
+script = ExtResource("1_game")
+bombay = SubResource("State_BOM")
+madras = SubResource("State_MAD")
+hyperbad = SubResource("State_HYP")
+punjab = SubResource("State_PUN")
+bengal = SubResource("State_BEN")
+maratha = SubResource("State_MAR")
+delhi = SubResource("State_DEL")
+mysore = SubResource("State_MYS")
+eventsToDraw = 10
