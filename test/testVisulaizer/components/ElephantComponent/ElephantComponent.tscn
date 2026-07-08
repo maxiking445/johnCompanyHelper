@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://g4e5q2shpql6"]
+
+[ext_resource type="Script" uid="uid://bimjj1wpt432d" path="res://test/testVisulaizer/components/ElephantComponent/elephant_component.gd" id="1_5jgr4"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_v2ds7"]
+
+[sub_resource type="DrawableTexture2D" id="DrawableTexture2D_d1pia"]
+
+[node name="ElephantComponent" type="Node2D" unique_id=1107469707]
+script = ExtResource("1_5jgr4")
+
+[node name="Body" type="MeshInstance2D" parent="." unique_id=1174692855]
+position = Vector2(11, 15.000001)
+scale = Vector2(21.014954, 31.094042)
+mesh = SubResource("QuadMesh_v2ds7")
+
+[node name="Head" type="MeshInstance2D" parent="Body" unique_id=311780000]
+position = Vector2(0, -0.4824075)
+scale = Vector2(0.6495204, 0.4183785)
+mesh = SubResource("QuadMesh_v2ds7")
+texture = SubResource("DrawableTexture2D_d1pia")
