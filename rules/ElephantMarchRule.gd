@@ -42,6 +42,8 @@ func calculateElephantTargetRegion(game_state: GameState)->StateType.StateType:
 	var location:StateType.StateType 
 	if game_state.hadASucessfullInvasionCrisis:
 		location = game_state.sucessFullInvasionCapital
+		game_state.hadASucessfullInvasionCrisis = false
+		game_state.sucessFullInvasionCapital = StateType.StateType.NONE
 	else:
 		location = EventHelper.getTopDeckEventLocation()
 	return location
