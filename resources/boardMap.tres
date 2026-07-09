@@ -58,7 +58,7 @@ metadata/_custom_type_script = "uid://gnmseuqe4pjp"
 
 [sub_resource type="Resource" id="Resource_8vw3s"]
 script = ExtResource("1_udy00")
-shapes = Array[int]([2])
+shapes = Array[int]([0])
 state = 2
 metadata/_custom_type_script = "uid://gnmseuqe4pjp"
 
@@ -112,7 +112,7 @@ metadata/_custom_type_script = "uid://gnmseuqe4pjp"
 
 [sub_resource type="Resource" id="Resource_qj4cp"]
 script = ExtResource("1_udy00")
-shapes = Array[int]([2])
+shapes = Array[int]([0])
 state = 6
 state_bordering = 4
 metadata/_custom_type_script = "uid://gnmseuqe4pjp"
