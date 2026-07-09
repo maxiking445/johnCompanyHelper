@@ -1,7 +1,7 @@
 class_name ElephantRedirectRule
 extends Rule
 
-const CIRCLE_BORDER_INDEX := 0
+const REDIRECT_SHAPE := EnumTypes.ElephantMarker.CIRCLE
 
 var elephant_march_rule := ElephantMarchRule.new()
 
@@ -38,8 +38,8 @@ func execute_with_circle_shape(game_state: GameState) -> void:
 		return
 
 	var top_event: IndiaEvent = EventHelper.draw_pile.front()
-	var original_border_index: int = top_event.elephantBorderIndex
-	top_event.elephantBorderIndex = CIRCLE_BORDER_INDEX
+	var original_shape: EnumTypes.ElephantMarker = top_event.elephantShape
+	top_event.elephantShape = REDIRECT_SHAPE
 	execute(game_state)
-	top_event.elephantBorderIndex = original_border_index
+	top_event.elephantShape = original_shape
 	

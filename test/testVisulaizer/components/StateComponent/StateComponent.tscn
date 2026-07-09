@@ -33,6 +33,7 @@ offset_left = 14.0
 offset_top = 25.0
 offset_right = 14.0
 offset_bottom = 25.0
+data_entries = {}
 
 [connection signal="mouse_entered" from="HoverArea" to="." method="_on_hover_area_mouse_entered"]
 [connection signal="mouse_exited" from="HoverArea" to="." method="_on_hover_area_mouse_exited"]

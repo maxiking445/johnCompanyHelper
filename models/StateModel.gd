@@ -55,6 +55,13 @@ func createNewEmpire(flag: EnumTypes.Empires ):
 	isSovereign = true
 	isEmpireCapital = true
 	
+	
+func isDominatedByState(state: StateModel):
+	if !state.isSovereign:
+		return false
+	if isDominated && isDominatedBy == state:
+		return true
+	return false		
 func getWritersAmountInState()-> int:
 	var writers: int = 0
 	for order in orders:

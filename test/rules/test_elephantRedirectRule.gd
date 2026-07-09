@@ -18,6 +18,7 @@ func before_each() -> void:
 
 func after_each() -> void:
 	EventHelper.draw_pile.clear()
+	EventHelper.activeEvent = null
 
 
 func test_rebelled_elephant_region_performs_elephant_march() -> void:
@@ -73,12 +74,12 @@ func test_foreign_invasion_redirect_uses_circle_and_restores_tile_shape() -> voi
 	_game_state.elephant.placeInCenterOf(_rebelled_state.location)
 	_rebelled_state.hasRebelled = true
 	var event := _set_top_deck_location(destination.location)
-	event.elephantBorderIndex = 1
+	event.elephantShape = EnumTypes.ElephantMarker.TRIANGLE
 
 	_rule.execute_with_circle_shape(_game_state)
 
-	assert_eq(_game_state.elephant.get_facing_state(), punjab.location)
-	assert_eq(event.elephantBorderIndex, 1)
+	assert_eq(_game_state.elephant.get_facing_state(), maratha.location)
+	assert_eq(event.elephantShape, EnumTypes.ElephantMarker.TRIANGLE)
 
 
 func _set_top_deck_location(location: StateType.StateType) -> IndiaEvent:

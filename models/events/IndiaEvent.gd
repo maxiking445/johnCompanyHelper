@@ -5,6 +5,6 @@ class_name IndiaEvent
 @export var eventLocation: StateType.StateType
 @export var modifier: int
 
-@export var elephantBorderIndex: EnumTypes.ElephantMarker
+@export var elephantShape: EnumTypes.ElephantMarker
 @export var ruleText: String
 @export var rule: Rule

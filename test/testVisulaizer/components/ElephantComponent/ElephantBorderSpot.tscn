@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://ccpq7usickj5t"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_n2hrg"]
+
+[node name="ElephantBorderSpot" type="Node2D" unique_id=1955553285]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=933427068]
+position = Vector2(4.6249094, 5.524191)
+scale = Vector2(0.013183947, 0.017483635)
+texture = SubResource("NoiseTexture2D_n2hrg")

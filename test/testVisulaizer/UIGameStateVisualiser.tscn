@@ -12,11 +12,13 @@
 
 [sub_resource type="Resource" id="MAD_1"]
 script = ExtResource("7_ywv2t")
+id = &"MAD_1"
 value = 2
 state = 1
 
 [sub_resource type="Resource" id="MAD_2"]
 script = ExtResource("7_ywv2t")
+id = &"MAD_2"
 value = 1
 state = 1
 
@@ -27,14 +29,17 @@ orders = Array[ExtResource("7_ywv2t")]([SubResource("MAD_1"), SubResource("MAD_2
 
 [sub_resource type="Resource" id="BOM_1"]
 script = ExtResource("7_ywv2t")
+id = &"BOM_1"
 value = 3
 
 [sub_resource type="Resource" id="BOM_2"]
 script = ExtResource("7_ywv2t")
+id = &"BOM_2"
 value = 2
 
 [sub_resource type="Resource" id="BOM_3"]
 script = ExtResource("7_ywv2t")
+id = &"BOM_3"
 value = 1
 
 [sub_resource type="Resource" id="State_BOM"]
@@ -43,6 +48,7 @@ orders = Array[ExtResource("7_ywv2t")]([SubResource("BOM_1"), SubResource("BOM_2
 
 [sub_resource type="Resource" id="PUN_1"]
 script = ExtResource("7_ywv2t")
+id = &"PUN_1"
 value = 3
 state = 3
 
@@ -53,16 +59,19 @@ orders = Array[ExtResource("7_ywv2t")]([SubResource("PUN_1")])
 
 [sub_resource type="Resource" id="DEL_1"]
 script = ExtResource("7_ywv2t")
+id = &"DEL_1"
 value = 3
 state = 6
 
 [sub_resource type="Resource" id="DEL_2"]
 script = ExtResource("7_ywv2t")
+id = &"DEL_2"
 value = 2
 state = 6
 
 [sub_resource type="Resource" id="DEL_3"]
 script = ExtResource("7_ywv2t")
+id = &"DEL_3"
 value = 1
 state = 6
 
@@ -73,11 +82,13 @@ orders = Array[ExtResource("7_ywv2t")]([SubResource("DEL_1"), SubResource("DEL_2
 
 [sub_resource type="Resource" id="BEN_1"]
 script = ExtResource("7_ywv2t")
+id = &"BEN_1"
 value = 2
 state = 4
 
 [sub_resource type="Resource" id="BEN_2"]
 script = ExtResource("7_ywv2t")
+id = &"BEN_2"
 value = 1
 state = 4
 
@@ -88,16 +99,19 @@ orders = Array[ExtResource("7_ywv2t")]([SubResource("BEN_1"), SubResource("BEN_2
 
 [sub_resource type="Resource" id="MAR_1"]
 script = ExtResource("7_ywv2t")
+id = &"MAR_1"
 value = 3
 state = 5
 
 [sub_resource type="Resource" id="MAR_2"]
 script = ExtResource("7_ywv2t")
+id = &"MAR_2"
 value = 2
 state = 5
 
 [sub_resource type="Resource" id="MAR_3"]
 script = ExtResource("7_ywv2t")
+id = &"MAR_3"
 value = 1
 state = 5
 
@@ -108,6 +122,7 @@ orders = Array[ExtResource("7_ywv2t")]([SubResource("MAR_1"), SubResource("MAR_2
 
 [sub_resource type="Resource" id="HYP_1"]
 script = ExtResource("7_ywv2t")
+id = &"HYP_1"
 value = 2
 state = 2
 
@@ -118,11 +133,13 @@ orders = Array[ExtResource("7_ywv2t")]([SubResource("HYP_1")])
 
 [sub_resource type="Resource" id="MYS_1"]
 script = ExtResource("7_ywv2t")
+id = &"MYS_1"
 value = 2
 state = 7
 
 [sub_resource type="Resource" id="MYS_2"]
 script = ExtResource("7_ywv2t")
+id = &"MYS_2"
 value = 1
 state = 7
 

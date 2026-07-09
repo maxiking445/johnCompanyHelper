@@ -17,6 +17,10 @@ class_name GameState
 @export var seaEast: SeaModel
 @export var seaSouth: SeaModel
 
+
+@export var hadASucessfullInvasionCrisis: bool
+@export var sucessFullInvasionCapital: StateType.StateType
+
 @export var eventsToDraw: int
 var states: Array[StateModel] = []
 

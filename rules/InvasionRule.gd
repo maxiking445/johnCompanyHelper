@@ -104,4 +104,6 @@ func resolve_success(
 	defender.isEmpireCapital = false
 	defender.isDominated = attacker.isPartOfEmpire()
 	defender.isDominatedBy = attacker if attacker.isPartOfEmpire() else null
+	game_state.hadASucessfullInvasionCrisis = true
+	game_state.sucessFullInvasionCapital = attacker.location
 	

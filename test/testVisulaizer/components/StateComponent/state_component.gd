@@ -23,6 +23,7 @@ class_name StateComponent
 
 
 func _ready() -> void:
+	details.hide()
 	_connect_model()
 	update_ui()
 	details.visible = Engine.is_editor_hint()
