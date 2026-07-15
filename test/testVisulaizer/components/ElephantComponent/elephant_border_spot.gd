@@ -32,6 +32,10 @@ func show_elephant_facing(target_position: Vector2) -> void:
 		elephant.face_global_position(target_position)
 
 
+func show_elephant() -> void:
+	elephantIsHere = true
+
+
 func hide_elephant() -> void:
 	elephantIsHere = false
 

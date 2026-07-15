@@ -194,7 +194,7 @@ tradeOrderStatus = 1
 [node name="ElephantBorder" type="Node2D" parent="." unique_id=695100541]
 
 [node name="Maratha_Bengal" parent="ElephantBorder" unique_id=1955553285 instance=ExtResource("10_glbnv")]
-position = Vector2(1107, 271.99994)
+position = Vector2(1096, 265)
 rotation = 1.2900753
 borderA = 5
 borderB = 4
@@ -260,6 +260,46 @@ position = Vector2(587.99994, 63.999992)
 rotation = -1.216948
 borderA = 6
 borderB = 3
+
+[node name="Maratha" parent="ElephantBorder" unique_id=367430679 instance=ExtResource("10_glbnv")]
+position = Vector2(880, 284)
+rotation = 1.2900753
+borderA = 5
+borderB = 5
+
+[node name="Madras" parent="ElephantBorder" unique_id=383980323 instance=ExtResource("10_glbnv")]
+position = Vector2(829, 626)
+rotation = 1.2900753
+borderA = 1
+borderB = 1
+
+[node name="Bombay" parent="ElephantBorder" unique_id=808279767 instance=ExtResource("10_glbnv")]
+position = Vector2(561.99994, 238.00002)
+rotation = 1.2900753
+
+[node name="Punjab" parent="ElephantBorder" unique_id=2057465995 instance=ExtResource("10_glbnv")]
+position = Vector2(475.99994, 101)
+rotation = 1.2900753
+borderA = 3
+borderB = 3
+
+[node name="Delih" parent="ElephantBorder" unique_id=1482022272 instance=ExtResource("10_glbnv")]
+position = Vector2(800, 90)
+rotation = 1.2900753
+borderA = 6
+borderB = 6
+
+[node name="Hyderabad" parent="ElephantBorder" unique_id=930093958 instance=ExtResource("10_glbnv")]
+position = Vector2(786, 450.00003)
+rotation = 1.2900753
+borderA = 2
+borderB = 2
+
+[node name="Bengal" parent="ElephantBorder" unique_id=1343957367 instance=ExtResource("10_glbnv")]
+position = Vector2(1159, 150.99998)
+rotation = 1.2900753
+borderA = 4
+borderB = 4
 
 [node name="SwitchButton" type="Button" parent="." unique_id=1116895022]
 offset_left = 67.0

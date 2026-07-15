@@ -53,14 +53,16 @@ func update_elephant() -> void:
 		(node as ElephantBorderSpot).hide_elephant()
 
 	var state := _active_game_state()
-	if (
-		state == null
-		or state.elephant == null
-		or state.elephant.placement != EnumTypes.ElephantPlacement.ON_BORDER
-	):
+	if state == null or state.elephant == null:
 		return
 
 	var elephant := state.elephant
+	if elephant.placement == EnumTypes.ElephantPlacement.IN_STATE:
+		_show_elephant_in_state(border_spots, elephant.current_state)
+		return
+	if elephant.placement != EnumTypes.ElephantPlacement.ON_BORDER:
+		return
+
 	var facing_component := _state_component_for(elephant.facing_state)
 	if facing_component == null:
 		push_warning("No StateComponent found for the elephant's facing state.")
@@ -73,6 +75,19 @@ func update_elephant() -> void:
 			return
 
 	push_warning("No ElephantBorderSpot matches the elephant's current border.")
+
+
+func _show_elephant_in_state(
+	spots: Array[Node],
+	location: StateType.StateType
+) -> void:
+	for node in spots:
+		var spot := node as ElephantBorderSpot
+		if spot.matches_border(location, location):
+			spot.show_elephant()
+			return
+
+	push_warning("No ElephantBorderSpot matches the elephant's current state.")
 
 
 func _state_component_for(location: StateType.StateType) -> StateComponent:
