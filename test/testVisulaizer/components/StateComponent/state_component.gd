@@ -26,7 +26,6 @@ func _ready() -> void:
 	details.hide()
 	_connect_model()
 	update_ui()
-	details.visible = Engine.is_editor_hint()
 
 
 func _connect_model() -> void:
@@ -42,7 +41,7 @@ func update_ui() -> void:
 		state_label.text = state_name if not state_name.is_empty() else "NO STATE"
 		details.data_entries = {}
 		return
-
+	$HoverArea/TowerLevel.text = str(stateModel.towerLevel)
 	state_label.text = state_name if not state_name.is_empty() else StateType.name(stateModel.location)
 	details.data_entries = {
 		"Unrest:": str(stateModel.unrest_size),

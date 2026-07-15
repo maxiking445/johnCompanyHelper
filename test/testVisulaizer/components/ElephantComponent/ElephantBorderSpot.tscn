@@ -1,10 +1,21 @@
 [gd_scene format=3 uid="uid://ccpq7usickj5t"]
 
+[ext_resource type="Script" uid="uid://46sy2u2wlylb" path="res://test/testVisulaizer/components/ElephantComponent/elephant_border_spot.gd" id="1_xkfu3"]
+[ext_resource type="PackedScene" uid="uid://g4e5q2shpql6" path="res://test/testVisulaizer/components/ElephantComponent/ElephantComponent.tscn" id="2_fs74e"]
+
+[sub_resource type="Gradient" id="Gradient_hitgy"]
+offsets = PackedFloat32Array(0, 0.988604)
+
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_n2hrg"]
+color_ramp = SubResource("Gradient_hitgy")
 
 [node name="ElephantBorderSpot" type="Node2D" unique_id=1955553285]
+script = ExtResource("1_xkfu3")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=933427068]
-position = Vector2(4.6249094, 5.524191)
-scale = Vector2(0.013183947, 0.017483635)
+position = Vector2(9.312455, 12.718878)
+scale = Vector2(0.030029474, 0.039823003)
 texture = SubResource("NoiseTexture2D_n2hrg")
+
+[node name="ElephantComponent" parent="." unique_id=1107469707 instance=ExtResource("2_fs74e")]
+visible = false

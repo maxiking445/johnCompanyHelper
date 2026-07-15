@@ -35,6 +35,7 @@ func _ready() -> void:
 
 func update_components() -> void:
 	update_state_components()
+	update_elephant()
 	update_sea_nodes()
 	update_trade_orders()
 
@@ -44,6 +45,38 @@ func update_state_components() -> void:
 		var component := node as StateComponent
 		var state_key := component.state_name.strip_edges().to_lower()
 		component.stateModel = states.get(state_key)
+
+
+func update_elephant() -> void:
+	var border_spots: Array[Node] = find_children("*", "ElephantBorderSpot", true, false)
+	for node in border_spots:
+		(node as ElephantBorderSpot).hide_elephant()
+
+	var state := _active_game_state()
+	if state == null or state.elephant == null or not state.elephant.is_on_border():
+		return
+
+	var elephant := state.elephant
+	var facing_component := _state_component_for(elephant.get_facing_state())
+	if facing_component == null:
+		push_warning("No StateComponent found for the elephant's facing state.")
+		return
+
+	for node in border_spots:
+		var spot := node as ElephantBorderSpot
+		if spot.matches_border(elephant.border_state_a, elephant.border_state_b):
+			spot.show_elephant_facing(facing_component.global_position)
+			return
+
+	push_warning("No ElephantBorderSpot matches the elephant's current border.")
+
+
+func _state_component_for(location: StateType.StateType) -> StateComponent:
+	for node in find_children("*", "StateComponent", true, false):
+		var component := node as StateComponent
+		if component.stateModel != null and component.stateModel.location == location:
+			return component
+	return null
 
 
 func update_sea_nodes() -> void:

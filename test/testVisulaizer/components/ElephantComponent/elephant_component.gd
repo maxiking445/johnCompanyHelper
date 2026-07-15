@@ -1,11 +1,14 @@
+@tool
 extends Node2D
+class_name ElephantComponent
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+## The elephant artwork points towards local up in its default orientation.
+const HEAD_ROTATION_OFFSET := PI / 2.0
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func face_global_position(target_position: Vector2) -> void:
+	var direction := target_position - global_position
+	if direction.is_zero_approx():
+		return
+	global_rotation = direction.angle() + HEAD_ROTATION_OFFSET

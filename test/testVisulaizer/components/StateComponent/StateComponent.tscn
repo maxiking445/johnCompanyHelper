@@ -27,7 +27,22 @@ grow_vertical = 2
 text = "NO STATE"
 label_settings = SubResource("LabelSettings_yo5bs")
 
+[node name="TowerLevel" type="Label" parent="HoverArea" unique_id=973620457]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 77.0
+offset_top = -1.0
+offset_right = 77.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0"
+label_settings = SubResource("LabelSettings_yo5bs")
+
 [node name="KeyValueTextComponent" parent="." unique_id=1519146366 instance=ExtResource("2_7tmy0")]
+visible = false
 z_index = 10
 offset_left = 14.0
 offset_top = 25.0

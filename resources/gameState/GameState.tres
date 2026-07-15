@@ -7,10 +7,19 @@
 [ext_resource type="Resource" uid="uid://bml0byrj2rog1" path="res://resources/states/DELIH.tres" id="3_t8rmh"]
 [ext_resource type="Resource" uid="uid://io8vcgcn74ok" path="res://resources/states/HYPERBAD.tres" id="4_5obnq"]
 [ext_resource type="Script" uid="uid://cooqoytdy5ufp" path="res://models/ShipModel.gd" id="4_5xgtk"]
+[ext_resource type="Script" uid="uid://db2idjntwxbuh" path="res://models/ElephantModel.gd" id="4_hvhxu"]
 [ext_resource type="Resource" uid="uid://2tgevahtsjrx" path="res://resources/states/MADRAS.tres" id="5_mjn08"]
 [ext_resource type="Resource" uid="uid://4cnutbax8b8x" path="res://resources/states/MARATHA.tres" id="6_m5j6m"]
 [ext_resource type="Resource" uid="uid://cseq0ccuxgx0v" path="res://resources/states/MYSORE.tres" id="7_cmtbu"]
 [ext_resource type="Resource" uid="uid://i2fjj54u1huo" path="res://resources/states/PUNJAB.tres" id="8_bygha"]
+
+[sub_resource type="Resource" id="Resource_glbnv"]
+script = ExtResource("4_hvhxu")
+placement = 1
+border_state_a = 6
+border_state_b = 5
+facing_state = 5
+metadata/_custom_type_script = "uid://db2idjntwxbuh"
 
 [sub_resource type="Resource" id="Resource_xw62o"]
 script = ExtResource("4_5xgtk")
@@ -47,6 +56,7 @@ bengal = ExtResource("1_8xj7o")
 maratha = ExtResource("6_m5j6m")
 delhi = ExtResource("3_t8rmh")
 mysore = ExtResource("7_cmtbu")
+elephant = SubResource("Resource_glbnv")
 seaWest = SubResource("Resource_5xgtk")
 seaEast = SubResource("Resource_4t2et")
 seaSouth = SubResource("Resource_0vh61")
