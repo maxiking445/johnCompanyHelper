@@ -1,7 +1,7 @@
 extends GutTest
 
 const TURMOIL_EVENT_RULE := preload("res://rules/events/TurmoilEventRule.gd")
-const GAME_STATE := preload("res://resources/gameState/GameState.tres")
+const GAME_STATE := preload("res://resources/gameState/GameState1710.tres")
 const TURMOIL_BOMBAY := preload("res://resources/events/turmoil/Turmoil_BOM.tres")
 
 var _rule: TurmoilEventRule

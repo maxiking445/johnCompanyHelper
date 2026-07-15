@@ -53,11 +53,15 @@ func update_elephant() -> void:
 		(node as ElephantBorderSpot).hide_elephant()
 
 	var state := _active_game_state()
-	if state == null or state.elephant == null or not state.elephant.is_on_border():
+	if (
+		state == null
+		or state.elephant == null
+		or state.elephant.placement != EnumTypes.ElephantPlacement.ON_BORDER
+	):
 		return
 
 	var elephant := state.elephant
-	var facing_component := _state_component_for(elephant.get_facing_state())
+	var facing_component := _state_component_for(elephant.facing_state)
 	if facing_component == null:
 		push_warning("No StateComponent found for the elephant's facing state.")
 		return

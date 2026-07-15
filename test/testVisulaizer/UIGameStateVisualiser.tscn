@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dsm4v3e6034yv"]
 
 [ext_resource type="Script" uid="uid://cd7xeg0xatbta" path="res://test/testVisulaizer/ui_game_state_visualiser.gd" id="1_script"]
-[ext_resource type="Resource" uid="uid://df6g5bknjcaik" path="res://resources/gameState/GameState.tres" id="2_2ckab"]
+[ext_resource type="Resource" uid="uid://df6g5bknjcaik" path="res://resources/gameState/GameState1710.tres" id="2_2ckab"]
 [ext_resource type="PackedScene" uid="uid://bloc4y5ufoc2j" path="res://test/testVisulaizer/components/ShipComponent/ShipComponent.tscn" id="3_h46l8"]
 [ext_resource type="Resource" uid="uid://cut5lk4lquwf7" path="res://test/integration/scenarios/full_turmoil_cascade/ExpectedGameState.tres" id="3_vld4c"]
 [ext_resource type="Texture2D" uid="uid://cya76l5w10q7e" path="res://test/testVisulaizer/assets/map.jpg" id="3_xqgvp"]
@@ -56,7 +56,6 @@ position = Vector2(929, 660)
 
 [node name="EastSea" parent="SeaNodes" unique_id=1035367439 instance=ExtResource("3_h46l8")]
 position = Vector2(1040, 429)
-player_ships = 2
 
 [node name="Madras" parent="." unique_id=976036685 instance=ExtResource("7_nfqf3")]
 z_index = 10
@@ -66,7 +65,7 @@ state_name = "Madras"
 stateModel = ExtResource("7_cxdna")
 
 [node name="TradeOrder1" parent="Madras" unique_id=254993254 instance=ExtResource("4_ub78g")]
-position = Vector2(45, 38)
+position = Vector2(63.490852, 53.60885)
 orderModel = ExtResource("9_1jsqj")
 tradeOrderStatus = 1
 
@@ -172,7 +171,7 @@ state_name = "Hyperbad"
 stateModel = ExtResource("28_6726a")
 
 [node name="TradeOrder1" parent="Hyperbad" unique_id=93655973 instance=ExtResource("4_ub78g")]
-position = Vector2(129, 70)
+position = Vector2(152, 99)
 orderModel = ExtResource("29_m5r0l")
 tradeOrderStatus = 1
 

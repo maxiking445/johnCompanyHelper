@@ -4,7 +4,7 @@ const SHUFFLE_EVENT_RULE := preload("res://rules/events/ShuffleEventRule.gd")
 const SHUFFLE_MADRAS := preload("res://resources/events/shuffle/Shuffle_MAD.tres")
 const TURMOIL_BOMBAY := preload("res://resources/events/turmoil/Turmoil_BOM.tres")
 const WINDFALL_HYPERBAD := preload("res://resources/events/windfall/Windfall_HYP.tres")
-const GAME_STATE := preload("res://resources/gameState/GameState.tres")
+const GAME_STATE := preload("res://resources/gameState/GameState1710.tres")
 
 var _rule: ShuffleEventRule
 var _game_state: GameState

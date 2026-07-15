@@ -5,5 +5,7 @@
 [resource]
 script = ExtResource("1_order")
 id = &"DEL_3"
+orderState = 1
+value = 3
 state = 6
 metadata/_custom_type_script = "uid://crcm1hwm5d582"

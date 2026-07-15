@@ -9,4 +9,6 @@ script = ExtResource("2_state_script")
 location = 2
 orders = Array[ExtResource("1_order_script")]([ExtResource("order_1")])
 is_connected_to = Array[int]([1, 7, 5])
+isSovereign = true
+towerLevel = 1
 metadata/_custom_type_script = "uid://d1exlj4eirnis"

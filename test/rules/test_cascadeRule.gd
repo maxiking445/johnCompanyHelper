@@ -1,7 +1,7 @@
 extends GutTest
 
 const CASCADE_RULE := preload("res://rules/CascadeRule.gd")
-const GAME_STATE := preload("res://resources/gameState/GameState.tres")
+const GAME_STATE := preload("res://resources/gameState/GameState1710.tres")
 
 var _rule: CascadeRule
 var _game_state: GameState

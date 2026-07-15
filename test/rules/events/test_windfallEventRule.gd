@@ -1,7 +1,7 @@
 extends GutTest
 
 const WINDFALL_EVENT_RULE := preload("res://rules/events/WindfallEventRule.gd")
-const GAME_STATE := preload("res://resources/gameState/GameState.tres")
+const GAME_STATE := preload("res://resources/gameState/GameState1710.tres")
 const WINDFALL_HYPERBAD := preload("res://resources/events/windfall/Windfall_HYP.tres")
 
 var _rule: WindfallEventRule

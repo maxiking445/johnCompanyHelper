@@ -1,6 +1,6 @@
 extends Node2D
 
-const DEFAULT_GAME_STATE := preload("res://resources/gameState/GameState.tres")
+const DEFAULT_GAME_STATE := preload("res://resources/gameState/GameState1710.tres")
 
 var storm_rule := StormRule.new()
 var gameState: GameState

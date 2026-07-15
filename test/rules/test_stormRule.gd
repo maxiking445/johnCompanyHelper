@@ -1,7 +1,7 @@
 extends GutTest
 
 const STORM_RULE := preload("res://rules/StormRule.gd")
-const GAME_STATE := preload("res://resources/gameState/GameState.tres")
+const GAME_STATE := preload("res://resources/gameState/GameState1710.tres")
 
 var _rule: StormRule
 var _game_state: GameState
