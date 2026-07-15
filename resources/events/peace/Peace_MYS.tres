@@ -11,6 +11,7 @@ metadata/_custom_type_script = "uid://y3ds0nyv2mqm"
 script = ExtResource("1_dq01m")
 eventName = "Peace"
 eventLocation = 7
+elephantShape = 0
 ruleText = "Open any orders that are connected through the border the Elephantstands on. Then add one tower level to each region touching the Elephantthat is not controlled by the Company. If the Elephant was wholly withina region (indicating a potential Rebellion), open all orders in that regionand remove any unrest in this region. Then, perform the Elephant'sMarch."
 rule = SubResource("Resource_ls2c0")
 metadata/_custom_type_script = "uid://cud5w8obqe6uf"

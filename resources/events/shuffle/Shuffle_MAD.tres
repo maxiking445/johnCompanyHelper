@@ -10,6 +10,7 @@ script = ExtResource("1_rttjq")
 script = ExtResource("1_c3kj8")
 eventName = "Shuffle"
 eventLocation = 1
+elephantShape = 1
 ruleText = "First, perform the Elephant's March. Then, shuffle this tile in with theremainder o f the draw stack. Finally, shuffle the discards and place themon top of the draw stack, facedown. In the rare instance the draw stack isempty, perform the Elephant's March last. "
 rule = SubResource("ShuffleRule")
 metadata/_custom_type_script = "uid://cud5w8obqe6uf"

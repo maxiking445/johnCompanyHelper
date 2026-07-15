@@ -10,6 +10,8 @@ metadata/_custom_type_script = "uid://b852qdvmhfr7n"
 [resource]
 script = ExtResource("1_2vndd")
 eventName = "Leader"
+modifier = 2
+elephantShape = 0
 ruleText = "If the region pictured on the top of the draw stack is sovereign, add atower level to it. Otherwise, treat this event as a Rebellion in the picturedregion with a strength modifier equal to the number on the explosionsymbol (see Crisis rules)."
 rule = SubResource("Resource_mcd57")
 metadata/_custom_type_script = "uid://cud5w8obqe6uf"

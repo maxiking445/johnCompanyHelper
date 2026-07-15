@@ -10,6 +10,8 @@ metadata/_custom_type_script = "uid://c40ckkcsfj3us"
 [resource]
 script = ExtResource("1_pf7i8")
 eventName = "Crisis"
+modifier = 1
+elephantShape = 0
 ruleText = "Like Peace, the location of the Crisis is determined by the placement ofthe Elephant piece, not by the top tile of the draw stack. The Elephant'stail (where it is walking.from) indicates the attacker. The Elephant's head(where it is walking to) indicates the defender. After resolving a Crisis,perform the Elephant's March."
 rule = SubResource("Resource_as2vq")
 metadata/_custom_type_script = "uid://cud5w8obqe6uf"
