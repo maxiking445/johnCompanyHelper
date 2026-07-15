@@ -1,50 +1,241 @@
 [gd_resource type="Resource" script_class="GameState" format=3 uid="uid://df6g5bknjcaik"]
 
-[ext_resource type="Resource" uid="uid://psputbwhk10s" path="res://resources/states/BENGAL.tres" id="1_8xj7o"]
-[ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="2_bgbnd"]
-[ext_resource type="Resource" uid="uid://dj1gne01f6iki" path="res://resources/states/BOMBAY.tres" id="2_hvhxu"]
-[ext_resource type="Script" uid="uid://bcb1pbdmq18c" path="res://models/SeaModel.gd" id="3_0vh61"]
-[ext_resource type="Resource" uid="uid://bml0byrj2rog1" path="res://resources/states/DELIH.tres" id="3_t8rmh"]
-[ext_resource type="Resource" uid="uid://io8vcgcn74ok" path="res://resources/states/HYPERBAD.tres" id="4_5obnq"]
-[ext_resource type="Script" uid="uid://db2idjntwxbuh" path="res://models/ElephantModel.gd" id="4_hvhxu"]
-[ext_resource type="Resource" uid="uid://2tgevahtsjrx" path="res://resources/states/MADRAS.tres" id="5_mjn08"]
-[ext_resource type="Resource" uid="uid://4cnutbax8b8x" path="res://resources/states/MARATHA.tres" id="6_m5j6m"]
-[ext_resource type="Resource" uid="uid://cseq0ccuxgx0v" path="res://resources/states/MYSORE.tres" id="7_cmtbu"]
-[ext_resource type="Resource" uid="uid://i2fjj54u1huo" path="res://resources/states/PUNJAB.tres" id="8_bygha"]
-[ext_resource type="Script" uid="uid://cooqoytdy5ufp" path="res://models/ShipModel.gd" id="12_hc4b0"]
+[ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="1_game_state"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_state"]
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="3_order"]
+[ext_resource type="Script" uid="uid://db2idjntwxbuh" path="res://models/ElephantModel.gd" id="4_elephant"]
+[ext_resource type="Script" uid="uid://bcb1pbdmq18c" path="res://models/SeaModel.gd" id="5_sea"]
 
-[sub_resource type="Resource" id="Resource_glbnv"]
-script = ExtResource("4_hvhxu")
+[sub_resource type="Resource" id="Order_BOM_1"]
+script = ExtResource("3_order")
+id = &"BOM_1"
+value = 3
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_BOM_2"]
+script = ExtResource("3_order")
+id = &"BOM_2"
+orderState = 1
+value = 3
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_BOM_3"]
+script = ExtResource("3_order")
+id = &"BOM_3"
+value = 4
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_BOMBAY"]
+script = ExtResource("2_state")
+orders = Array[ExtResource("3_order")]([SubResource("Order_BOM_1"), SubResource("Order_BOM_2"), SubResource("Order_BOM_3")])
+is_connected_to = Array[int]([7, 5, 3, 6])
+isSovereign = true
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_MAD_1"]
+script = ExtResource("3_order")
+id = &"MAD_1"
+orderState = 1
+value = 5
+state = 1
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_MAD_2"]
+script = ExtResource("3_order")
+id = &"MAD_2"
+value = 4
+state = 1
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_MADRAS"]
+script = ExtResource("2_state")
+location = 1
+orders = Array[ExtResource("3_order")]([SubResource("Order_MAD_1"), SubResource("Order_MAD_2")])
+is_connected_to = Array[int]([7, 2])
+isSovereign = true
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_HYP_1"]
+script = ExtResource("3_order")
+id = &"HYP_1"
+orderState = 1
+value = 7
+state = 2
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_HYPERBAD"]
+script = ExtResource("2_state")
+location = 2
+orders = Array[ExtResource("3_order")]([SubResource("Order_HYP_1")])
+is_connected_to = Array[int]([1, 7, 5])
+isSovereign = true
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_PUN_1"]
+script = ExtResource("3_order")
+id = &"PUN_1"
+orderState = 1
+value = 7
+state = 3
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_BEN_1"]
+script = ExtResource("3_order")
+id = &"BEN_1"
+value = 5
+state = 4
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_BEN_2"]
+script = ExtResource("3_order")
+id = &"BEN_2"
+value = 6
+state = 4
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_BENGAL"]
+script = ExtResource("2_state")
+location = 4
+orders = Array[ExtResource("3_order")]([SubResource("Order_BEN_1"), SubResource("Order_BEN_2")])
+is_connected_to = Array[int]([5])
+isSovereign = true
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_MAR_1"]
+script = ExtResource("3_order")
+id = &"MAR_1"
+value = 4
+state = 5
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_MAR_2"]
+script = ExtResource("3_order")
+id = &"MAR_2"
+orderState = 1
+value = 3
+state = 5
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_MAR_3"]
+script = ExtResource("3_order")
+id = &"MAR_3"
+value = 2
+state = 5
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_DEL_1"]
+script = ExtResource("3_order")
+id = &"DEL_1"
+value = 5
+state = 6
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_DEL_2"]
+script = ExtResource("3_order")
+id = &"DEL_2"
+value = 5
+state = 6
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_DEL_3"]
+script = ExtResource("3_order")
+id = &"DEL_3"
+orderState = 1
+value = 3
+state = 6
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_DELHI"]
+script = ExtResource("2_state")
+location = 6
+orders = Array[ExtResource("3_order")]([SubResource("Order_DEL_1"), SubResource("Order_DEL_2"), SubResource("Order_DEL_3")])
+is_connected_to = Array[int]([0, 5])
+isSovereign = true
+partOfEmpire = 0
+isEmpireCapital = true
+towerLevel = 2
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="State_PUNJAB"]
+script = ExtResource("2_state")
+location = 3
+orders = Array[ExtResource("3_order")]([SubResource("Order_PUN_1")])
+is_connected_to = Array[int]([0, 6])
+partOfEmpire = 0
+isDominated = true
+isDominatedBy = SubResource("State_DELHI")
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="State_MARATHA"]
+script = ExtResource("2_state")
+location = 5
+orders = Array[ExtResource("3_order")]([SubResource("Order_MAR_1"), SubResource("Order_MAR_2"), SubResource("Order_MAR_3")])
+is_connected_to = Array[int]([0, 6, 4])
+partOfEmpire = 0
+isDominated = true
+isDominatedBy = SubResource("State_DELHI")
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_MYS_1"]
+script = ExtResource("3_order")
+id = &"MYS_1"
+value = 6
+state = 7
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_MYS_2"]
+script = ExtResource("3_order")
+id = &"MYS_2"
+value = 3
+state = 7
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_MYSORE"]
+script = ExtResource("2_state")
+location = 7
+orders = Array[ExtResource("3_order")]([SubResource("Order_MYS_1"), SubResource("Order_MYS_2")])
+is_connected_to = Array[int]([0, 2, 1])
+isSovereign = true
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Elephant_1710"]
+script = ExtResource("4_elephant")
 placement = 1
 border_state_a = 6
 border_state_b = 5
 facing_state = 6
 metadata/_custom_type_script = "uid://db2idjntwxbuh"
 
-[sub_resource type="Resource" id="Resource_4t2et"]
-script = ExtResource("3_0vh61")
+[sub_resource type="Resource" id="Sea_West"]
+script = ExtResource("5_sea")
 metadata/_custom_type_script = "uid://bcb1pbdmq18c"
 
-[sub_resource type="Resource" id="Resource_0vh61"]
-script = ExtResource("3_0vh61")
+[sub_resource type="Resource" id="Sea_East"]
+script = ExtResource("5_sea")
 metadata/_custom_type_script = "uid://bcb1pbdmq18c"
 
-[sub_resource type="Resource" id="Resource_5xgtk"]
-script = ExtResource("3_0vh61")
+[sub_resource type="Resource" id="Sea_South"]
+script = ExtResource("5_sea")
 metadata/_custom_type_script = "uid://bcb1pbdmq18c"
 
 [resource]
-script = ExtResource("2_bgbnd")
-bombay = ExtResource("2_hvhxu")
-madras = ExtResource("5_mjn08")
-hyperbad = ExtResource("4_5obnq")
-punjab = ExtResource("8_bygha")
-bengal = ExtResource("1_8xj7o")
-maratha = ExtResource("6_m5j6m")
-delhi = ExtResource("3_t8rmh")
-mysore = ExtResource("7_cmtbu")
-elephant = SubResource("Resource_glbnv")
-seaWest = SubResource("Resource_5xgtk")
-seaEast = SubResource("Resource_4t2et")
-seaSouth = SubResource("Resource_0vh61")
+script = ExtResource("1_game_state")
+bombay = SubResource("State_BOMBAY")
+madras = SubResource("State_MADRAS")
+hyperbad = SubResource("State_HYPERBAD")
+punjab = SubResource("State_PUNJAB")
+bengal = SubResource("State_BENGAL")
+maratha = SubResource("State_MARATHA")
+delhi = SubResource("State_DELHI")
+mysore = SubResource("State_MYSORE")
+elephant = SubResource("Elephant_1710")
+seaWest = SubResource("Sea_West")
+seaEast = SubResource("Sea_East")
+seaSouth = SubResource("Sea_South")
 metadata/_custom_type_script = "uid://cvcexcttx1ehx"
