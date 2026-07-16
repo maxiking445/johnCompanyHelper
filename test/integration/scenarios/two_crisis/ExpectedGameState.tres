@@ -8,15 +8,21 @@
 [sub_resource type="Resource" id="Bombay"]
 script = ExtResource("2")
 troops = 2
-exhaustedTroops = 1
-isCompanyControlled = true
-trophyToken = 2
+exhaustedTroops = 2
+isSovereign = true
+isCompanyControlled = false
+towerLevel = 1
+trophyToken = 1
+hasRebelled = true
 
 [sub_resource type="Resource" id="Elephant"]
 script = ExtResource("3")
+placement = 1
+border_state_b = 2
 
 [resource]
 script = ExtResource("1")
 bombay = SubResource("Bombay")
 elephant = SubResource("Elephant")
+companyStanding = -1
 eventsToDraw = 2

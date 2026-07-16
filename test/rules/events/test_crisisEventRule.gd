@@ -77,6 +77,7 @@ func _set_event(next_location: StateType.StateType, modifier: int) -> void:
 	var event := IndiaEvent.new()
 	event.eventLocation = next_location
 	event.modifier = modifier
+	event.elephantShape = EnumTypes.ElephantMarker.SQUARE
 	EventHelper.draw_pile = [event]
 	EventHelper.activeEvent = event
 

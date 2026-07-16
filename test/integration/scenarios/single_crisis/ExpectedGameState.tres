@@ -8,7 +8,7 @@
 [sub_resource type="Resource" id="Bombay"]
 script = ExtResource("2")
 troops = 2
-exhaustedTroops = 1
+exhaustedTroops = 2
 isCompanyControlled = true
 trophyToken = 1
 
