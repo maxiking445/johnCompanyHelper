@@ -5,6 +5,30 @@
 [ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="3_order"]
 [ext_resource type="Script" uid="uid://db2idjntwxbuh" path="res://models/ElephantModel.gd" id="4_elephant"]
 [ext_resource type="Script" uid="uid://bcb1pbdmq18c" path="res://models/SeaModel.gd" id="5_sea"]
+[ext_resource type="Script" uid="uid://cooqoytdy5ufp" path="res://models/ShipModel.gd" id="6_acbri"]
+
+[sub_resource type="Resource" id="Order_BEN_1"]
+script = ExtResource("3_order")
+id = &"BEN_1"
+value = 5
+state = 4
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_BEN_2"]
+script = ExtResource("3_order")
+id = &"BEN_2"
+value = 6
+state = 4
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_BENGAL"]
+script = ExtResource("2_state")
+location = 4
+orders = Array[ExtResource("3_order")]([SubResource("Order_BEN_1"), SubResource("Order_BEN_2")])
+is_connected_to = Array[int]([5])
+isSovereign = true
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
 [sub_resource type="Resource" id="Order_BOM_1"]
 script = ExtResource("3_order")
@@ -31,100 +55,6 @@ orders = Array[ExtResource("3_order")]([SubResource("Order_BOM_1"), SubResource(
 is_connected_to = Array[int]([7, 5, 3, 6])
 isSovereign = true
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
-
-[sub_resource type="Resource" id="Order_MAD_1"]
-script = ExtResource("3_order")
-id = &"MAD_1"
-orderState = 1
-value = 5
-state = 1
-metadata/_custom_type_script = "uid://crcm1hwm5d582"
-
-[sub_resource type="Resource" id="Order_MAD_2"]
-script = ExtResource("3_order")
-id = &"MAD_2"
-value = 4
-state = 1
-metadata/_custom_type_script = "uid://crcm1hwm5d582"
-
-[sub_resource type="Resource" id="State_MADRAS"]
-script = ExtResource("2_state")
-location = 1
-orders = Array[ExtResource("3_order")]([SubResource("Order_MAD_1"), SubResource("Order_MAD_2")])
-is_connected_to = Array[int]([7, 2])
-isSovereign = true
-towerLevel = 1
-metadata/_custom_type_script = "uid://d1exlj4eirnis"
-
-[sub_resource type="Resource" id="Order_HYP_1"]
-script = ExtResource("3_order")
-id = &"HYP_1"
-orderState = 1
-value = 7
-state = 2
-metadata/_custom_type_script = "uid://crcm1hwm5d582"
-
-[sub_resource type="Resource" id="State_HYPERBAD"]
-script = ExtResource("2_state")
-location = 2
-orders = Array[ExtResource("3_order")]([SubResource("Order_HYP_1")])
-is_connected_to = Array[int]([1, 7, 5])
-isSovereign = true
-towerLevel = 1
-metadata/_custom_type_script = "uid://d1exlj4eirnis"
-
-[sub_resource type="Resource" id="Order_PUN_1"]
-script = ExtResource("3_order")
-id = &"PUN_1"
-orderState = 1
-value = 7
-state = 3
-metadata/_custom_type_script = "uid://crcm1hwm5d582"
-
-[sub_resource type="Resource" id="Order_BEN_1"]
-script = ExtResource("3_order")
-id = &"BEN_1"
-value = 5
-state = 4
-metadata/_custom_type_script = "uid://crcm1hwm5d582"
-
-[sub_resource type="Resource" id="Order_BEN_2"]
-script = ExtResource("3_order")
-id = &"BEN_2"
-value = 6
-state = 4
-metadata/_custom_type_script = "uid://crcm1hwm5d582"
-
-[sub_resource type="Resource" id="State_BENGAL"]
-script = ExtResource("2_state")
-location = 4
-orders = Array[ExtResource("3_order")]([SubResource("Order_BEN_1"), SubResource("Order_BEN_2")])
-is_connected_to = Array[int]([5])
-isSovereign = true
-towerLevel = 1
-metadata/_custom_type_script = "uid://d1exlj4eirnis"
-
-[sub_resource type="Resource" id="Order_MAR_1"]
-script = ExtResource("3_order")
-id = &"MAR_1"
-value = 4
-state = 5
-metadata/_custom_type_script = "uid://crcm1hwm5d582"
-
-[sub_resource type="Resource" id="Order_MAR_2"]
-script = ExtResource("3_order")
-id = &"MAR_2"
-orderState = 1
-value = 3
-state = 5
-metadata/_custom_type_script = "uid://crcm1hwm5d582"
-
-[sub_resource type="Resource" id="Order_MAR_3"]
-script = ExtResource("3_order")
-id = &"MAR_3"
-value = 2
-state = 5
-metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="Order_DEL_1"]
 script = ExtResource("3_order")
@@ -159,16 +89,76 @@ isEmpireCapital = true
 towerLevel = 2
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
-[sub_resource type="Resource" id="State_PUNJAB"]
+[sub_resource type="Resource" id="Elephant_1710"]
+script = ExtResource("4_elephant")
+placement = 1
+border_state_a = 6
+border_state_b = 5
+facing_state = 6
+metadata/_custom_type_script = "uid://db2idjntwxbuh"
+
+[sub_resource type="Resource" id="Order_HYP_1"]
+script = ExtResource("3_order")
+id = &"HYP_1"
+orderState = 1
+value = 7
+state = 2
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_HYPERBAD"]
 script = ExtResource("2_state")
-location = 3
-orders = Array[ExtResource("3_order")]([SubResource("Order_PUN_1")])
-is_connected_to = Array[int]([0, 6])
-partOfEmpire = 0
-isDominated = true
-isDominatedBy = SubResource("State_DELHI")
+location = 2
+orders = Array[ExtResource("3_order")]([SubResource("Order_HYP_1")])
+is_connected_to = Array[int]([1, 7, 5])
+isSovereign = true
 towerLevel = 1
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_MAD_1"]
+script = ExtResource("3_order")
+id = &"MAD_1"
+orderState = 1
+value = 5
+state = 1
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_MAD_2"]
+script = ExtResource("3_order")
+id = &"MAD_2"
+value = 4
+state = 1
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_MADRAS"]
+script = ExtResource("2_state")
+location = 1
+orders = Array[ExtResource("3_order")]([SubResource("Order_MAD_1"), SubResource("Order_MAD_2")])
+is_connected_to = Array[int]([7, 2])
+isSovereign = true
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_MAR_1"]
+script = ExtResource("3_order")
+id = &"MAR_1"
+value = 4
+state = 5
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_MAR_2"]
+script = ExtResource("3_order")
+id = &"MAR_2"
+orderState = 1
+value = 3
+state = 5
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_MAR_3"]
+script = ExtResource("3_order")
+id = &"MAR_3"
+value = 2
+state = 5
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="State_MARATHA"]
 script = ExtResource("2_state")
@@ -204,23 +194,34 @@ isSovereign = true
 towerLevel = 1
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
-[sub_resource type="Resource" id="Elephant_1710"]
-script = ExtResource("4_elephant")
-placement = 1
-border_state_a = 6
-border_state_b = 5
-facing_state = 6
-metadata/_custom_type_script = "uid://db2idjntwxbuh"
+[sub_resource type="Resource" id="Order_PUN_1"]
+script = ExtResource("3_order")
+id = &"PUN_1"
+orderState = 1
+value = 7
+state = 3
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
-[sub_resource type="Resource" id="Sea_West"]
-script = ExtResource("5_sea")
-metadata/_custom_type_script = "uid://bcb1pbdmq18c"
+[sub_resource type="Resource" id="State_PUNJAB"]
+script = ExtResource("2_state")
+location = 3
+orders = Array[ExtResource("3_order")]([SubResource("Order_PUN_1")])
+is_connected_to = Array[int]([0, 6])
+partOfEmpire = 0
+isDominated = true
+isDominatedBy = SubResource("State_DELHI")
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
 [sub_resource type="Resource" id="Sea_East"]
 script = ExtResource("5_sea")
 metadata/_custom_type_script = "uid://bcb1pbdmq18c"
 
 [sub_resource type="Resource" id="Sea_South"]
+script = ExtResource("5_sea")
+metadata/_custom_type_script = "uid://bcb1pbdmq18c"
+
+[sub_resource type="Resource" id="Sea_West"]
 script = ExtResource("5_sea")
 metadata/_custom_type_script = "uid://bcb1pbdmq18c"
 

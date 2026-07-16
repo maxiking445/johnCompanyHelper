@@ -6,33 +6,208 @@
 [ext_resource type="Resource" uid="uid://cut5lk4lquwf7" path="res://test/integration/scenarios/full_turmoil_cascade/ExpectedGameState.tres" id="3_vld4c"]
 [ext_resource type="Texture2D" uid="uid://cya76l5w10q7e" path="res://test/testVisulaizer/assets/map.jpg" id="3_xqgvp"]
 [ext_resource type="PackedScene" uid="uid://b4mbx70anlblu" path="res://test/testVisulaizer/components/tradeOrderComponent/TradeOrder.tscn" id="4_ub78g"]
-[ext_resource type="Resource" uid="uid://2tgevahtsjrx" path="res://resources/states/MADRAS.tres" id="7_cxdna"]
+[ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="7_glbnv"]
 [ext_resource type="PackedScene" uid="uid://d0o0qukt7ldnc" path="res://test/testVisulaizer/components/StateComponent/StateComponent.tscn" id="7_nfqf3"]
-[ext_resource type="Resource" uid="uid://on1y52ki8606" path="res://resources/tradeOrders/MADRAS_ORDER_1.tres" id="9_1jsqj"]
+[ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="8_n2hrg"]
 [ext_resource type="PackedScene" uid="uid://ccpq7usickj5t" path="res://test/testVisulaizer/components/ElephantComponent/ElephantBorderSpot.tscn" id="10_glbnv"]
-[ext_resource type="Resource" uid="uid://giop2bet24se" path="res://resources/tradeOrders/MADRAS_ORDER_2.tres" id="10_h0grs"]
-[ext_resource type="Resource" uid="uid://dj1gne01f6iki" path="res://resources/states/BOMBAY.tres" id="11_tuqao"]
-[ext_resource type="Resource" uid="uid://brmu0lkji3dr" path="res://resources/tradeOrders/BOMBAY_ORDER_1.tres" id="12_sm2lp"]
-[ext_resource type="Resource" uid="uid://c70ipgcd663i7" path="res://resources/tradeOrders/BOMBAY_ORDER_2.tres" id="13_0cn2p"]
-[ext_resource type="Resource" uid="uid://54rwf8hqh5lb" path="res://resources/tradeOrders/BOMBAY_ORDER_3.tres" id="14_buk2h"]
-[ext_resource type="Resource" uid="uid://i2fjj54u1huo" path="res://resources/states/PUNJAB.tres" id="15_eg61s"]
-[ext_resource type="Resource" uid="uid://cgsckpiqw85h7" path="res://resources/tradeOrders/PUNJAB_ORDER_1.tres" id="16_lsry8"]
-[ext_resource type="Resource" uid="uid://bml0byrj2rog1" path="res://resources/states/DELIH.tres" id="17_dahbv"]
-[ext_resource type="Resource" uid="uid://dc5cnf0bm3gvj" path="res://resources/tradeOrders/DELIH_ORDER_1.tres" id="18_oob8k"]
-[ext_resource type="Resource" uid="uid://j8f8i8je78fu" path="res://resources/tradeOrders/DELIH_ORDER_2.tres" id="19_mmysw"]
-[ext_resource type="Resource" uid="uid://ygclvw16of1n" path="res://resources/tradeOrders/DELIH_ORDER_3.tres" id="20_tvqe1"]
-[ext_resource type="Resource" uid="uid://psputbwhk10s" path="res://resources/states/BENGAL.tres" id="21_jb0j8"]
-[ext_resource type="Resource" uid="uid://b5ad23dcyernq" path="res://resources/tradeOrders/BENG_ORDER_1.tres" id="22_8xnqb"]
-[ext_resource type="Resource" uid="uid://bdnowg3v32ici" path="res://resources/tradeOrders/BENG_ORDER_2.tres" id="23_kchl1"]
-[ext_resource type="Resource" uid="uid://4cnutbax8b8x" path="res://resources/states/MARATHA.tres" id="24_xidob"]
-[ext_resource type="Resource" uid="uid://jn264xi85olj" path="res://resources/tradeOrders/MARATHA_ORDER_1.tres" id="25_xxogr"]
-[ext_resource type="Resource" uid="uid://dd43x8yrc72kb" path="res://resources/tradeOrders/MARATHA_ORDER_2.tres" id="26_bbekc"]
-[ext_resource type="Resource" uid="uid://dnjapsidh5jkv" path="res://resources/tradeOrders/MARATHA_ORDER_3.tres" id="27_g0xr6"]
-[ext_resource type="Resource" uid="uid://io8vcgcn74ok" path="res://resources/states/HYPERBAD.tres" id="28_6726a"]
-[ext_resource type="Resource" uid="uid://uq6jqi233k4e" path="res://resources/tradeOrders/HYPERBAD_ORDER_1.tres" id="29_m5r0l"]
-[ext_resource type="Resource" uid="uid://cseq0ccuxgx0v" path="res://resources/states/MYSORE.tres" id="30_7c4w4"]
-[ext_resource type="Resource" uid="uid://dv3s585mqnslw" path="res://resources/tradeOrders/MYSORE_ORDER_1.tres" id="31_abtir"]
-[ext_resource type="Resource" uid="uid://df4h6uj7rf1cv" path="res://resources/tradeOrders/MYSORE_ORDER_2.tres" id="32_kej6r"]
+
+[sub_resource type="Resource" id="Order_MAD_1"]
+script = ExtResource("7_glbnv")
+id = &"MAD_1"
+orderState = 1
+value = 5
+state = 1
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_MAD_2"]
+script = ExtResource("7_glbnv")
+id = &"MAD_2"
+value = 4
+state = 1
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_MADRAS"]
+script = ExtResource("8_n2hrg")
+location = 1
+orders = Array[ExtResource("7_glbnv")]([SubResource("Order_MAD_1"), SubResource("Order_MAD_2")])
+is_connected_to = Array[int]([7, 2])
+isSovereign = true
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_BOM_1"]
+script = ExtResource("7_glbnv")
+id = &"BOM_1"
+value = 3
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_BOM_2"]
+script = ExtResource("7_glbnv")
+id = &"BOM_2"
+orderState = 1
+value = 3
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_BOM_3"]
+script = ExtResource("7_glbnv")
+id = &"BOM_3"
+value = 4
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_BOMBAY"]
+script = ExtResource("8_n2hrg")
+orders = Array[ExtResource("7_glbnv")]([SubResource("Order_BOM_1"), SubResource("Order_BOM_2"), SubResource("Order_BOM_3")])
+is_connected_to = Array[int]([7, 5, 3, 6])
+isSovereign = true
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_DEL_1"]
+script = ExtResource("7_glbnv")
+id = &"DEL_1"
+value = 5
+state = 6
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_DEL_2"]
+script = ExtResource("7_glbnv")
+id = &"DEL_2"
+value = 5
+state = 6
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_DEL_3"]
+script = ExtResource("7_glbnv")
+id = &"DEL_3"
+orderState = 1
+value = 3
+state = 6
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_DELHI"]
+script = ExtResource("8_n2hrg")
+location = 6
+orders = Array[ExtResource("7_glbnv")]([SubResource("Order_DEL_1"), SubResource("Order_DEL_2"), SubResource("Order_DEL_3")])
+is_connected_to = Array[int]([0, 5])
+isSovereign = true
+partOfEmpire = 0
+isEmpireCapital = true
+towerLevel = 2
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_PUN_1"]
+script = ExtResource("7_glbnv")
+id = &"PUN_1"
+orderState = 1
+value = 7
+state = 3
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_PUNJAB"]
+script = ExtResource("8_n2hrg")
+location = 3
+orders = Array[ExtResource("7_glbnv")]([SubResource("Order_PUN_1")])
+is_connected_to = Array[int]([0, 6])
+partOfEmpire = 0
+isDominated = true
+isDominatedBy = SubResource("State_DELHI")
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_BEN_1"]
+script = ExtResource("7_glbnv")
+id = &"BEN_1"
+value = 5
+state = 4
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_BEN_2"]
+script = ExtResource("7_glbnv")
+id = &"BEN_2"
+value = 6
+state = 4
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_BENGAL"]
+script = ExtResource("8_n2hrg")
+location = 4
+orders = Array[ExtResource("7_glbnv")]([SubResource("Order_BEN_1"), SubResource("Order_BEN_2")])
+is_connected_to = Array[int]([5])
+isSovereign = true
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_MAR_1"]
+script = ExtResource("7_glbnv")
+id = &"MAR_1"
+value = 4
+state = 5
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_MAR_2"]
+script = ExtResource("7_glbnv")
+id = &"MAR_2"
+orderState = 1
+value = 3
+state = 5
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_MAR_3"]
+script = ExtResource("7_glbnv")
+id = &"MAR_3"
+value = 2
+state = 5
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_MARATHA"]
+script = ExtResource("8_n2hrg")
+location = 5
+orders = Array[ExtResource("7_glbnv")]([SubResource("Order_MAR_1"), SubResource("Order_MAR_2"), SubResource("Order_MAR_3")])
+is_connected_to = Array[int]([0, 6, 4])
+partOfEmpire = 0
+isDominated = true
+isDominatedBy = SubResource("State_DELHI")
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_HYP_1"]
+script = ExtResource("7_glbnv")
+id = &"HYP_1"
+orderState = 1
+value = 7
+state = 2
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_HYPERBAD"]
+script = ExtResource("8_n2hrg")
+location = 2
+orders = Array[ExtResource("7_glbnv")]([SubResource("Order_HYP_1")])
+is_connected_to = Array[int]([1, 7, 5])
+isSovereign = true
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
+
+[sub_resource type="Resource" id="Order_MYS_1"]
+script = ExtResource("7_glbnv")
+id = &"MYS_1"
+value = 6
+state = 7
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="Order_MYS_2"]
+script = ExtResource("7_glbnv")
+id = &"MYS_2"
+value = 3
+state = 7
+metadata/_custom_type_script = "uid://crcm1hwm5d582"
+
+[sub_resource type="Resource" id="State_MYSORE"]
+script = ExtResource("8_n2hrg")
+location = 7
+orders = Array[ExtResource("7_glbnv")]([SubResource("Order_MYS_1"), SubResource("Order_MYS_2")])
+is_connected_to = Array[int]([0, 2, 1])
+isSovereign = true
+towerLevel = 1
+metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
 [node name="UiGameStateVisualiser" type="Node2D" unique_id=339786545]
 script = ExtResource("1_script")
@@ -62,133 +237,133 @@ z_index = 10
 position = Vector2(772, 554)
 rotation = -0.009551656
 state_name = "Madras"
-stateModel = ExtResource("7_cxdna")
+stateModel = SubResource("State_MADRAS")
 
 [node name="TradeOrder1" parent="Madras" unique_id=254993254 instance=ExtResource("4_ub78g")]
 position = Vector2(63.490852, 53.60885)
-orderModel = ExtResource("9_1jsqj")
+orderModel = SubResource("Order_MAD_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Madras" unique_id=397533947 instance=ExtResource("4_ub78g")]
 position = Vector2(0, 109)
-orderModel = ExtResource("10_h0grs")
+orderModel = SubResource("Order_MAD_2")
 tradeOrderStatus = 1
 
 [node name="Bombay" parent="." unique_id=860924127 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(460, 191)
 state_name = "Bombay"
-stateModel = ExtResource("11_tuqao")
+stateModel = SubResource("State_BOMBAY")
 
 [node name="TradeOrder1" parent="Bombay" unique_id=1149008009 instance=ExtResource("4_ub78g")]
 position = Vector2(49, -70)
-orderModel = ExtResource("12_sm2lp")
+orderModel = SubResource("Order_BOM_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Bombay" unique_id=1375326550 instance=ExtResource("4_ub78g")]
 position = Vector2(111, 49)
-orderModel = ExtResource("13_0cn2p")
+orderModel = SubResource("Order_BOM_2")
 tradeOrderStatus = 1
 
 [node name="TradeOrder3" parent="Bombay" unique_id=996740099 instance=ExtResource("4_ub78g")]
 position = Vector2(30, 145)
-orderModel = ExtResource("14_buk2h")
+orderModel = SubResource("Order_BOM_3")
 tradeOrderStatus = 1
 
 [node name="Punjab" parent="." unique_id=320295851 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(424, 33)
 state_name = "Punjab"
-stateModel = ExtResource("15_eg61s")
+stateModel = SubResource("State_PUNJAB")
 
 [node name="TradeOrder1" parent="Punjab" unique_id=1848986787 instance=ExtResource("4_ub78g")]
 position = Vector2(97, 19)
-orderModel = ExtResource("16_lsry8")
+orderModel = SubResource("Order_PUN_1")
 tradeOrderStatus = 1
 
 [node name="Delhi" parent="." unique_id=1240419331 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(660, 62)
 state_name = "Delih"
-stateModel = ExtResource("17_dahbv")
+stateModel = SubResource("State_DELHI")
 
 [node name="TradeOrder1" parent="Delhi" unique_id=2059909582 instance=ExtResource("4_ub78g")]
 position = Vector2(60, -22)
-orderModel = ExtResource("18_oob8k")
+orderModel = SubResource("Order_DEL_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Delhi" unique_id=2067773317 instance=ExtResource("4_ub78g")]
 position = Vector2(188, 25)
-orderModel = ExtResource("19_mmysw")
+orderModel = SubResource("Order_DEL_2")
 tradeOrderStatus = 1
 
 [node name="TradeOrder3" parent="Delhi" unique_id=1845676917 instance=ExtResource("4_ub78g")]
 position = Vector2(12, 50)
-orderModel = ExtResource("20_tvqe1")
+orderModel = SubResource("Order_DEL_3")
 tradeOrderStatus = 1
 
 [node name="Bengal" parent="." unique_id=964637510 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(1055, 66)
 state_name = "Bengal"
-stateModel = ExtResource("21_jb0j8")
+stateModel = SubResource("State_BENGAL")
 
 [node name="TradeOrder1" parent="Bengal" unique_id=2009264296 instance=ExtResource("4_ub78g")]
 position = Vector2(-31, 118)
-orderModel = ExtResource("22_8xnqb")
+orderModel = SubResource("Order_BEN_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Bengal" unique_id=1204339038 instance=ExtResource("4_ub78g")]
 position = Vector2(111, 206)
-orderModel = ExtResource("23_kchl1")
+orderModel = SubResource("Order_BEN_2")
 tradeOrderStatus = 1
 
 [node name="Maratha" parent="." unique_id=296362532 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(816, 168)
 state_name = "Maratha"
-stateModel = ExtResource("24_xidob")
+stateModel = SubResource("State_MARATHA")
 
 [node name="TradeOrder1" parent="Maratha" unique_id=1350500739 instance=ExtResource("4_ub78g")]
 position = Vector2(52, 11)
-orderModel = ExtResource("25_xxogr")
+orderModel = SubResource("Order_MAR_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Maratha" unique_id=1321096633 instance=ExtResource("4_ub78g")]
 position = Vector2(-90, 112)
-orderModel = ExtResource("26_bbekc")
+orderModel = SubResource("Order_MAR_2")
 tradeOrderStatus = 1
 
 [node name="TradeOrder3" parent="Maratha" unique_id=1011564923 instance=ExtResource("4_ub78g")]
 position = Vector2(128, 174)
-orderModel = ExtResource("27_g0xr6")
+orderModel = SubResource("Order_MAR_3")
 tradeOrderStatus = 1
 
 [node name="Hyperbad" parent="." unique_id=828023437 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(662, 362)
 state_name = "Hyperbad"
-stateModel = ExtResource("28_6726a")
+stateModel = SubResource("State_HYPERBAD")
 
 [node name="TradeOrder1" parent="Hyperbad" unique_id=93655973 instance=ExtResource("4_ub78g")]
 position = Vector2(152, 99)
-orderModel = ExtResource("29_m5r0l")
+orderModel = SubResource("Order_HYP_1")
 tradeOrderStatus = 1
 
 [node name="Mysore" parent="." unique_id=2027831930 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(612, 598)
 state_name = "Mysore"
-stateModel = ExtResource("30_7c4w4")
+stateModel = SubResource("State_MYSORE")
 
 [node name="TradeOrder1" parent="Mysore" unique_id=291754330 instance=ExtResource("4_ub78g")]
 position = Vector2(129, 70)
-orderModel = ExtResource("31_abtir")
+orderModel = SubResource("Order_MYS_1")
 tradeOrderStatus = 1
 
 [node name="TradeOrder2" parent="Mysore" unique_id=996947322 instance=ExtResource("4_ub78g")]
 position = Vector2(73, -15)
-orderModel = ExtResource("32_kej6r")
+orderModel = SubResource("Order_MYS_2")
 tradeOrderStatus = 1
 
 [node name="ElephantBorder" type="Node2D" parent="." unique_id=695100541]
@@ -248,6 +423,7 @@ position = Vector2(776.99994, 145)
 rotation = 0.04350373
 borderA = 5
 borderB = 6
+elephantIsHere = true
 
 [node name="Delih_Bengal" parent="ElephantBorder" unique_id=287328363 instance=ExtResource("10_glbnv")]
 position = Vector2(983, 127.999985)
