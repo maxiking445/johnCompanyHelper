@@ -92,18 +92,13 @@ func resolve_success(
 
 	if defender.hasSovereignCapital():
 		for defender_state in defender_states:
-			defender_state.partOfEmpire = EnumTypes.Empires.NONE
+			defender_state.remove_empire_flag()
 
 	if not attacker.isPartOfEmpire():
 		var flag: EnumTypes.Empires = game_state.findFreeEmpireFlags()
 		if flag != EnumTypes.Empires.NONE:
 			attacker.createNewEmpire(flag)
 
-	defender.partOfEmpire = attacker.partOfEmpire
-	defender.isSovereign = false
-	defender.isEmpireCapital = false
-	defender.isDominated = attacker.isPartOfEmpire()
-	defender.isDominatedBy = attacker if attacker.isPartOfEmpire() else null
-	game_state.hadASucessfullInvasionCrisis = true
-	game_state.sucessFullInvasionCapital = attacker.location
+	defender.become_dominated_by(attacker)
+	game_state.mark_successful_invasion_crisis(attacker.location)
 	

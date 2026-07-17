@@ -108,6 +108,31 @@ func openAllOrders(location: StateType.StateType):
 func lowerCompanyStanding(number: int):
 	companyStanding = companyStanding - number
 
+
+func set_events_to_draw(event_count: int) -> void:
+	eventsToDraw = event_count
+
+
+func mark_successful_invasion_crisis(capital: StateType.StateType) -> void:
+	hadASucessfullInvasionCrisis = true
+	sucessFullInvasionCapital = capital
+
+
+func consume_successful_invasion_capital() -> StateType.StateType:
+	if not hadASucessfullInvasionCrisis:
+		return StateType.StateType.NONE
+	var capital := sucessFullInvasionCapital
+	hadASucessfullInvasionCrisis = false
+	sucessFullInvasionCapital = StateType.StateType.NONE
+	return capital
+
+
+func dissolve_empire(empire: EnumTypes.Empires) -> void:
+	if empire == EnumTypes.Empires.NONE:
+		return
+	for state in getAllStatesOfEmpire(empire):
+		state.remove_empire_flag()
+
 func getAllStatesOfEmpire(empire: EnumTypes.Empires)-> Array[StateModel]:
 	var statesOfEmpire: Array[StateModel] = []
 	for state in getStates():

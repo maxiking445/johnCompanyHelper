@@ -28,7 +28,7 @@ func execute(game_state: GameState) -> void:
 	if state == null or not state.hasRebelled:
 		return
 
-	state.hasRebelled = false
+	state.clear_rebellion()
 	elephant_march_rule.execute(game_state)
 
 

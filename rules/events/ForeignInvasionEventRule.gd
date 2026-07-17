@@ -98,16 +98,9 @@ func apply_success(
 ) -> void:
 	var defeated_empire := state.partOfEmpire
 	if state.isEmpireCapital and defeated_empire != EnumTypes.Empires.NONE:
-		for empire_state in game_state.getAllStatesOfEmpire(defeated_empire):
-			empire_state.partOfEmpire = EnumTypes.Empires.NONE
+		game_state.dissolve_empire(defeated_empire)
 
-	state.partOfEmpire = EnumTypes.Empires.NONE
-	state.isCompanyControlled = false
-	state.isSovereign = true
-	state.isEmpireCapital = false
-	state.isDominated = false
-	state.isDominatedBy = null
-	state.towerLevel = floori(invasion_strength / 2.0)
+	state.resolve_foreign_invasion(invasion_strength)
 
 	# Region Loss already handles orders for Company-controlled targets.
 	if not state.hasRebelled:

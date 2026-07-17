@@ -61,14 +61,7 @@ func performGovernerElimination(game_state: GameState, state: StateModel):
 		print("return it to the unused offices stack and return the officeholder's family member to that player's supply")
 
 func performRestoreLocalAuthority(game_state: GameState, state: StateModel):
-	state.resetUnrest()
-	state.towerLevel = 1
-	state.isCompanyControlled = false
-	state.isSovereign = true
-	state.isEmpireCapital = false
-	state.isDominated = false
-	state.isDominatedBy = null
-	state.partOfEmpire = EnumTypes.Empires.NONE
+	state.restore_local_authority()
 	
 	if game_state.areAllOrderClosed(state.location):
 		cascadeRule.execute_location(game_state, state.location)

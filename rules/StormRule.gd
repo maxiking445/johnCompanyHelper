@@ -16,18 +16,18 @@ func execute(game_state: GameState) -> void:
 	var zones_to_check: Array[SeaModel] = []
 	match diceResult:
 		StormDice.Face.FOUR_A, StormDice.Face.FOUR_B:
-			game_state.eventsToDraw = 4
+			game_state.set_events_to_draw(4)
 		StormDice.Face.SOUTH_3:
-			game_state.eventsToDraw = 3
+			game_state.set_events_to_draw(3)
 			zones_to_check.append(game_state.seaSouth)
 		StormDice.Face.EAST_2:
-			game_state.eventsToDraw = 2
+			game_state.set_events_to_draw(2)
 			zones_to_check.append(game_state.seaEast)
 		StormDice.Face.WEST_2:
-			game_state.eventsToDraw = 2
+			game_state.set_events_to_draw(2)
 			zones_to_check.append(game_state.seaWest)
 		StormDice.Face.STORMS_ALL:
-			game_state.eventsToDraw = 1
+			game_state.set_events_to_draw(1)
 			zones_to_check.append(game_state.seaSouth)
 			zones_to_check.append(game_state.seaWest)
 			zones_to_check.append(game_state.seaEast)
@@ -57,5 +57,5 @@ func _check_zone(zone: SeaModel, game_state: GameState) -> void:
 
 
 func _sink_ship(ship: ShipModel, zone: SeaModel, game_state: GameState) -> void:
-	zone.ships.erase(ship)
+	zone.sink_ship(ship)
 	print("Ship sunk from ", ship.shipOwner  , " due to the Storm")
