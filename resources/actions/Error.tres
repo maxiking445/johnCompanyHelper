@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="FormattedAction" format=3 uid="uid://c3thy5y181e82"]
+
+[ext_resource type="Script" uid="uid://camfqdkdy1g5i" path="res://models/actions/formatted_action.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "Action required: {message}"
+title = "Error"
+type = 3
+minimum_parameter_count = 1
+maximum_parameter_count = 1

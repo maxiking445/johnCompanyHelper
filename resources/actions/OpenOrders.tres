@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FormattedAction" format=3 uid="uid://d1sb2wkguj2h0"]
+
+[ext_resource type="Script" uid="uid://camfqdkdy1g5i" path="res://models/actions/formatted_action.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "Open {order_count} orders in {state}."
+title = "Open Orders"
+minimum_parameter_count = 2
+maximum_parameter_count = 2

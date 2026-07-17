@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="FormattedAction" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://models/actions/formatted_action.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "Create the {empire} empire with its capital in {capital}."
+title = "Create Empire"
+type = 0
+minimum_parameter_count = 2
+maximum_parameter_count = 2
