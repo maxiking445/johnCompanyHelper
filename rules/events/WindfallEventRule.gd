@@ -20,15 +20,18 @@ func execute(game_state: GameState) -> void:
 		printerr("Location ", StateType.name(targetLocation) ," in WindfallEventRule is not defined! Please fix!")
 		return
 
-	_apply_windfall_to_state(targetState)
+	var affected_writer_count := _apply_windfall_to_state(targetState)
 
 	for connectedLocation in game_state.findConnectedLocations(targetLocation):
 		var connectedState: StateModel = game_state.findStateByLocation(connectedLocation)
 		if connectedState != null:
-			_apply_windfall_to_state(connectedState)
+			affected_writer_count += _apply_windfall_to_state(connectedState)
+
+	if affected_writer_count == 0:
+		ActionManager.add_action(ActionFactory.windfall_no_writers_action())
 
 
-func _apply_windfall_to_state(state: StateModel) -> void:
+func _apply_windfall_to_state(state: StateModel) -> int:
 	var writer_count := state.getWritersAmountInState()
 	if writer_count > 0:
 		ActionManager.add_action(
@@ -39,4 +42,5 @@ func _apply_windfall_to_state(state: StateModel) -> void:
 	for writer_index in writer_count:
 		var message := "Writer in %s gains 1$" % StateType.name(state.location)
 		print(message)
+	return writer_count
 		

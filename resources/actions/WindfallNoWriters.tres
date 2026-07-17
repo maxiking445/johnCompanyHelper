@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="FormattedAction" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://models/actions/formatted_action.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "No Writers are present in the Windfall target or its connected states. Do nothing."
+title = "Windfall Has No Effect"
+type = 2
+minimum_parameter_count = 0
+maximum_parameter_count = 0

@@ -25,6 +25,7 @@ const DOMINATE_STATE: Action = preload("res://resources/actions/DominateState.tr
 const RESTORE_SOVEREIGNTY: Action = preload("res://resources/actions/RestoreSovereignty.tres")
 const UPDATE_SHIP_STATUS: Action = preload("res://resources/actions/UpdateShipStatus.tres")
 const WINDFALL_PAY_WRITERS: Action = preload("res://resources/actions/WindfallPayWriters.tres")
+const WINDFALL_NO_WRITERS: Action = preload("res://resources/actions/WindfallNoWriters.tres")
 const STATE_STATUS: Action = preload("res://resources/actions/StateStatus.tres")
 const BATTLE_STARTED: Action = preload("res://resources/actions/BattleStarted.tres")
 const BATTLE_RESULT: Action = preload("res://resources/actions/BattleResult.tres")
@@ -221,6 +222,10 @@ static func windfall_pay_writers_action(state: String, amount: int) -> Action:
 		"state": state,
 		"amount": amount,
 	})
+
+
+static func windfall_no_writers_action() -> Action:
+	return _create(WINDFALL_NO_WRITERS, {})
 
 
 static func information_action(message: String) -> Action:
