@@ -29,6 +29,15 @@ offset_top = 23.0
 offset_right = 716.0
 offset_bottom = 23.0
 
+[node name="ContinueButton" type="Button" parent="." unique_id=963600623]
+layout_mode = 0
+offset_left = 275.0
+offset_top = 194.0
+offset_right = 394.0
+offset_bottom = 245.0
+text = "Continue"
+
 [connection signal="download_gamestate" from="ResourceLoader" to="." method="_on_resource_loader_download_gamestate"]
 [connection signal="upload_gamestate" from="ResourceLoader" to="." method="_on_resource_loader_upload_gamestate"]
 [connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="ContinueButton" to="." method="_on_continue_button_pressed"]

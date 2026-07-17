@@ -25,6 +25,10 @@ const DOMINATE_STATE: Action = preload("res://resources/actions/DominateState.tr
 const RESTORE_SOVEREIGNTY: Action = preload("res://resources/actions/RestoreSovereignty.tres")
 const UPDATE_SHIP_STATUS: Action = preload("res://resources/actions/UpdateShipStatus.tres")
 const WINDFALL_PAY_WRITERS: Action = preload("res://resources/actions/WindfallPayWriters.tres")
+const STATE_STATUS: Action = preload("res://resources/actions/StateStatus.tres")
+const BATTLE_STARTED: Action = preload("res://resources/actions/BattleStarted.tres")
+const BATTLE_RESULT: Action = preload("res://resources/actions/BattleResult.tres")
+const INVASION_RESULT: Action = preload("res://resources/actions/InvasionResult.tres")
 
 
 static func ship_action(ship: String, sea_zone: String, status: String) -> Action:
@@ -32,6 +36,42 @@ static func ship_action(ship: String, sea_zone: String, status: String) -> Actio
 		"ship": ship,
 		"sea_zone": sea_zone,
 		"status": status,
+	})
+
+
+static func state_status_action(state: String, status: String) -> Action:
+	return _create(STATE_STATUS, {"state": state, "status": status})
+
+
+static func battle_started_action(
+	attacker: String,
+	defender: String,
+	attack_strength: int,
+	defense_strength: int
+) -> Action:
+	return _create(BATTLE_STARTED, {
+		"attacker": attacker,
+		"defender": defender,
+		"attack_strength": attack_strength,
+		"defense_strength": defense_strength,
+	})
+
+
+static func battle_result_action(
+	attacker: String, defender: String, winner: String
+) -> Action:
+	return _create(BATTLE_RESULT, {
+		"attacker": attacker, "defender": defender, "winner": winner,
+	})
+
+
+static func invasion_result_action(
+	attacker: String, defender: String, succeeded: bool
+) -> Action:
+	return _create(INVASION_RESULT, {
+		"attacker": attacker,
+		"defender": defender,
+		"outcome": "succeeded" if succeeded else "failed",
 	})
 
 

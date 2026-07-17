@@ -78,7 +78,7 @@ func _resolve_invasion(
 ) -> void:
 	if state.isCompanyControlled:
 		var succeeded := attack_against_company_rule.execute_for_state(
-			game_state, state, invasion_strength
+			game_state, state, invasion_strength, null, "Foreign invaders"
 		)
 		if succeeded:
 			apply_success(game_state, state, invasion_strength)
@@ -88,7 +88,44 @@ func _resolve_invasion(
 	if invasion_rule.is_invasion_successful(
 		game_state, state, invasion_strength
 	):
+		_add_foreign_invasion_actions(
+			game_state, state, invasion_strength, true
+		)
 		apply_success(game_state, state, invasion_strength)
+	else:
+		_add_foreign_invasion_actions(
+			game_state, state, invasion_strength, false
+		)
+
+
+func _add_foreign_invasion_actions(
+	game_state: GameState,
+	state: StateModel,
+	invasion_strength: int,
+	succeeded: bool
+) -> void:
+	var attacker_name := "Foreign invaders"
+	var defender_name := StateType.name(state.location)
+	var defense_strength := invasion_rule.calculate_defense_strength(
+		game_state, state
+	)
+	ActionManager.add_action(
+		ActionFactory.battle_started_action(
+			attacker_name, defender_name, invasion_strength, defense_strength
+		)
+	)
+	ActionManager.add_action(
+		ActionFactory.invasion_result_action(
+			attacker_name, defender_name, succeeded
+		)
+	)
+	ActionManager.add_action(
+		ActionFactory.battle_result_action(
+			attacker_name,
+			defender_name,
+			attacker_name if succeeded else defender_name
+		)
+	)
 
 
 func apply_success(

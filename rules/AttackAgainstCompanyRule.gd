@@ -67,7 +67,8 @@ func execute_for_state(
 	game_state: GameState,
 	primary_state: StateModel,
 	base_strength = null,
-	invasion_attacker: StateModel = null
+	invasion_attacker: StateModel = null,
+	attacker_name_override: String = ""
 ) -> bool:
 	if game_state == null or primary_state == null:
 		push_error("AttackAgainstCompanyRule needs a game state and primary state.")
@@ -77,8 +78,15 @@ func execute_for_state(
 	var primary_base_strength: int = (
 		get_event_modifier() if base_strength == null else base_strength
 	)
+	var primary_attacker_name := (
+		attacker_name_override
+		if not attacker_name_override.is_empty()
+		else StateType.name(invasion_attacker.location)
+		if invasion_attacker != null
+		else "Crisis"
+	)
 	var primary_attack_succeeded := resolve_attack(
-		game_state, primary_state, primary_base_strength
+		game_state, primary_state, primary_base_strength, primary_attacker_name
 	)
 
 	if invasion_attacker != null:
@@ -92,7 +100,7 @@ func execute_for_state(
 	var states_with_unrest := game_state.findAllStatesWithUnrest()
 	for state in states_with_unrest:
 		if state != primary_state:
-			resolve_attack(game_state, state, 0)
+			resolve_attack(game_state, state, 0, "Local unrest")
 	return primary_attack_succeeded
 
 
@@ -101,14 +109,34 @@ func execute_state(game_state: GameState, primary_state: StateModel) -> void:
 	execute_for_state(game_state, primary_state)
 
 
-func resolve_attack(game_state: GameState, state: StateModel, base_strength: int) -> bool:
+func resolve_attack(
+	game_state: GameState,
+	state: StateModel,
+	base_strength: int,
+	attacker_name: String = "Crisis"
+) -> bool:
 	var attack_strength := maxi(0, base_strength + state.unrest_size)
 	var available_troops := maxi(0, state.troops - state.exhaustedTroops)
+	var defender_name := "Company in %s" % StateType.name(state.location)
+	ActionManager.add_action(
+		ActionFactory.battle_started_action(
+			attacker_name, defender_name, attack_strength, available_troops
+		)
+	)
 	var troops_to_exhaust := mini(attack_strength, available_troops)
 	state.exhaustTroops(troops_to_exhaust)
 
 	var winner := battle_resolver.determine_winner(
 		attack_strength, available_troops
+	)
+	ActionManager.add_action(
+		ActionFactory.battle_result_action(
+			attacker_name,
+			defender_name,
+			attacker_name
+			if winner == BATTLE_RESOLVER.Winner.ATTACKER
+			else defender_name
+		)
 	)
 	if winner == BATTLE_RESOLVER.Winner.ATTACKER:
 		loose_region_rule.execute_for_state(game_state, state)

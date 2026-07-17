@@ -45,8 +45,24 @@ func execute_detail( game_state: GameState, attacker: StateModel, defender: Stat
 
 	var attack_strength := calculate_attack_strength(attacker)
 	var defense_strength := defender.towerLevel
+	var attacker_name := StateType.name(attacker.location)
+	var defender_name := StateType.name(defender.location)
+	ActionManager.add_action(
+		ActionFactory.battle_started_action(
+			attacker_name, defender_name, attack_strength, defense_strength
+		)
+	)
 	var winner := battle_resolver.determine_winner(
 		attack_strength, defense_strength
+	)
+	ActionManager.add_action(
+		ActionFactory.battle_result_action(
+			attacker_name,
+			defender_name,
+			attacker_name
+			if winner == BATTLE_RESOLVER.Winner.ATTACKER
+			else defender_name
+		)
 	)
 	if winner == BATTLE_RESOLVER.Winner.ATTACKER:
 		resolve_success(game_state, attacker)

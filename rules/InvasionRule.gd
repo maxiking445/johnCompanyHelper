@@ -30,8 +30,30 @@ func execute(game_state: GameState) -> void:
 func execute_detail(game_state: GameState, attacker: StateModel, defender: StateModel)-> void:
 	var attackStrength := calculate_attack_strength(game_state, attacker)
 	var defenderStates := get_defending_states(game_state, defender)
+	var defense_strength := calculate_defense_strength(game_state, defender)
+	var attacker_name := StateType.name(attacker.location)
+	var defender_name := StateType.name(defender.location)
+	ActionManager.add_action(
+		ActionFactory.battle_started_action(
+			attacker_name, defender_name, attackStrength, defense_strength
+		)
+	)
 
-	if is_invasion_successful(game_state, defender, attackStrength):
+	var succeeded := is_invasion_successful(game_state, defender, attackStrength)
+	ActionManager.add_action(
+		ActionFactory.invasion_result_action(
+			attacker_name, defender_name, succeeded
+		)
+	)
+	ActionManager.add_action(
+		ActionFactory.battle_result_action(
+			attacker_name,
+			defender_name,
+			attacker_name if succeeded else defender_name
+		)
+	)
+
+	if succeeded:
 		resolve_success(game_state, attacker, defender, defenderStates)
 	elif attacker.towerLevel > 0:
 		attacker.removeTowerLevel()

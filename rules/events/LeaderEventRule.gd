@@ -21,6 +21,11 @@ func execute(game_state: GameState) -> void:
 	var state: StateModel = game_state.findStateByLocation(location)
 
 	if state.isSovereign:
+		ActionManager.add_action(
+			ActionFactory.state_status_action(
+				StateType.name(state.location), "sovereign"
+			)
+		)
 		state.addTowerLevel()
 	elif state.isCompanyControlled:
 		var rebellion_succeeded := attackAgainstCompanyRule.execute_for_state(

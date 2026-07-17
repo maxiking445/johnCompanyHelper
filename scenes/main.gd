@@ -9,18 +9,24 @@ var gameState: GameState
 
 
 func start_normal_game() -> GameState:
-	return start_game_from_state(DEFAULT_GAME_STATE)
-
-
-func start_game_from_state(start_game_state: GameState) -> GameState:
 	actionEventLog.clear()
 	ActionManager.clear()
-	_set_game_state(start_game_state.duplicate(true))
+	_set_game_state(DEFAULT_GAME_STATE)
+	start_game_from_state(gameState)
+	actionEventLog.renderActions()
+	return gameState
+	
+
+func continue_game() -> GameState:
+	start_game_from_state(gameState)
+	actionEventLog.renderActions()
+	return gameState
+
+func start_game_from_state(start_game_state: GameState) -> GameState:
 	EventHelper.initEventDeck(false)
 	RollHelper.clearQueuedResults()
 	storm_rule.execute(gameState)
 	_resolve_events(gameState, gameState.eventsToDraw)
-	actionEventLog.renderActions()
 	return gameState
 
 
@@ -117,3 +123,7 @@ func _on_resource_loader_upload_gamestate(loaded_game_state: GameState) -> void:
 
 func _on_start_button_pressed() -> void:
 	start_normal_game()
+
+
+func _on_continue_button_pressed() -> void:
+	continue_game()

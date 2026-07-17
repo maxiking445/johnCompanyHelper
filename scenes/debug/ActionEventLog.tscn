@@ -13,8 +13,8 @@ script = ExtResource("1_7dpri")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=453531063]
 layout_mode = 0
-offset_right = 744.0
-offset_bottom = 535.0
+offset_right = 918.0
+offset_bottom = 859.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer" unique_id=986946460]
 layout_mode = 2
