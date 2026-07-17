@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bjm5fuccheofc"]
+
+[ext_resource type="Script" uid="uid://jcfkwbujmrdx" path="res://scenes/debug/action_event_log.gd" id="1_7dpri"]
+
+[node name="ActionEventLog" type="Control" unique_id=1990207424]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7dpri")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=453531063]
+layout_mode = 0
+offset_right = 744.0
+offset_bottom = 535.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer" unique_id=986946460]
+layout_mode = 2
+
+[node name="VScrollBar" type="VScrollBar" parent="PanelContainer/ScrollContainer" unique_id=1480812131]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/ScrollContainer/VScrollBar" unique_id=453800527]
+layout_mode = 0
+offset_right = 704.654
+offset_bottom = 433.0
+
+[node name="Label" type="Label" parent="PanelContainer/ScrollContainer/VScrollBar/VBoxContainer" unique_id=1646735031]
+layout_mode = 2
+text = "TEST"

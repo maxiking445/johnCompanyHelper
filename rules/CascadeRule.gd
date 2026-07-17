@@ -36,8 +36,21 @@ func checkLocation(game_state: GameState, location:  StateType.StateType):
 						push_error("Connected order not found: %s" % connected_order_id)
 						continue
 					if connectedOrder.isOpen():
+						_add_cascade_action(location, connectedOrder.state)
 						connectedOrder.close()
-					else:
+					elif not allreadyCascadedLocations.has(connectedOrder.state):
+						_add_cascade_action(location, connectedOrder.state)
 						checkLocation(game_state, connectedOrder.state)
 	else:
 		game_state.closeNorthestOrder(location)
+
+
+func _add_cascade_action(
+	origin: StateType.StateType,
+	destination: StateType.StateType
+) -> void:
+	ActionManager.add_action(
+		ActionFactory.cascade_action(
+			StateType.name(origin), StateType.name(destination)
+		)
+	)

@@ -29,7 +29,14 @@ func execute(game_state: GameState) -> void:
 
 
 func _apply_windfall_to_state(state: StateModel) -> void:
-	for writer_index in state.getWritersAmountInState():
+	var writer_count := state.getWritersAmountInState()
+	if writer_count > 0:
+		ActionManager.add_action(
+			ActionFactory.windfall_pay_writers_action(
+				StateType.name(state.location), 1
+			)
+		)
+	for writer_index in writer_count:
 		var message := "Writer in %s gains 1$" % StateType.name(state.location)
 		print(message)
 		

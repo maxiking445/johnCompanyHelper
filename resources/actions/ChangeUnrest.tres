@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="FormattedAction" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://models/actions/formatted_action.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "Change unrest in {state} from {old_value} to {new_value}."
+title = "Change Unrest"
+type = 0
+minimum_parameter_count = 3
+maximum_parameter_count = 3

@@ -51,11 +51,11 @@ func _check_zone(zone: SeaModel, game_state: GameState) -> void:
 			if ship.isDamaged(): 
 				_sink_ship(ship, zone, game_state)
 			else: 
-				ship.damageShip()
+				ship.damageShip(game_state.get_sea_name(zone))
 		elif roll == 5 ||  roll == 6:
 			_sink_ship(ship, zone, game_state)
 
 
 func _sink_ship(ship: ShipModel, zone: SeaModel, game_state: GameState) -> void:
-	zone.sink_ship(ship)
+	zone.sink_ship(ship, game_state.get_sea_name(zone))
 	print("Ship sunk from ", ship.shipOwner  , " due to the Storm")

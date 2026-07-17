@@ -5,6 +5,7 @@ const DEFAULT_GAME_STATE := preload("res://resources/gameState/GameState1710.tre
 var storm_rule := StormRule.new()
 var gameState: GameState
 
+@onready var actionEventLog: ActionEventLog = $ActionEventLog
 
 
 func start_normal_game() -> GameState:
@@ -12,11 +13,14 @@ func start_normal_game() -> GameState:
 
 
 func start_game_from_state(start_game_state: GameState) -> GameState:
+	actionEventLog.clear()
+	ActionManager.clear()
 	_set_game_state(start_game_state.duplicate(true))
 	EventHelper.initEventDeck(false)
 	RollHelper.clearQueuedResults()
 	storm_rule.execute(gameState)
 	_resolve_events(gameState, gameState.eventsToDraw)
+	actionEventLog.renderActions()
 	return gameState
 
 
@@ -34,6 +38,7 @@ func start_test_game(
 		push_error("The deterministic event count must fit the supplied deck.")
 		return null
 
+	ActionManager.clear()
 	_set_game_state(start_game_state.duplicate(true))
 	EventHelper.draw_pile = event_deck.duplicate()
 	EventHelper.discard_pile.clear()
@@ -55,12 +60,16 @@ func execute_event(
 		push_error("Executing an event needs a GameState and a valid event.")
 		return null
 
+	ActionManager.clear()
 	_set_game_state(start_game_state.duplicate(true))
 	var location_event := IndiaEvent.new()
 	location_event.eventLocation = location
 	EventHelper.draw_pile = [location_event]
 	EventHelper.discard_pile = [event]
 	EventHelper.activeEvent = event
+	ActionManager.add_action(
+		ActionFactory.draw_event_action(event.eventName, StateType.name(location))
+	)
 	event.rule.execute(gameState)
 	EventHelper.eventHandled()
 	return gameState  
@@ -83,6 +92,12 @@ func _resolve_events(target_game_state: GameState, event_count: int) -> void:
 		if event == null or event.rule == null:
 			push_error("Every drawn event needs an executable rule.")
 			return
+		ActionManager.add_action(
+			ActionFactory.draw_event_action(
+				event.eventName,
+				StateType.name(EventHelper.getTopDeckEventLocation())
+			)
+		)
 		event.rule.execute(target_game_state)
 
 

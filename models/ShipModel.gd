@@ -15,5 +15,10 @@ func isExtraShip() -> bool:
 func isDamaged() -> bool:
 	return isFlipped
 
-func damageShip()->void:
+func damageShip(sea_zone: String = "Unknown Sea")->void:
+	if isFlipped:
+		return
 	self.isFlipped = true
+	ActionManager.add_action(
+		ActionFactory.ship_action(shipOwner, sea_zone, "damaged")
+	)

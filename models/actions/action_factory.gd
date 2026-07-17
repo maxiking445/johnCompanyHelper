@@ -2,16 +2,27 @@ class_name ActionFactory
 extends RefCounted
 
 const CHANGE_TREASURY: Action = preload("res://resources/actions/ChangeTreasury.tres")
+const CHANGE_TOWER_LEVEL: Action = preload("res://resources/actions/ChangeTowerLevel.tres")
+const CHANGE_UNREST: Action = preload("res://resources/actions/ChangeUnrest.tres")
+const CASCADE: Action = preload("res://resources/actions/Cascade.tres")
 const CLOSE_ORDERS: Action = preload("res://resources/actions/CloseOrders.tres")
 const CREATE_EMPIRE: Action = preload("res://resources/actions/CreateEmpire.tres")
 const DRAW_EVENT: Action = preload("res://resources/actions/DrawEvent.tres")
 const ERROR: Action = preload("res://resources/actions/Error.tres")
+const EXHAUST_TROOPS: Action = preload("res://resources/actions/ExhaustTroops.tres")
 const INCREASE_UNREST: Action = preload("res://resources/actions/IncreaseUnrest.tres")
 const INFORMATION: Action = preload("res://resources/actions/Information.tres")
 const MOVE_ELEPHANT: Action = preload("res://resources/actions/MoveElephant.tres")
 const OPEN_ORDERS: Action = preload("res://resources/actions/OpenOrders.tres")
 const REMOVE_EMPIRE_FLAG: Action = preload("res://resources/actions/RemoveEmpireFlag.tres")
+const REMOVE_OFFICER: Action = preload("res://resources/actions/RemoveOfficer.tres")
 const REMOVE_SOLDIERS: Action = preload("res://resources/actions/RemoveSoldiers.tres")
+const REMOVE_WRITER: Action = preload("res://resources/actions/RemoveWriter.tres")
+const ADD_TROPHY: Action = preload("res://resources/actions/AddTrophy.tres")
+const CHANGE_COMPANY_STANDING: Action = preload("res://resources/actions/ChangeCompanyStanding.tres")
+const RESTORE_LOCAL_AUTHORITY: Action = preload("res://resources/actions/RestoreLocalAuthority.tres")
+const DOMINATE_STATE: Action = preload("res://resources/actions/DominateState.tres")
+const RESTORE_SOVEREIGNTY: Action = preload("res://resources/actions/RestoreSovereignty.tres")
 const UPDATE_SHIP_STATUS: Action = preload("res://resources/actions/UpdateShipStatus.tres")
 const WINDFALL_PAY_WRITERS: Action = preload("res://resources/actions/WindfallPayWriters.tres")
 
@@ -22,6 +33,64 @@ static func ship_action(ship: String, sea_zone: String, status: String) -> Actio
 		"sea_zone": sea_zone,
 		"status": status,
 	})
+
+
+static func cascade_action(origin: String, destination: String) -> Action:
+	return _create(CASCADE, {"origin": origin, "destination": destination})
+
+
+static func change_tower_level_action(
+	state: String, old_value: int, new_value: int
+) -> Action:
+	return _create(CHANGE_TOWER_LEVEL, {
+		"state": state, "old_value": old_value, "new_value": new_value,
+	})
+
+
+static func change_unrest_action(
+	state: String, old_value: int, new_value: int
+) -> Action:
+	return _create(CHANGE_UNREST, {
+		"state": state, "old_value": old_value, "new_value": new_value,
+	})
+
+
+static func exhaust_troops_action(state: String, amount: int) -> Action:
+	return _create(EXHAUST_TROOPS, {"state": state, "amount": amount})
+
+
+static func remove_officer_action(state: String) -> Action:
+	return _create(REMOVE_OFFICER, {"state": state})
+
+
+static func add_trophy_action(state: String) -> Action:
+	return _create(ADD_TROPHY, {"state": state})
+
+
+static func change_company_standing_action(old_value: int, new_value: int) -> Action:
+	return _create(CHANGE_COMPANY_STANDING, {
+		"old_value": old_value, "new_value": new_value,
+	})
+
+
+static func remove_writer_action(state: String, order: String) -> Action:
+	return _create(REMOVE_WRITER, {"state": state, "order": order})
+
+
+static func restore_local_authority_action(
+	state: String, tower_level: int
+) -> Action:
+	return _create(RESTORE_LOCAL_AUTHORITY, {
+		"state": state, "tower_level": tower_level,
+	})
+
+
+static func dominate_state_action(state: String, dominator: String) -> Action:
+	return _create(DOMINATE_STATE, {"state": state, "dominator": dominator})
+
+
+static func restore_sovereignty_action(state: String) -> Action:
+	return _create(RESTORE_SOVEREIGNTY, {"state": state})
 
 
 static func close_orders_action(state: String, order_count: int) -> Action:

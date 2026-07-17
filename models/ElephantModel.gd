@@ -22,15 +22,37 @@ func getTouchingLocations()-> Array[StateType.StateType]:
 	return locations
 
 func placeInCenterOf(targetLocation: StateType.StateType):
+	var origin := _placement_description()
 	current_state = targetLocation
 	placement = EnumTypes.ElephantPlacement.IN_STATE
+	ActionManager.add_action(
+		ActionFactory.move_elephant_action(
+			origin, StateType.name(targetLocation), "center"
+		)
+	)
 	
 	
 func placeOnBorderOf(facingDirection: StateType.StateType, backDirection: StateType.StateType):
+	var origin := _placement_description()
 	placement = EnumTypes.ElephantPlacement.ON_BORDER	
 	border_state_a =  facingDirection
 	border_state_b = backDirection
 	facing_state = facingDirection
+	ActionManager.add_action(
+		ActionFactory.move_elephant_action(
+			origin,
+			"%s / %s" % [StateType.name(facingDirection), StateType.name(backDirection)],
+			"border"
+		)
+	)
+
+
+func _placement_description() -> String:
+	if is_inside_state():
+		return StateType.name(current_state)
+	if is_on_border():
+		return "%s / %s" % [StateType.name(border_state_a), StateType.name(border_state_b)]
+	return "unknown location"
 
 func is_inside_state() -> bool:
 	return placement == EnumTypes.ElephantPlacement.IN_STATE

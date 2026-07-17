@@ -106,7 +106,21 @@ func openAllOrders(location: StateType.StateType):
 		order.open()
 
 func lowerCompanyStanding(number: int):
+	var old_value := companyStanding
 	companyStanding = companyStanding - number
+	ActionManager.add_action(
+		ActionFactory.change_company_standing_action(old_value, companyStanding)
+	)
+
+
+func get_sea_name(sea: SeaModel) -> String:
+	if sea == seaWest:
+		return "West Sea"
+	if sea == seaEast:
+		return "East Sea"
+	if sea == seaSouth:
+		return "South Sea"
+	return "Unknown Sea"
 
 
 func set_events_to_draw(event_count: int) -> void:

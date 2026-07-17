@@ -25,21 +25,60 @@ class_name StateModel
 
 func addThropyToken():
 	trophyToken = trophyToken + 1
+	ActionManager.add_action(ActionFactory.add_trophy_action(_display_name()))
 
 func addTowerLevel():
+	var old_value := towerLevel
 	towerLevel = towerLevel + 1
+	ActionManager.add_action(
+		ActionFactory.change_tower_level_action(_display_name(), old_value, towerLevel)
+	)
 	
 func removeTowerLevel():
+	var old_value := towerLevel
 	towerLevel = towerLevel - 1
+	ActionManager.add_action(
+		ActionFactory.change_tower_level_action(_display_name(), old_value, towerLevel)
+	)
 
 func resetUnrest():
+	var old_value := unrest_size
 	unrest_size = 0
+	if old_value != unrest_size:
+		ActionManager.add_action(
+			ActionFactory.change_unrest_action(_display_name(), old_value, unrest_size)
+		)
+
+
+func change_unrest(amount: int) -> void:
+	var old_value := unrest_size
+	unrest_size += amount
+	if old_value != unrest_size:
+		ActionManager.add_action(
+			ActionFactory.change_unrest_action(_display_name(), old_value, unrest_size)
+		)
+
+
+func change_treasury(amount: int) -> void:
+	var old_value := treasury_size
+	treasury_size += amount
+	if old_value != treasury_size:
+		ActionManager.add_action(
+			ActionFactory.change_treasury_action(
+				_display_name(), old_value, treasury_size
+			)
+		)
 
 func exhaustTroops(number: int):
 	exhaustedTroops = exhaustedTroops + number
+	if number > 0:
+		ActionManager.add_action(
+			ActionFactory.exhaust_troops_action(_display_name(), number)
+		)
 	
 func removeOfficer():
 	officers = officers -1	
+	ActionManager.add_action(ActionFactory.remove_officer_action(_display_name()))
 
 func stateHasRebelled():
 	hasRebelled = true
@@ -54,10 +93,20 @@ func createNewEmpire(flag: EnumTypes.Empires ):
 	partOfEmpire = flag
 	isSovereign = true
 	isEmpireCapital = true
+	ActionManager.add_action(
+		ActionFactory.create_empire_action(_empire_name(flag), _display_name())
+	)
 
 
 func remove_empire_flag() -> void:
+	var removed_empire := partOfEmpire
 	partOfEmpire = EnumTypes.Empires.NONE
+	if removed_empire != EnumTypes.Empires.NONE:
+		ActionManager.add_action(
+			ActionFactory.remove_empire_flag_action(
+				_empire_name(removed_empire), _display_name()
+			)
+		)
 
 
 func become_dominated_by(state: StateModel) -> void:
@@ -66,6 +115,9 @@ func become_dominated_by(state: StateModel) -> void:
 	isEmpireCapital = false
 	isDominated = state.isPartOfEmpire()
 	isDominatedBy = state if state.isPartOfEmpire() else null
+	ActionManager.add_action(
+		ActionFactory.dominate_state_action(_display_name(), state._display_name())
+	)
 
 
 func restore_local_authority() -> void:
@@ -77,6 +129,9 @@ func restore_local_authority() -> void:
 	isDominated = false
 	isDominatedBy = null
 	remove_empire_flag()
+	ActionManager.add_action(
+		ActionFactory.restore_local_authority_action(_display_name(), towerLevel)
+	)
 
 
 func become_sovereign_after_rebellion() -> void:
@@ -85,9 +140,11 @@ func become_sovereign_after_rebellion() -> void:
 	remove_empire_flag()
 	isDominated = false
 	isDominatedBy = null
+	ActionManager.add_action(ActionFactory.restore_sovereignty_action(_display_name()))
 
 
 func resolve_foreign_invasion(invasion_strength: int) -> void:
+	var old_tower_level := towerLevel
 	remove_empire_flag()
 	isCompanyControlled = false
 	isSovereign = true
@@ -95,10 +152,24 @@ func resolve_foreign_invasion(invasion_strength: int) -> void:
 	isDominated = false
 	isDominatedBy = null
 	towerLevel = floori(invasion_strength / 2.0)
+	ActionManager.add_action(ActionFactory.restore_sovereignty_action(_display_name()))
+	ActionManager.add_action(
+		ActionFactory.change_tower_level_action(
+			_display_name(), old_tower_level, towerLevel
+		)
+	)
 
 
 func clear_rebellion() -> void:
 	hasRebelled = false
+
+
+func _display_name() -> String:
+	return StateType.name(location)
+
+
+func _empire_name(empire: EnumTypes.Empires) -> String:
+	return EnumTypes.Empires.keys()[empire]
 	
 	
 func isDominatedByState(state: StateModel):
