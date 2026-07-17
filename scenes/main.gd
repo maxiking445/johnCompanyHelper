@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 const DEFAULT_GAME_STATE := preload("res://resources/gameState/GameState1710.tres")
 
@@ -6,12 +6,13 @@ var storm_rule := StormRule.new()
 var gameState: GameState
 
 
-func _ready() -> void:
-	start_normal_game()
-
 
 func start_normal_game() -> GameState:
-	gameState = DEFAULT_GAME_STATE.duplicate(true)
+	return start_game_from_state(DEFAULT_GAME_STATE)
+
+
+func start_game_from_state(start_game_state: GameState) -> GameState:
+	_set_game_state(start_game_state.duplicate(true))
 	EventHelper.initEventDeck(false)
 	RollHelper.clearQueuedResults()
 	storm_rule.execute(gameState)
@@ -33,7 +34,7 @@ func start_test_game(
 		push_error("The deterministic event count must fit the supplied deck.")
 		return null
 
-	gameState = start_game_state.duplicate(true)
+	_set_game_state(start_game_state.duplicate(true))
 	EventHelper.draw_pile = event_deck.duplicate()
 	EventHelper.discard_pile.clear()
 	EventHelper.activeEvent = null
@@ -54,7 +55,7 @@ func execute_event(
 		push_error("Executing an event needs a GameState and a valid event.")
 		return null
 
-	gameState = start_game_state.duplicate(true)
+	_set_game_state(start_game_state.duplicate(true))
 	var location_event := IndiaEvent.new()
 	location_event.eventLocation = location
 	EventHelper.draw_pile = [location_event]
@@ -62,7 +63,14 @@ func execute_event(
 	EventHelper.activeEvent = event
 	event.rule.execute(gameState)
 	EventHelper.eventHandled()
-	return gameState
+	return gameState  
+
+
+func _set_game_state(new_game_state: GameState) -> void:
+	gameState = new_game_state
+	var resource_loader := get_node_or_null("ResourceLoader")
+	if resource_loader != null:
+		resource_loader.game_state = gameState
 
 
 func _resolve_events(target_game_state: GameState, event_count: int) -> void:
@@ -76,3 +84,21 @@ func _resolve_events(target_game_state: GameState, event_count: int) -> void:
 			push_error("Every drawn event needs an executable rule.")
 			return
 		event.rule.execute(target_game_state)
+
+
+
+
+
+func _on_resource_loader_download_gamestate(_downloaded_game_state: GameState) -> void:
+	pass
+
+
+func _on_resource_loader_upload_gamestate(loaded_game_state: GameState) -> void:
+	if loaded_game_state == null:
+		push_error("Cannot restart the game without a loaded GameState.")
+		return
+	start_game_from_state(loaded_game_state)
+
+
+func _on_start_button_pressed() -> void:
+	start_normal_game()
