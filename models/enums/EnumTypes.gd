@@ -27,3 +27,11 @@ enum Empires {
 	C,
 	NONE
   }
+
+
+enum ActionType {
+  	BOARD_CHANGE,
+	ACTION,
+	INFO,
+	ERROR
+  }
