@@ -8,6 +8,17 @@ extends Control
 
 
 func _ready() -> void:
+	if event != null:
+		_render_event()
+
+
+func initialize(new_event: Action) -> void:
+	event = new_event
+	if is_node_ready() and event != null:
+		_render_event()
+
+
+func _render_event() -> void:
 	$PanelContainer/MarginContainer/VBoxContainer/ActionText.text = event.text
 	_play_spawn_animation()
 
@@ -32,3 +43,7 @@ func _play_spawn_animation() -> void:
 		1.0,
 		animation_duration
 	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+
+func _on_done_button_pressed() -> void:
+	queue_free()

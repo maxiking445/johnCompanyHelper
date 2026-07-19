@@ -68,4 +68,5 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 
+[connection signal="flip_finished" from="CurrentDeckCard/CurrentEventCard" to="." method="_on_current_event_card_flip_finished"]
 [connection signal="gui_input" from="CurrentDeckCard/CurrentEventCard" to="." method="_on_current_event_card_gui_input"]

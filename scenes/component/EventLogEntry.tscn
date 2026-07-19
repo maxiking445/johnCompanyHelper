@@ -2,19 +2,20 @@
 
 [ext_resource type="Script" uid="uid://b0x03bc7aak8o" path="res://scenes/component/event_log_entry.gd" id="1_4a8rp"]
 
-[node name="EventLogEntry" type="Control" unique_id=2090890397]
+[node name="EventLogEntry" type="Control" unique_id=1241166982]
+custom_minimum_size = Vector2(0, 105)
 layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 3
+script = ExtResource("1_4a8rp")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=950236088]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_4a8rp")
-
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=950236088]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=2134340459]
 layout_mode = 2
@@ -30,7 +31,9 @@ layout_mode = 2
 layout_mode = 2
 text = "Change unrest in {state} from {old_value} to {new_value}."
 
-[node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1407233211]
+[node name="DoneButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1407233211]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "DONE"
+
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/DoneButton" to="." method="_on_done_button_pressed"]

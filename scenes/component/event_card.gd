@@ -17,10 +17,22 @@ var is_flipping: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if front != null:
-		front_sprite.texture = front
-	if back != null:
-		back_sprite.texture = back
+	_set_sprite_textures()
+
+
+func set_textures(
+	new_front: CompressedTexture2D,
+	new_back: CompressedTexture2D
+) -> void:
+	front = new_front
+	back = new_back
+	if is_node_ready():
+		_set_sprite_textures()
+
+
+func _set_sprite_textures() -> void:
+	front_sprite.texture = front
+	back_sprite.texture = back
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

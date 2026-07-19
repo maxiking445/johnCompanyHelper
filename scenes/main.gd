@@ -131,7 +131,17 @@ func _on_continue_button_pressed() -> void:
 
 func _on_start_with_ui_button_pressed() -> void:
 	start_normal_game()
-	$EventSummary.actionList = ActionManager.get_actions()
+	var current_event: IndiaEvent = null
+	var top_deck_event: IndiaEvent = null
+	if not EventHelper.discard_pile.is_empty():
+		current_event = EventHelper.discard_pile.back()
+	if not EventHelper.draw_pile.is_empty():
+		top_deck_event = EventHelper.draw_pile.front()
+
+	$EventSummary.initialize(
+		ActionManager.get_actions(),
+		top_deck_event,
+		current_event
+	)
 	$EventSummary.show()
-	$EventSummary.populate_event_log()
 	

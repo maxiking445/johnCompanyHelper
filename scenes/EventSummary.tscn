@@ -17,7 +17,9 @@ layout_mode = 1
 
 [node name="EventLogList" type="VBoxContainer" parent="." unique_id=153284763]
 layout_mode = 0
-offset_left = 507.0
-offset_top = 272.0
-offset_right = 1027.0
-offset_bottom = 704.0
+offset_left = 381.0
+offset_top = 298.0
+offset_right = 901.0
+offset_bottom = 730.0
+
+[connection signal="flipFinished" from="EventShowComponent" to="." method="_on_event_show_component_flip_finished"]

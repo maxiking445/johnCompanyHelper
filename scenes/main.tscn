@@ -24,6 +24,7 @@ offset_bottom = 172.0
 text = "Start"
 
 [node name="ActionEventLog" parent="." unique_id=1990207424 instance=ExtResource("4_jyhfs")]
+visible = false
 layout_mode = 1
 offset_left = 716.0
 offset_top = 23.0

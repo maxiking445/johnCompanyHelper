@@ -10,18 +10,38 @@ var is_animating_current_card: bool = false
 @onready var top_deck_event_card = $TopDeckCard/TopDeckEventCard
 @onready var current_card_target: Marker2D = $CurrentDeckCard/Marker2D
 
-
 var hasFlipped: bool = false
+
+signal flipFinished
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	top_deck_event_card.front = topDeckEvent.front_sprite
-	top_deck_event_card.back = topDeckEvent.back_sprite
-	current_event_card.front = currentDeckEvent.front_sprite
-	current_event_card.back = currentDeckEvent.back_sprite
 	$TopDeckCard.hide()
 	$CurrentDeckCard/Label.hide()
-	
+
+
+func initialize_events(
+	new_top_deck_event: IndiaEvent,
+	new_current_deck_event: IndiaEvent
+) -> void:
+	topDeckEvent = new_top_deck_event
+	currentDeckEvent = new_current_deck_event
+
+	if topDeckEvent != null:
+		top_deck_event_card.set_textures(
+			topDeckEvent.front_sprite,
+			topDeckEvent.back_sprite
+		)
+	else:
+		top_deck_event_card.set_textures(null, null)
+
+	if currentDeckEvent != null:
+		current_event_card.set_textures(
+			currentDeckEvent.front_sprite,
+			currentDeckEvent.back_sprite
+		)
+	else:
+		current_event_card.set_textures(null, null)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -74,3 +94,7 @@ func _move_current_card_to_marker() -> void:
 	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 
 	await tween.finished
+
+
+func _on_current_event_card_flip_finished() -> void:
+	flipFinished.emit()
