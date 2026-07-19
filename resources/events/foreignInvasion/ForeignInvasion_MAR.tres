@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_73j00"]
 [ext_resource type="Script" uid="uid://bg3ss66uav2xb" path="res://rules/events/ForeignInvasionEventRule.gd" id="2_rule"]
-[ext_resource type="Texture2D" path="res://assets/events/foreign_invasion_front_maratha_1.png" id="3_front"]
-[ext_resource type="Texture2D" path="res://assets/events/foreign_invasion_back_maratha_1.png" id="4_back"]
+[ext_resource type="Texture2D" uid="uid://cxnaytyh6qhh3" path="res://assets/events/foreign_invasion_front_maratha_1.png" id="3_front"]
+[ext_resource type="Texture2D" uid="uid://m374l04u37xl" path="res://assets/events/foreign_invasion_back_maratha_1.png" id="4_back"]
 
 [sub_resource type="Resource" id="ForeignInvasionRule"]
 script = ExtResource("2_rule")

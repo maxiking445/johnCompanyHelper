@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://b4ryqdsbscgld" path="res://rules/events/TurmoilEventRule.gd" id="1_1dbhp"]
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_m5b75"]
-[ext_resource type="Texture2D" path="res://assets/events/turmoil_front_delhi_1.png" id="3_front"]
-[ext_resource type="Texture2D" path="res://assets/events/turmoil_back_delhi_1.png" id="4_back"]
+[ext_resource type="Texture2D" uid="uid://d2xg47ipy5ci8" path="res://assets/events/turmoil_front_delhi_1.png" id="3_front"]
+[ext_resource type="Texture2D" uid="uid://bu4edjcm477va" path="res://assets/events/turmoil_back_delhi_1.png" id="4_back"]
 
 [sub_resource type="Resource" id="Resource_jroxm"]
 script = ExtResource("1_1dbhp")

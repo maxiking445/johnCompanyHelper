@@ -4,7 +4,6 @@
 [ext_resource type="Script" uid="uid://7uvl05segpkc" path="res://models/events/IndiaEvents.gd" id="2_usicb"]
 [ext_resource type="Resource" uid="uid://13bjruvj062t" path="res://resources/events/crisis/Crisis_BOM.tres" id="3_cf5cp"]
 [ext_resource type="Resource" uid="uid://b2bbgfl46yaft" path="res://resources/events/crisis/Crisis_DEL.tres" id="4_i32uu"]
-[ext_resource type="Resource" uid="uid://8nqcnfb8a8gp" path="res://resources/events/crisis/Crisis_MAD.tres" id="5_rd8qr"]
 [ext_resource type="Resource" uid="uid://cak4myqik27x8" path="res://resources/events/crisis/Crisis_MAR.tres" id="6_kc0fb"]
 [ext_resource type="Resource" uid="uid://jjx142eegnnf" path="res://resources/events/crisis/Crisis_MYS.tres" id="7_sr62c"]
 [ext_resource type="Resource" uid="uid://e8ytpgp83p5k" path="res://resources/events/crisis/Crisis_PUN.tres" id="8_sdoim"]
@@ -20,10 +19,11 @@
 [ext_resource type="Resource" uid="uid://dj2ytbmfjxyo7" path="res://resources/events/turmoil/Turmoil_DEL.tres" id="18_smc31"]
 [ext_resource type="Resource" uid="uid://v1gf6m07k77" path="res://resources/events/turmoil/Turmoil_MARA.tres" id="19_imst7"]
 [ext_resource type="Resource" uid="uid://coor674d3wopr" path="res://resources/events/turmoil/Turmoil_PUN.tres" id="20_im4re"]
+[ext_resource type="Resource" uid="uid://dubqnfdc6snbr" path="res://resources/events/crisis/Crisis_BENG.tres" id="21_6vn0g"]
 [ext_resource type="Resource" uid="uid://jtgvqovn44ex" path="res://resources/events/windfall/Windfall_HYP.tres" id="21_rxoms"]
 [ext_resource type="Resource" uid="uid://cbi6oh82wsuxq" path="res://resources/events/windfall/Windfall_MAD.tres" id="22_fkk7f"]
 
 [resource]
 script = ExtResource("2_usicb")
-events = Array[ExtResource("1_6vn0g")]([ExtResource("21_rxoms"), ExtResource("3_cf5cp"), ExtResource("4_i32uu"), ExtResource("5_rd8qr"), ExtResource("6_kc0fb"), ExtResource("7_sr62c"), ExtResource("8_sdoim"), ExtResource("9_kio6o"), ExtResource("10_be7se"), ExtResource("11_rgmv2"), ExtResource("12_3wr4c"), ExtResource("13_uwn58"), ExtResource("14_mnpkn"), ExtResource("15_mcf80"), ExtResource("16_lmetb"), ExtResource("17_tjmr5"), ExtResource("18_smc31"), ExtResource("19_imst7"), ExtResource("20_im4re"), ExtResource("21_rxoms"), ExtResource("22_fkk7f")])
+events = Array[ExtResource("1_6vn0g")]([ExtResource("21_rxoms"), ExtResource("3_cf5cp"), ExtResource("4_i32uu"), ExtResource("6_kc0fb"), ExtResource("7_sr62c"), ExtResource("8_sdoim"), ExtResource("9_kio6o"), ExtResource("10_be7se"), ExtResource("11_rgmv2"), ExtResource("12_3wr4c"), ExtResource("13_uwn58"), ExtResource("14_mnpkn"), ExtResource("15_mcf80"), ExtResource("16_lmetb"), ExtResource("17_tjmr5"), ExtResource("18_smc31"), ExtResource("19_imst7"), ExtResource("20_im4re"), ExtResource("21_rxoms"), ExtResource("22_fkk7f"), ExtResource("21_6vn0g")])
 metadata/_custom_type_script = "uid://7uvl05segpkc"

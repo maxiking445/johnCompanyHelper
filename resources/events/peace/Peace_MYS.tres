@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_dq01m"]
 [ext_resource type="Script" uid="uid://y3ds0nyv2mqm" path="res://rules/events/PeaceEventRule.gd" id="1_i00oe"]
-[ext_resource type="Texture2D" path="res://assets/events/peace_front_mysore_1.png" id="3_front"]
-[ext_resource type="Texture2D" path="res://assets/events/peace_back_mysore_1.png" id="4_back"]
+[ext_resource type="Texture2D" uid="uid://gxtv3h6t1tsv" path="res://assets/events/peace_front_mysore_1.png" id="3_front"]
+[ext_resource type="Texture2D" uid="uid://chcd8sqp6enoc" path="res://assets/events/peace_back_mysore_1.png" id="4_back"]
 
 [sub_resource type="Resource" id="Resource_ls2c0"]
 script = ExtResource("1_i00oe")
