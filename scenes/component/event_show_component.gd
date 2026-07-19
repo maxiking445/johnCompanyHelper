@@ -1,5 +1,7 @@
 extends Control
 
+@export var topDeckEvent: IndiaEvent
+@export var currentDeckEvent: IndiaEvent
 @export var move_duration: float = 0.55
 
 var is_animating_current_card: bool = false
@@ -13,6 +15,10 @@ var hasFlipped: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	top_deck_event_card.front = topDeckEvent.front_sprite
+	top_deck_event_card.back = topDeckEvent.back_sprite
+	current_event_card.front = currentDeckEvent.front_sprite
+	current_event_card.back = currentDeckEvent.back_sprite
 	$TopDeckCard.hide()
 	$CurrentDeckCard/Label.hide()
 	

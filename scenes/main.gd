@@ -127,3 +127,11 @@ func _on_start_button_pressed() -> void:
 
 func _on_continue_button_pressed() -> void:
 	continue_game()
+
+
+func _on_start_with_ui_button_pressed() -> void:
+	start_normal_game()
+	$EventSummary.actionList = ActionManager.get_actions()
+	$EventSummary.show()
+	$EventSummary.populate_event_log()
+	

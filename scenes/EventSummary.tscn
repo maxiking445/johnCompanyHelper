@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://gpfei4wa2jkf"]
+
+[ext_resource type="Script" uid="uid://byauixe5cx7ng" path="res://scenes/event_summary.gd" id="1_7wnqb"]
+[ext_resource type="PackedScene" uid="uid://c8ni8qxid5sny" path="res://scenes/component/EventShowComponent.tscn" id="2_2of6r"]
+
+[node name="EventSummary" type="Control" unique_id=736882236]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7wnqb")
+
+[node name="EventShowComponent" parent="." unique_id=1761235851 instance=ExtResource("2_2of6r")]
+layout_mode = 1
+
+[node name="EventLogList" type="VBoxContainer" parent="." unique_id=153284763]
+layout_mode = 0
+offset_left = 507.0
+offset_top = 272.0
+offset_right = 1027.0
+offset_bottom = 704.0
