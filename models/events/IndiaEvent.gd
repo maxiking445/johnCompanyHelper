@@ -8,3 +8,6 @@ class_name IndiaEvent
 @export var elephantShape: EnumTypes.ElephantMarker = EnumTypes.ElephantMarker.NONE
 @export var ruleText: String
 @export var rule: Rule
+
+@export var front_sprite: CompressedTexture2D
+@export var back_sprite: CompressedTexture2D

@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_bl3uf"]
 [ext_resource type="Script" uid="uid://bdftkvc1w8ita" path="res://rules/events/WindfallEventRule.gd" id="1_n6x7b"]
+[ext_resource type="Texture2D" path="res://assets/events/windfall_front_hyderabad_1.png" id="3_front"]
+[ext_resource type="Texture2D" path="res://assets/events/windfall_back_hyderabad_1.png" id="4_back"]
 
 [sub_resource type="Resource" id="Resource_n6x7b"]
 script = ExtResource("1_n6x7b")
@@ -13,4 +15,6 @@ eventName = "Windfall"
 eventLocation = 2
 ruleText = "Players take £1 from the bank for each writer they have on an order in theregion pictured on the top of the draw stack and all adjacent regions i.e.regions that share a border with that region. "
 rule = SubResource("Resource_n6x7b")
+front_sprite = ExtResource("3_front")
+back_sprite = ExtResource("4_back")
 metadata/_custom_type_script = "uid://cud5w8obqe6uf"

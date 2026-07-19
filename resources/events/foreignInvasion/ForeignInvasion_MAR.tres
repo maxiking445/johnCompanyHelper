@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_73j00"]
 [ext_resource type="Script" uid="uid://bg3ss66uav2xb" path="res://rules/events/ForeignInvasionEventRule.gd" id="2_rule"]
+[ext_resource type="Texture2D" path="res://assets/events/foreign_invasion_front_maratha_1.png" id="3_front"]
+[ext_resource type="Texture2D" path="res://assets/events/foreign_invasion_back_maratha_1.png" id="4_back"]
 
 [sub_resource type="Resource" id="ForeignInvasionRule"]
 script = ExtResource("2_rule")
@@ -12,4 +14,6 @@ eventName = "Foreign Invasion"
 eventLocation = 5
 ruleText = "Roll the storm die and resolve an Invasion Crisis and/or Attack against theCompany in each region linked to a storm (Bombay for West Indian, Madras forSouth Indian, and Bengal for East Indian). If all storms are rolled, resolve thisevent once in each. If no storms are rolled, resolve this event in the region onthe top card of the draw stack instead. "
 rule = SubResource("ForeignInvasionRule")
+front_sprite = ExtResource("3_front")
+back_sprite = ExtResource("4_back")
 metadata/_custom_type_script = "uid://cud5w8obqe6uf"

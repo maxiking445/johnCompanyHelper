@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_2vndd"]
 [ext_resource type="Script" uid="uid://b852qdvmhfr7n" path="res://rules/events/LeaderEventRule.gd" id="1_s4xcx"]
+[ext_resource type="Texture2D" path="res://assets/events/leader_front_bombay_1.png" id="3_front"]
+[ext_resource type="Texture2D" path="res://assets/events/leader_back_bombay_1.png" id="4_back"]
 
 [sub_resource type="Resource" id="Resource_mcd57"]
 script = ExtResource("1_s4xcx")
@@ -14,4 +16,6 @@ modifier = 2
 elephantShape = 0
 ruleText = "If the region pictured on the top of the draw stack is sovereign, add atower level to it. Otherwise, treat this event as a Rebellion in the picturedregion with a strength modifier equal to the number on the explosionsymbol (see Crisis rules)."
 rule = SubResource("Resource_mcd57")
+front_sprite = ExtResource("3_front")
+back_sprite = ExtResource("4_back")
 metadata/_custom_type_script = "uid://cud5w8obqe6uf"

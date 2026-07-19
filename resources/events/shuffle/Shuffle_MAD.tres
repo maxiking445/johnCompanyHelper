@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cud5w8obqe6uf" path="res://models/events/IndiaEvent.gd" id="1_c3kj8"]
 [ext_resource type="Script" uid="uid://4yaohaaiqpdq" path="res://rules/events/ShuffleEventRule.gd" id="1_rttjq"]
+[ext_resource type="Texture2D" path="res://assets/events/shuffle_front_madras_1.png" id="3_front"]
+[ext_resource type="Texture2D" path="res://assets/events/shuffle_back_madras_1.png" id="4_back"]
 
 [sub_resource type="Resource" id="ShuffleRule"]
 script = ExtResource("1_rttjq")
@@ -13,4 +15,6 @@ eventLocation = 1
 elephantShape = 1
 ruleText = "First, perform the Elephant's March. Then, shuffle this tile in with theremainder o f the draw stack. Finally, shuffle the discards and place themon top of the draw stack, facedown. In the rare instance the draw stack isempty, perform the Elephant's March last. "
 rule = SubResource("ShuffleRule")
+front_sprite = ExtResource("3_front")
+back_sprite = ExtResource("4_back")
 metadata/_custom_type_script = "uid://cud5w8obqe6uf"
