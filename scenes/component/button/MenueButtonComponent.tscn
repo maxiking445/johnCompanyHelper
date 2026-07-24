@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bxwkqw4qluyvf"]
+
+[ext_resource type="Theme" uid="uid://cymebvqn8yi8t" path="res://scenes/component/button/menueButton.tres" id="1_2bqpb"]
+
+[node name="MenueButtonComponent" type="Button" unique_id=347931871]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -1298.0
+offset_bottom = -835.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_2bqpb")
+text = "TEST"

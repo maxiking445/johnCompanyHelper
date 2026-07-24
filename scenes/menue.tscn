@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://ddci5qppxv6cq"]
+
+[ext_resource type="Script" uid="uid://bkb6rhnn4mpaj" path="res://scenes/menue.gd" id="1_4mjw0"]
+[ext_resource type="PackedScene" uid="uid://cnnglhyxqwp4b" path="res://scenes/component/background/background.tscn" id="2_bfvy1"]
+[ext_resource type="Texture2D" uid="uid://7d6r64tujev2" path="res://assets/mainMenueLogo.png" id="3_6yxwk"]
+[ext_resource type="FontFile" uid="uid://dym0tpcfny0lk" path="res://font/LibreBaskerville-Bold.ttf" id="5_bfvy1"]
+[ext_resource type="FontFile" uid="uid://grk07og35w54" path="res://font/LibreBaskerville-Italic.ttf" id="6_psqmx"]
+[ext_resource type="PackedScene" uid="uid://bxwkqw4qluyvf" path="res://scenes/component/button/MenueButtonComponent.tscn" id="7_psqmx"]
+
+[node name="Menue" type="Control" unique_id=1364657303]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4mjw0")
+metadata/_edit_lock_ = true
+
+[node name="Background" parent="." unique_id=1923771803 instance=ExtResource("2_bfvy1")]
+layout_mode = 1
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=444586989]
+layout_mode = 0
+offset_left = 1044.0
+offset_top = 68.0
+offset_right = 1466.0
+offset_bottom = 817.8236
+texture = ExtResource("3_6yxwk")
+expand_mode = 1
+
+[node name="Title" type="Label" parent="." unique_id=119026716]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 220.0
+offset_right = 633.0
+offset_bottom = 277.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_bfvy1")
+theme_override_font_sizes/font_size = 45
+text = "JOHNCOMPANY"
+
+[node name="Subtitle" type="Label" parent="." unique_id=1015565845]
+layout_mode = 0
+offset_left = 280.0
+offset_top = 279.0
+offset_right = 552.0
+offset_bottom = 336.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_psqmx")
+theme_override_font_sizes/font_size = 30
+text = "India Phase Helper"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=475342523]
+layout_mode = 0
+offset_left = 333.0
+offset_top = 344.0
+offset_right = 478.0
+offset_bottom = 461.0
+
+[node name="StartButton" parent="VBoxContainer" unique_id=347931871 instance=ExtResource("7_psqmx")]
+layout_mode = 2
+text = "START"
+
+[node name="QuitButton" parent="VBoxContainer" unique_id=1349532960 instance=ExtResource("7_psqmx")]
+layout_mode = 2
+size_flags_vertical = 10
+text = "QUIT"
+
+[connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
