@@ -1,6 +1,7 @@
 extends Resource
 class_name IndiaEvent
 
+@export var eventId: int = -1
 @export var eventName: String
 @export var eventLocation: StateType.StateType
 @export var modifier: int

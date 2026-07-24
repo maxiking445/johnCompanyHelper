@@ -10,6 +10,7 @@ script = ExtResource("1_rttjq")
 
 [resource]
 script = ExtResource("1_c3kj8")
+eventId = 14
 eventName = "Shuffle"
 eventLocation = 1
 elephantShape = 1

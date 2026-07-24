@@ -11,6 +11,7 @@ metadata/_custom_type_script = "uid://bdftkvc1w8ita"
 
 [resource]
 script = ExtResource("1_ryd4t")
+eventId = 21
 eventName = "Windfall"
 eventLocation = 1
 ruleText = "Players take £1 from the bank for each writer they have on an order in theregion pictured on the top of the draw stack and all adjacent regions i.e.regions that share a border with that region. "

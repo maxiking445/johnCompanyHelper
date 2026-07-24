@@ -11,6 +11,7 @@ metadata/_custom_type_script = "uid://b4ryqdsbscgld"
 
 [resource]
 script = ExtResource("1_3gx1c")
+eventId = 17
 eventName = "Turmoil"
 eventLocation = 5
 ruleText = "Close the northernmost open order in the region pictured on the top ofthe draw stack. Any writer on the order is returned to that player's supply.If all orders in this region are already closed, perform a Cascade. "

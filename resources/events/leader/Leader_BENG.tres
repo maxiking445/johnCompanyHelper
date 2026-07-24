@@ -11,6 +11,7 @@ metadata/_custom_type_script = "uid://b852qdvmhfr7n"
 
 [resource]
 script = ExtResource("1_4h0cw")
+eventId = 8
 eventName = "Leader"
 eventLocation = 4
 modifier = 2

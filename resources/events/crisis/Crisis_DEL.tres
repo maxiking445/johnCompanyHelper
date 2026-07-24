@@ -11,6 +11,7 @@ metadata/_custom_type_script = "uid://c40ckkcsfj3us"
 
 [resource]
 script = ExtResource("1_7wir5")
+eventId = 3
 eventName = "Crisis"
 eventLocation = 6
 elephantShape = 2

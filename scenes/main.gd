@@ -139,7 +139,7 @@ func _on_start_with_ui_button_pressed() -> void:
 		top_deck_event = EventHelper.draw_pile.front()
 
 	$EventSummary.initialize(
-		ActionManager.get_actions(),
+		ActionManager.get_actions_by_event_id(current_event.eventId),
 		top_deck_event,
 		current_event
 	)

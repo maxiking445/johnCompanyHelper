@@ -11,6 +11,7 @@ metadata/_custom_type_script = "uid://y3ds0nyv2mqm"
 
 [resource]
 script = ExtResource("1_l5msg")
+eventId = 12
 eventName = "Peace"
 eventLocation = 1
 elephantShape = 2

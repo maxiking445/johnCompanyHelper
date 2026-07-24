@@ -10,12 +10,21 @@ func add_action(action: Action) -> void:
 	if action == null:
 		push_error("ActionManager cannot add a null action.")
 		return
+	if EventHelper.activeEvent != null:
+		action.eventId = EventHelper.activeEvent.eventId
 	_actions.append(action)
 	action_added.emit(action)
 
 
 func get_actions() -> Array[Action]:
 	return _actions.duplicate()
+
+func get_actions_by_event_id(event_id: int) -> Array[Action]:
+	var event_actions: Array[Action] = []
+	for action in _actions:
+		if action.eventId == event_id:
+			event_actions.append(action)
+	return event_actions
 
 
 func get_action(index: int) -> Action:
