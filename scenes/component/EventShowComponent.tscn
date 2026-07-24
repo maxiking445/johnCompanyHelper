@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://c8ni8qxid5sny"]
 
 [ext_resource type="Script" uid="uid://cca8s4t3cf3fd" path="res://scenes/component/event_show_component.gd" id="1_m2s0u"]
-[ext_resource type="PackedScene" uid="uid://cwlyerw0bsy5i" path="res://scenes/component/event_card.tscn" id="2_sfgxw"]
+[ext_resource type="PackedScene" uid="uid://cwlyerw0bsy5i" path="res://scenes/component/eventCard/event_card.tscn" id="2_sfgxw"]
+[ext_resource type="LabelSettings" uid="uid://rli1xj7qgpnm" path="res://font/english_label.tres" id="2_x6q8h"]
 
 [node name="EventShowComponent" type="Control" unique_id=1761235851]
 layout_mode = 3
@@ -12,11 +13,13 @@ grow_horizontal = 2
 script = ExtResource("1_m2s0u")
 
 [node name="TopDeckCard" type="Control" parent="." unique_id=825448648]
-anchors_preset = 0
-offset_left = -348.0
-offset_top = 27.0
-offset_right = -307.0
-offset_bottom = 27.0
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -341.0
+offset_right = -341.0
+grow_horizontal = 2
 
 [node name="Label" type="Label" parent="TopDeckCard" unique_id=1104599707]
 layout_mode = 0
@@ -25,6 +28,7 @@ offset_top = 1.0
 offset_right = 184.0
 offset_bottom = 24.0
 text = "Top Deck Card"
+label_settings = ExtResource("2_x6q8h")
 
 [node name="TopDeckEventCard" parent="TopDeckCard" unique_id=832911006 instance=ExtResource("2_sfgxw")]
 layout_mode = 0
@@ -36,36 +40,39 @@ scale = Vector2(0.4, 0.4)
 mouse_filter = 2
 
 [node name="CurrentDeckCard" type="Control" parent="." unique_id=1210345120]
-anchors_preset = 0
-offset_left = -348.0
-offset_top = 27.0
-offset_right = -307.0
-offset_bottom = 27.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -27.0
+offset_top = 473.0
+offset_right = -27.0
+offset_bottom = 473.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Marker2D" type="Marker2D" parent="CurrentDeckCard" unique_id=1014496513]
-position = Vector2(414, 142)
+position = Vector2(74, -340)
 
 [node name="Label" type="Label" parent="CurrentDeckCard" unique_id=1949443877]
-layout_mode = 0
-offset_left = 363.0
-offset_top = 1.0
-offset_right = 471.0
-offset_bottom = 24.0
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 17.0
+offset_top = -467.0
+offset_right = 125.0
+offset_bottom = -444.0
+grow_horizontal = 2
 text = "Current Event"
+label_settings = ExtResource("2_x6q8h")
 
 [node name="CurrentEventCard" parent="CurrentDeckCard" unique_id=79784915 instance=ExtResource("2_sfgxw")]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 54.5
-offset_top = 202.0
-offset_right = 566.5
-offset_bottom = 714.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_left = -260.0
+offset_top = -244.0
+offset_right = 252.0
+offset_bottom = 268.0
 mouse_filter = 0
 
 [connection signal="flip_finished" from="CurrentDeckCard/CurrentEventCard" to="." method="_on_current_event_card_flip_finished"]

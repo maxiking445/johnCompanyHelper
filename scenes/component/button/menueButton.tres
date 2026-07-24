@@ -1,6 +1,6 @@
 [gd_resource type="Theme" format=3 uid="uid://cymebvqn8yi8t"]
 
-[ext_resource type="FontFile" uid="uid://wkt3pysvuh01" path="res://font/IMFellEnglish-Regular.ttf" id="1_8mnnk"]
+[ext_resource type="FontFile" uid="uid://bijmld4gt6fim" path="res://font/PirataOne-Regular.ttf" id="1_gql5p"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_8mnnk"]
 load_path = "res://.godot/imported/button.svg-f49004b9779a0b45871c3519b64b92cd.ctex"
@@ -16,11 +16,11 @@ texture = SubResource("CompressedTexture2D_8mnnk")
 texture = SubResource("CompressedTexture2D_8mnnk")
 
 [resource]
-Button/colors/font_color = Color(0.9098039, 1, 0.8901961, 1)
+Button/colors/font_color = Color(1, 1, 1, 1)
 Button/colors/font_hover_color = Color(0.69411767, 0.11372549, 0.16470589, 1)
 Button/colors/font_pressed_color = Color(0.6934779, 0.11566361, 0.16651568, 1)
 Button/font_sizes/font_size = 30
-Button/fonts/font = ExtResource("1_8mnnk")
+Button/fonts/font = ExtResource("1_gql5p")
 Button/styles/hover = SubResource("StyleBoxTexture_2bmkw")
 Button/styles/normal = SubResource("StyleBoxTexture_7ruag")
 Button/styles/pressed = SubResource("StyleBoxTexture_crnkb")

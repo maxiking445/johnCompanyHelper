@@ -5,13 +5,29 @@
 [ext_resource type="Resource" uid="uid://df6g5bknjcaik" path="res://resources/gameState/GameState1710.tres" id="3_sugp2"]
 [ext_resource type="PackedScene" uid="uid://bjm5fuccheofc" path="res://scenes/debug/ActionEventLog.tscn" id="4_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://gpfei4wa2jkf" path="res://scenes/EventSummary.tscn" id="5_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://cnnglhyxqwp4b" path="res://scenes/component/background/background.tscn" id="6_tefeu"]
 
 [node name="Main" type="Control" unique_id=2144566368]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_o5qli")
 
+[node name="Background" parent="." unique_id=1923771803 instance=ExtResource("6_tefeu")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 1600.0
+offset_bottom = 895.0
+grow_horizontal = 1
+grow_vertical = 1
+
 [node name="ResourceLoader" parent="." unique_id=1308806400 instance=ExtResource("2_0wfyh")]
+visible = false
 layout_mode = 1
 game_state = ExtResource("3_sugp2")
 
@@ -41,18 +57,23 @@ text = "Continue"
 
 [node name="StartWithUIButton" type="Button" parent="." unique_id=1852270056]
 layout_mode = 0
-offset_left = 433.0
-offset_top = 117.0
-offset_right = 539.0
-offset_bottom = 173.0
+offset_left = 46.0
+offset_top = 101.0
+offset_right = 152.0
+offset_bottom = 157.0
 text = "Start with UI"
 
 [node name="EventSummary" parent="." unique_id=736882236 instance=ExtResource("5_tbgi4")]
 layout_mode = 1
-offset_left = 522.0
-offset_top = 23.0
-offset_right = 522.0
-offset_bottom = 23.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 21.0
+offset_top = 22.0
+offset_right = 21.0
+offset_bottom = 22.0
 
 [connection signal="download_gamestate" from="ResourceLoader" to="." method="_on_resource_loader_download_gamestate"]
 [connection signal="upload_gamestate" from="ResourceLoader" to="." method="_on_resource_loader_upload_gamestate"]

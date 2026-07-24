@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://cwlyerw0bsy5i"]
+
+[ext_resource type="Script" uid="uid://tc18vtuq03ip" path="res://scenes/component/eventCard/event_card.gd" id="1_dj2if"]
+[ext_resource type="Texture2D" uid="uid://cataxjup4qh8u" path="res://assets/events/crisis_front_bengal_1.png" id="1_n2d2m"]
+[ext_resource type="Texture2D" uid="uid://c25e1oln65jk" path="res://assets/events/crisis_back_delhi_1.png" id="2_dj2if"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_uegmi"]
+
+[node name="EventCard" type="SubViewportContainer" unique_id=79784915]
+offset_right = 512.0
+offset_bottom = 512.0
+script = ExtResource("1_dj2if")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1507361598]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="CardMesh" type="MeshInstance3D" parent="SubViewport" unique_id=982226533]
+transform = Transform3D(1, 0, 0, 0, 0.022378147, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_uegmi")
+
+[node name="Front" type="Sprite3D" parent="SubViewport/CardMesh" unique_id=260761704]
+transform = Transform3D(0.13963798, 0, 0, 0, -1.0274118e-05, 1650.9896, 0, -0.14236577, -4.3711385e-08, 0.002829671, 1.3656933, 2.9742718e-05)
+double_sided = false
+texture = ExtResource("1_n2d2m")
+
+[node name="Back" type="Sprite3D" parent="SubViewport/CardMesh" unique_id=917611662]
+transform = Transform3D(-0.13963798, -1.24460104e-08, -1.6149646e-06, 2.7275587e-07, 1.215544e-14, -1650.9896, 1.220754e-08, -0.14236577, 7.059234e-14, 0, -1.2283117, 0)
+double_sided = false
+texture = ExtResource("2_dj2if")
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=1253253992]
+transform = Transform3D(1, 0, 0, 0, -0.0027438805, 0.99999624, 0, -0.99999624, -0.0027438805, 0, 1.0289757, 0)
+projection = 1
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport" unique_id=319864121]
+transform = Transform3D(1, 0, 0, 0, -0.45045656, 0.8927984, 0, -0.8927984, -0.45045656, 0, 1.5958647, 0)
+light_energy = 2.0
+sky_mode = 1

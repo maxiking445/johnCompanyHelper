@@ -6,7 +6,7 @@ const EVENT_LOG_ENTRY_SCENE := preload("res://scenes/component/EventLogEntry.tsc
 @export var entry_delay: float = 0.5
 @export var topDeckEvent: IndiaEvent 
 @export var currentEvent: IndiaEvent 
-@onready var eventLogList: VBoxContainer = $EventLogList
+@onready var eventLogList: VBoxContainer = $ScrollContainer/EventLogList
 
 func _ready() -> void:
 	pass

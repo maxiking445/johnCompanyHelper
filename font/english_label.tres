@@ -1,0 +1,10 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://rli1xj7qgpnm"]
+
+[ext_resource type="FontFile" uid="uid://btbga84s2fti" path="res://font/IMFellEnglish-Italic.ttf" id="1_e5781"]
+
+[resource]
+font = ExtResource("1_e5781")
+font_size = 24
+font_color = Color(0, 0, 0, 1)
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
