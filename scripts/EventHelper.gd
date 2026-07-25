@@ -6,6 +6,7 @@ const IndiaEventsDatabase: IndiaEvents = preload("res://resources/events/IndiaEv
 var draw_pile: Array[IndiaEvent] = []
 var discard_pile: Array[IndiaEvent] = []
 var activeEvent: IndiaEvent
+var playedEvents: Dictionary[int, PlayedEvent] = {}
 
 func initEventDeck(shuffle_deck: bool = true) -> void:
 	draw_pile = IndiaEventsDatabase.events.duplicate()
@@ -28,7 +29,22 @@ func drawEvent() -> IndiaEvent:
 	var event: IndiaEvent = draw_pile.pop_front()
 	discard_pile.append(event)
 	activeEvent = event
+	addPlayedEvent()
 	return event
+
+func addPlayedEvent():
+	var playedEvent = PlayedEvent.new()
+	playedEvent.topdeckEvent = getTopDeckEvent()
+	playedEvent.currentEvent = activeEvent
+	playedEvents[activeEvent.eventId] = playedEvent
+
+func getPlayedEvents() -> Dictionary[int, PlayedEvent]: 
+	return playedEvents
+
+func getPlayedEventAt(index: int)-> PlayedEvent:
+	var event = EventHelper.getPlayedEvents().keys()[index]
+	var value: PlayedEvent = EventHelper.getPlayedEvents()[event]
+	return value
 
 func eventHandled():
 	activeEvent = null
@@ -57,3 +73,17 @@ func getTopDeckEventLocation() -> StateType.StateType:
 		print("EventDeck is empty!")
 
 	return draw_pile.front().eventLocation
+
+
+func getTopDeckEvent() -> IndiaEvent:
+	if draw_pile.is_empty():
+		print("EventDeck is empty!")
+	return draw_pile.front()
+
+
+func getEventByEventId(id: int ) -> IndiaEvent:
+	for event: IndiaEvent in IndiaEventsDatabase.events:
+		if event.eventId == id:
+			return event
+	printerr("Could not find Event with EventID: ", id)			
+	return null

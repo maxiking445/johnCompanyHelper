@@ -9,6 +9,7 @@ signal flip_finished
 @export var flip_height: float = 0.18
 
 var is_flipping: bool = false
+var flip_tween: Tween
 
 @onready var card_mesh: MeshInstance3D = $SubViewport/CardMesh
 @onready var front_sprite: Sprite3D = $SubViewport/CardMesh/Front
@@ -50,17 +51,17 @@ func flip() -> void:
 	var half_rotation := start_rotation + 90.0
 	var target_rotation := start_rotation + 180.0
 	var half_duration := flip_duration * 0.5
-	var tween := create_tween()
+	flip_tween = create_tween()
 
 	# Lift and turn the card halfway, similar to a physical tabletop flip.
-	tween.tween_property(
+	flip_tween.tween_property(
 		card_mesh,
 		"position:y",
 		start_y + flip_height,
 		half_duration
 	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
-	tween.parallel().tween_property(
+	flip_tween.parallel().tween_property(
 		card_mesh,
 		"rotation_degrees:z",
 		half_rotation,
@@ -68,23 +69,33 @@ func flip() -> void:
 	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 
 	# Finish the turn and let the card settle back onto the table.
-	tween.tween_property(
+	flip_tween.tween_property(
 		card_mesh,
 		"position:y",
 		start_y,
 		half_duration
 	).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 
-	tween.parallel().tween_property(
+	flip_tween.parallel().tween_property(
 		card_mesh,
 		"rotation_degrees:z",
 		target_rotation,
 		half_duration
 	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
-	tween.finished.connect(func() -> void:
+	flip_tween.finished.connect(func() -> void:
 		card_mesh.rotation_degrees.z = fposmod(card_mesh.rotation_degrees.z, 360.0)
 		card_mesh.position.y = start_y
 		is_flipping = false
+		flip_tween = null
 		flip_finished.emit()
 	)
+
+
+func reset() -> void:
+	if flip_tween != null and flip_tween.is_valid():
+		flip_tween.kill()
+	flip_tween = null
+	is_flipping = false
+	card_mesh.position.y = 0.0
+	card_mesh.rotation_degrees.z = 0.0

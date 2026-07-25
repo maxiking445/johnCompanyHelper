@@ -6,6 +6,7 @@ const EVENT_LOG_ENTRY_SCENE := preload("res://scenes/component/EventLogEntry.tsc
 @export var entry_delay: float = 0.5
 @export var topDeckEvent: IndiaEvent 
 @export var currentEvent: IndiaEvent 
+@export var index: int 
 @onready var eventLogList: VBoxContainer = $ScrollContainer/EventLogList
 
 func _ready() -> void:
@@ -13,13 +14,14 @@ func _ready() -> void:
 
 
 func initialize(
-	new_action_list: Array[Action],
+	index: int,
 	new_top_deck_event: IndiaEvent,
 	new_current_event: IndiaEvent
 ) -> void:
-	actionList = new_action_list
+	self.index = index
 	topDeckEvent = new_top_deck_event
 	currentEvent = new_current_event
+	actionList = ActionManager.get_actions_by_event_id(currentEvent.eventId)
 	$EventShowComponent.initialize_events(topDeckEvent, currentEvent)
 	
 
@@ -38,3 +40,19 @@ func populate_event_log() -> void:
 
 func _on_event_show_component_flip_finished() -> void:
 	populate_event_log()
+
+
+func _on_next_button_pressed() -> void:
+	index = index + 1
+	if index >= EventHelper.getPlayedEvents().size():
+		print("NO MORE EVENTS!")
+		return
+	var firstEventValue = EventHelper.getPlayedEventAt(index)
+	var current_event: IndiaEvent = firstEventValue.currentEvent
+	var top_deck_event: IndiaEvent = firstEventValue.topdeckEvent
+	topDeckEvent = top_deck_event
+	currentEvent = current_event
+	actionList = ActionManager.get_actions_by_event_id(currentEvent.eventId)
+	for child in eventLogList.get_children():
+		child.queue_free()
+	$EventShowComponent.initialize_events(topDeckEvent, currentEvent, true)

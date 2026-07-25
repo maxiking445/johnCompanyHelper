@@ -89,15 +89,14 @@ func _set_game_state(new_game_state: GameState) -> void:
 
 
 func _resolve_events(target_game_state: GameState, event_count: int) -> void:
+	print("Event count: ", event_count)
 	for event_index in range(event_count):
 		if EventHelper.draw_pile.is_empty():
 			push_error("The event deck is empty before all events were resolved.")
 			return
 
 		var event := EventHelper.drawEvent()
-		if event == null or event.rule == null:
-			push_error("Every drawn event needs an executable rule.")
-			return
+		
 		ActionManager.add_action(
 			ActionFactory.draw_event_action(
 				event.eventName,
@@ -131,15 +130,12 @@ func _on_continue_button_pressed() -> void:
 
 func _on_start_with_ui_button_pressed() -> void:
 	start_normal_game()
-	var current_event: IndiaEvent = null
-	var top_deck_event: IndiaEvent = null
-	if not EventHelper.discard_pile.is_empty():
-		current_event = EventHelper.discard_pile.back()
-	if not EventHelper.draw_pile.is_empty():
-		top_deck_event = EventHelper.draw_pile.front()
+	var firstEventValue = EventHelper.getPlayedEventAt(0)
+	var current_event: IndiaEvent = firstEventValue.currentEvent
+	var top_deck_event: IndiaEvent = firstEventValue.topdeckEvent
 
 	$EventSummary.initialize(
-		ActionManager.get_actions_by_event_id(current_event.eventId),
+		0,
 		top_deck_event,
 		current_event
 	)
