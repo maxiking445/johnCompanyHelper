@@ -46,14 +46,6 @@ offset_right = 394.0
 offset_bottom = 245.0
 text = "Continue"
 
-[node name="StartWithUIButton" type="Button" parent="." unique_id=1852270056]
-layout_mode = 0
-offset_left = 46.0
-offset_top = 101.0
-offset_right = 152.0
-offset_bottom = 157.0
-text = "Start with UI"
-
 [node name="EventSummary" parent="." unique_id=736882236 instance=ExtResource("5_tbgi4")]
 layout_mode = 1
 anchors_preset = 8
@@ -70,4 +62,3 @@ offset_bottom = 22.0
 [connection signal="upload_gamestate" from="ResourceLoader" to="." method="_on_resource_loader_upload_gamestate"]
 [connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="ContinueButton" to="." method="_on_continue_button_pressed"]
-[connection signal="pressed" from="StartWithUIButton" to="." method="_on_start_with_ui_button_pressed"]

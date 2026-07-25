@@ -11,7 +11,9 @@ var gameState: GameState
 func start_normal_game() -> GameState:
 	ActionManager.clear()
 	_set_game_state(DEFAULT_GAME_STATE)
+	EventHelper.initEventDeck(true)
 	start_game_from_state(gameState)
+	initUI()
 	return gameState
 	
 
@@ -22,7 +24,6 @@ func continue_game() -> GameState:
 	return gameState
 
 func start_game_from_state(start_game_state: GameState) -> GameState:
-	EventHelper.initEventDeck(false)
 	RollHelper.clearQueuedResults()
 	storm_rule.execute(gameState)
 	_resolve_events(gameState, gameState.eventsToDraw)
@@ -126,10 +127,6 @@ func _on_start_button_pressed() -> void:
 func _on_continue_button_pressed() -> void:
 	continue_game()
 
-
-func _on_start_with_ui_button_pressed() -> void:
-	start_normal_game()
-	initUI()
 	
 func initUI():	
 	$EventSummary.removeLog()
