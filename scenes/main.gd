@@ -5,21 +5,20 @@ const DEFAULT_GAME_STATE := preload("res://resources/gameState/GameState1710.tre
 var storm_rule := StormRule.new()
 var gameState: GameState
 
-@onready var actionEventLog: ActionEventLog = $ActionEventLog
+
 
 
 func start_normal_game() -> GameState:
-	actionEventLog.clear()
 	ActionManager.clear()
 	_set_game_state(DEFAULT_GAME_STATE)
 	start_game_from_state(gameState)
-	actionEventLog.renderActions()
 	return gameState
 	
 
 func continue_game() -> GameState:
+	EventHelper.resetPlayedEvents()
 	start_game_from_state(gameState)
-	actionEventLog.renderActions()
+	initUI()
 	return gameState
 
 func start_game_from_state(start_game_state: GameState) -> GameState:
@@ -130,6 +129,10 @@ func _on_continue_button_pressed() -> void:
 
 func _on_start_with_ui_button_pressed() -> void:
 	start_normal_game()
+	initUI()
+	
+func initUI():	
+	#$EventSummary.clearLogList()
 	var firstEventValue = EventHelper.getPlayedEventAt(0)
 	var current_event: IndiaEvent = firstEventValue.currentEvent
 	var top_deck_event: IndiaEvent = firstEventValue.topdeckEvent

@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://by5fkl0efnbdk" path="res://scenes/main.gd" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://clfeq58guy10u" path="res://scenes/debug/DebugResourceLoader.tscn" id="2_0wfyh"]
 [ext_resource type="Resource" uid="uid://df6g5bknjcaik" path="res://resources/gameState/GameState1710.tres" id="3_sugp2"]
-[ext_resource type="PackedScene" uid="uid://bjm5fuccheofc" path="res://scenes/debug/ActionEventLog.tscn" id="4_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://gpfei4wa2jkf" path="res://scenes/EventSummary.tscn" id="5_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://cnnglhyxqwp4b" path="res://scenes/component/background/background.tscn" id="6_tefeu"]
 
@@ -38,14 +37,6 @@ offset_top = 116.0
 offset_right = 387.0
 offset_bottom = 172.0
 text = "Start"
-
-[node name="ActionEventLog" parent="." unique_id=1990207424 instance=ExtResource("4_jyhfs")]
-visible = false
-layout_mode = 1
-offset_left = 716.0
-offset_top = 23.0
-offset_right = 716.0
-offset_bottom = 23.0
 
 [node name="ContinueButton" type="Button" parent="." unique_id=963600623]
 layout_mode = 0

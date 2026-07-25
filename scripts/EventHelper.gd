@@ -46,6 +46,9 @@ func getPlayedEventAt(index: int)-> PlayedEvent:
 	var value: PlayedEvent = EventHelper.getPlayedEvents()[event]
 	return value
 
+func resetPlayedEvents():
+	playedEvents = {}
+
 func eventHandled():
 	activeEvent = null
 

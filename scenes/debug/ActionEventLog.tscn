@@ -1,6 +1,35 @@
 [gd_scene format=3 uid="uid://bjm5fuccheofc"]
 
-[ext_resource type="Script" uid="uid://jcfkwbujmrdx" path="res://scenes/debug/action_event_log.gd" id="1_7dpri"]
+[sub_resource type="GDScript" id="GDScript_r7uwy"]
+script/source = "extends Control
+class_name ActionEventLog
+
+@onready var _action_list: VBoxContainer = (
+	$PanelContainer/ScrollContainer/VBoxContainer
+)
+
+var _rendered_action_count := 0
+
+
+func renderActions() -> void:
+	var actions: Array[Action] = ActionManager.get_actions()
+	if _rendered_action_count > actions.size():
+		clear()
+
+	for action_index in range(_rendered_action_count, actions.size()):
+		var action := actions[action_index]
+		var label: Label = Label.new()
+		label.text = action.text
+		_action_list.add_child(label)
+
+	_rendered_action_count = actions.size()
+
+
+func clear() -> void:
+	for child in _action_list.get_children():
+		child.free()
+	_rendered_action_count = 0
+"
 
 [node name="ActionEventLog" type="Control" unique_id=1990207424]
 layout_mode = 3
@@ -9,7 +38,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_7dpri")
+script = SubResource("GDScript_r7uwy")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=453531063]
 layout_mode = 0
