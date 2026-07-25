@@ -132,7 +132,7 @@ func _on_start_with_ui_button_pressed() -> void:
 	initUI()
 	
 func initUI():	
-	#$EventSummary.clearLogList()
+	$EventSummary.removeLog()
 	var firstEventValue = EventHelper.getPlayedEventAt(0)
 	var current_event: IndiaEvent = firstEventValue.currentEvent
 	var top_deck_event: IndiaEvent = firstEventValue.topdeckEvent

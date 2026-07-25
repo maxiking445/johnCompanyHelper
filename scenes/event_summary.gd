@@ -53,6 +53,9 @@ func _on_next_button_pressed() -> void:
 	topDeckEvent = top_deck_event
 	currentEvent = current_event
 	actionList = ActionManager.get_actions_by_event_id(currentEvent.eventId)
-	for child in eventLogList.get_children():
-		child.queue_free()
+	removeLog()
 	$EventShowComponent.initialize_events(topDeckEvent, currentEvent, true)
+	
+func removeLog():
+	for child in eventLogList.get_children():
+		child.queue_free()	
