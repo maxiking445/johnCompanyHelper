@@ -9,6 +9,8 @@ const EVENT_LOG_ENTRY_SCENE := preload("res://scenes/component/EventLogEntry.tsc
 @export var index: int 
 @onready var eventLogList: VBoxContainer = $ScrollContainer/EventLogList
 
+signal lastEventShown
+
 func _ready() -> void:
 	pass
 
@@ -42,11 +44,14 @@ func _on_event_show_component_flip_finished() -> void:
 	populate_event_log()
 
 
-func _on_next_button_pressed() -> void:
-	index = index + 1
+func next() -> void:
+	if index+1 == EventHelper.getPlayedEvents().size():
+		lastEventShown.emit()
 	if index >= EventHelper.getPlayedEvents().size():
 		print("NO MORE EVENTS!")
 		return
+
+
 	var firstEventValue = EventHelper.getPlayedEventAt(index)
 	var current_event: IndiaEvent = firstEventValue.currentEvent
 	var top_deck_event: IndiaEvent = firstEventValue.topdeckEvent
@@ -54,6 +59,7 @@ func _on_next_button_pressed() -> void:
 	currentEvent = current_event
 	actionList = ActionManager.get_actions_by_event_id(currentEvent.eventId)
 	removeLog()
+	index = index + 1
 	$EventShowComponent.initialize_events(topDeckEvent, currentEvent, true)
 	
 func removeLog():

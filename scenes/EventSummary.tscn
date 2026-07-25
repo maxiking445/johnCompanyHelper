@@ -40,13 +40,4 @@ grow_vertical = 2
 [node name="EventLogList" type="VBoxContainer" parent="ScrollContainer" unique_id=153284763]
 layout_mode = 2
 
-[node name="NextButton" type="Button" parent="." unique_id=1861993798]
-layout_mode = 0
-offset_left = 204.0
-offset_top = 273.0
-offset_right = 325.0
-offset_bottom = 336.0
-text = "NEXT"
-
 [connection signal="flipFinished" from="EventShowComponent" to="." method="_on_event_show_component_flip_finished"]
-[connection signal="pressed" from="NextButton" to="." method="_on_next_button_pressed"]

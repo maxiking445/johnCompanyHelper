@@ -47,6 +47,7 @@ offset_bottom = 245.0
 text = "Continue"
 
 [node name="EventSummary" parent="." unique_id=736882236 instance=ExtResource("5_tbgi4")]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -58,7 +59,25 @@ offset_top = 22.0
 offset_right = 21.0
 offset_bottom = 22.0
 
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=246972342]
+layout_mode = 0
+offset_left = 1225.0
+offset_top = 772.0
+offset_right = 1327.0
+offset_bottom = 812.0
+
+[node name="NextButton" type="Button" parent="HBoxContainer" unique_id=1419888375]
+layout_mode = 2
+text = "NEXT"
+
+[node name="FinishButton" type="Button" parent="HBoxContainer" unique_id=1939976980]
+layout_mode = 2
+text = "FINISH ROUND"
+
 [connection signal="download_gamestate" from="ResourceLoader" to="." method="_on_resource_loader_download_gamestate"]
 [connection signal="upload_gamestate" from="ResourceLoader" to="." method="_on_resource_loader_upload_gamestate"]
 [connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="lastEventShown" from="EventSummary" to="." method="_on_event_summary_last_event_shown"]
+[connection signal="pressed" from="HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/FinishButton" to="." method="_on_finish_button_pressed"]

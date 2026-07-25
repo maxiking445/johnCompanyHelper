@@ -129,6 +129,8 @@ func _on_continue_button_pressed() -> void:
 
 	
 func initUI():	
+	$HBoxContainer/FinishButton.hide()
+	$HBoxContainer/NextButton.show()
 	$EventSummary.removeLog()
 	var firstEventValue = EventHelper.getPlayedEventAt(0)
 	var current_event: IndiaEvent = firstEventValue.currentEvent
@@ -141,3 +143,17 @@ func initUI():
 	)
 	$EventSummary.show()
 	
+
+
+func _on_next_button_pressed() -> void:
+	$EventSummary.next()
+
+
+func _on_finish_button_pressed() -> void:
+	$EventSummary.hide()
+	$HBoxContainer/FinishButton.hide()
+
+
+func _on_event_summary_last_event_shown() -> void:
+	$HBoxContainer/FinishButton.show()
+	$HBoxContainer/NextButton.hide()
