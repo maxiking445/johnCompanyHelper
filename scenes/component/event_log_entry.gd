@@ -1,6 +1,6 @@
 extends Control
 
-@export var event: Action
+@export var action: Action
 @export var animation_duration: float = 0.35
 @export var slide_distance: float = 45.0
 
@@ -8,18 +8,22 @@ extends Control
 
 
 func _ready() -> void:
-	if event != null:
+	if action != null:
 		_render_event()
 
 
 func initialize(new_event: Action) -> void:
-	event = new_event
-	if is_node_ready() and event != null:
+	action = new_event
+	if is_node_ready() and action != null:
 		_render_event()
+	if action.type == EnumTypes.ActionType.BOARD_CHANGE:
+		$PanelContainer/MarginContainer/VBoxContainer/DoneButton.show()
+	else:
+		$PanelContainer/MarginContainer/VBoxContainer/DoneButton.hide()
 
 
 func _render_event() -> void:
-	$PanelContainer/MarginContainer/VBoxContainer/ActionText.text = event.text
+	$PanelContainer/MarginContainer/VBoxContainer/ActionText.text = action.text
 	_play_spawn_animation()
 
 
