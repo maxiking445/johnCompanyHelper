@@ -6,5 +6,6 @@
 script = ExtResource("1")
 text = "Open {order_count} orders in {state}."
 title = "Open Orders"
+type = 0
 minimum_parameter_count = 2
 maximum_parameter_count = 2
