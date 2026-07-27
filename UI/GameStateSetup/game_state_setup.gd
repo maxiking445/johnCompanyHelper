@@ -24,6 +24,7 @@ const STATE_TITLES := [
 @onready var reset_button: Button = %ResetButton
 @onready var progress_bar: ProgressBar = %ProgressBar
 @onready var path_label: Label = %PathLabel
+@onready var json_transfer: Node = %GameStateJsonTransfer
 
 var game_state: GameState
 var current_step := 0
@@ -38,6 +39,11 @@ func _ready() -> void:
 	save_button.pressed.connect(_save_game_state)
 	reset_button.pressed.connect(_load_default)
 	%BackButton.pressed.connect(_return_to_menu)
+	%DownloadJsonButton.pressed.connect(_download_json)
+	%UploadJsonButton.pressed.connect(_upload_json)
+	json_transfer.import_completed.connect(_on_json_imported)
+	json_transfer.export_completed.connect(_on_json_exported)
+	json_transfer.transfer_failed.connect(_on_json_transfer_failed)
 
 
 func _build_steps() -> void:
@@ -357,6 +363,34 @@ func _save_game_state() -> void:
 
 func _return_to_menu() -> void:
 	get_tree().change_scene_to_file(MENU_SCENE)
+
+
+func _download_json() -> void:
+	json_transfer.show_export_dialog(game_state)
+
+
+func _upload_json() -> void:
+	json_transfer.show_import_dialog()
+
+
+func _on_json_imported(imported_game_state: GameState, source_path: String) -> void:
+	game_state = imported_game_state
+	current_step = 0
+	var save_error: Error = get_node("/root/SaveGameManager").save_current(game_state)
+	if save_error != OK:
+		path_label.text = "JSON loaded, but current save could not be updated"
+	else:
+		path_label.text = "Imported and set current save: %s" % source_path
+	_show_step()
+
+
+func _on_json_exported(target_path: String) -> void:
+	path_label.text = "JSON exported: %s" % target_path
+
+
+func _on_json_transfer_failed(message: String) -> void:
+	path_label.text = message
+	push_error(message)
 
 
 func _is_editable_property(property: Dictionary) -> bool:
