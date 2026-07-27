@@ -7,7 +7,7 @@ const EVENT_LOG_ENTRY_SCENE := preload("res://scenes/component/EventLogEntry.tsc
 @export var topDeckEvent: IndiaEvent 
 @export var currentEvent: IndiaEvent 
 @export var index: int 
-@onready var eventLogList: VBoxContainer = $ScrollContainer/EventLogList
+@onready var eventLogList: VBoxContainer = %EventLogList
 
 signal lastEventShown
 

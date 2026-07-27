@@ -30,14 +30,33 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -423.0
-offset_top = -87.0
-offset_right = 407.0
-offset_bottom = 379.56384
+offset_left = -410.0
+offset_top = -78.0
+offset_right = 410.0
+offset_bottom = 380.0
 grow_horizontal = 2
 grow_vertical = 2
+horizontal_scroll_mode = 0
+theme_override_constants/scroll_deadzone = 8
 
-[node name="EventLogList" type="VBoxContainer" parent="ScrollContainer" unique_id=153284763]
+[node name="ListMargin" type="MarginContainer" parent="ScrollContainer"]
+custom_minimum_size = Vector2(800, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 24
+
+[node name="Center" type="CenterContainer" parent="ScrollContainer/ListMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EventLogList" type="VBoxContainer" parent="ScrollContainer/ListMargin/Center" unique_id=153284763]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(680, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 15
 
 [connection signal="flipFinished" from="EventShowComponent" to="." method="_on_event_show_component_flip_finished"]
