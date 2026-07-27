@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://ddci5qppxv6cq"]
+[gd_scene load_steps=8 format=3 uid="uid://ddci5qppxv6cq"]
 
 [ext_resource type="Script" uid="uid://bkb6rhnn4mpaj" path="res://scenes/menue.gd" id="1_4mjw0"]
 [ext_resource type="PackedScene" uid="uid://cnnglhyxqwp4b" path="res://scenes/component/background/background.tscn" id="2_bfvy1"]
@@ -6,6 +6,9 @@
 [ext_resource type="FontFile" uid="uid://dym0tpcfny0lk" path="res://font/LibreBaskerville-Bold.ttf" id="5_bfvy1"]
 [ext_resource type="FontFile" uid="uid://grk07og35w54" path="res://font/LibreBaskerville-Italic.ttf" id="6_psqmx"]
 [ext_resource type="PackedScene" uid="uid://bxwkqw4qluyvf" path="res://scenes/component/button/MenueButtonComponent.tscn" id="7_psqmx"]
+
+[sub_resource type="StyleBoxFlat" id="TitleRuleStyle"]
+bg_color = Color(0.43, 0.055, 0.075, 0.82)
 
 [node name="Menue" type="Control" unique_id=1364657303]
 layout_mode = 3
@@ -33,16 +36,46 @@ offset_bottom = 817.8236
 texture = ExtResource("3_6yxwk")
 expand_mode = 1
 
-[node name="Title" type="Label" parent="." unique_id=119026716]
+[node name="TitleGroup" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 216.0
-offset_top = 220.0
-offset_right = 633.0
-offset_bottom = 277.0
+offset_left = 160.0
+offset_top = 207.0
+offset_right = 688.0
+offset_bottom = 282.0
+theme_override_constants/separation = 2
+
+[node name="TitleRow" type="HBoxContainer" parent="TitleGroup"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 15
+
+[node name="LeftOrnament" type="Label" parent="TitleGroup/TitleRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.43, 0.055, 0.075, 1)
+theme_override_font_sizes/font_size = 17
+text = "◆"
+vertical_alignment = 1
+
+[node name="Title" type="Label" parent="TitleGroup/TitleRow" unique_id=119026716]
+layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("5_bfvy1")
 theme_override_font_sizes/font_size = 45
 text = "JOHNCOMPANY"
+horizontal_alignment = 1
+
+[node name="RightOrnament" type="Label" parent="TitleGroup/TitleRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.43, 0.055, 0.075, 1)
+theme_override_font_sizes/font_size = 17
+text = "◆"
+vertical_alignment = 1
+
+[node name="TitleDivider" type="Panel" parent="TitleGroup"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("TitleRuleStyle")
 
 [node name="Subtitle" type="Label" parent="." unique_id=1015565845]
 layout_mode = 0
