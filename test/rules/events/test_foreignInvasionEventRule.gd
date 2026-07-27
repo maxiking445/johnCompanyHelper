@@ -98,7 +98,6 @@ func test_failed_company_invasion_awards_trophy_and_removes_unrest() -> void:
 
 	assert_true(madras.isCompanyControlled)
 	assert_eq(madras.unrest_size, 0)
-	assert_eq(madras.trophyToken, 1)
 	assert_eq(madras.exhaustedTroops, 4)
 
 

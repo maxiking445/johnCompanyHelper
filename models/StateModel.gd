@@ -9,7 +9,6 @@ class_name StateModel
 @export var troops: int
 @export var exhaustedTroops: int
 @export var hasGovenor: bool
-@export var treasury_size: int
 @export var orders: Array[OrderModel]
 @export var is_connected_to: Array[StateType.StateType]
 @export var isSovereign: bool
@@ -20,12 +19,7 @@ class_name StateModel
 @export var isDominatedBy: StateModel
 @export var isCompanyControlled: bool
 @export var towerLevel: int
-@export var trophyToken: int
 @export var hasRebelled: bool = false
-
-func addThropyToken():
-	trophyToken = trophyToken + 1
-	ActionManager.add_action(ActionFactory.add_trophy_action(_display_name()))
 
 func addTowerLevel():
 	var old_value := towerLevel
@@ -58,16 +52,6 @@ func change_unrest(amount: int) -> void:
 			ActionFactory.change_unrest_action(_display_name(), old_value, unrest_size)
 		)
 
-
-func change_treasury(amount: int) -> void:
-	var old_value := treasury_size
-	treasury_size += amount
-	if old_value != treasury_size:
-		ActionManager.add_action(
-			ActionFactory.change_treasury_action(
-				_display_name(), old_value, treasury_size
-			)
-		)
 
 func exhaustTroops(number: int):
 	exhaustedTroops = exhaustedTroops + number

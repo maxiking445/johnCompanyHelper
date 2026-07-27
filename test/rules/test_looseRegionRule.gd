@@ -9,10 +9,9 @@ var _game_state: GameState
 func before_each() -> void:
 	_rule = LOOSE_REGION_RULE.new()
 	_game_state = GameState.new()
-	_game_state.companyStanding = 10
 
 
-func test_execute_for_state_resets_region_and_lowers_company_standing() -> void:
+func test_execute_for_state_resets_region_and_tracks_region_loss() -> void:
 	var state := _create_state(StateType.StateType.BOMBAY)
 	state.unrest_size = 3
 	state.towerLevel = 4
@@ -22,7 +21,6 @@ func test_execute_for_state_resets_region_and_lowers_company_standing() -> void:
 
 	assert_eq(state.unrest_size, 0)
 	assert_eq(state.towerLevel, 1)
-	assert_eq(_game_state.companyStanding, 9)
 	assert_eq(_rule.lostRegionsThisRound, 1)
 
 
@@ -38,10 +36,9 @@ func test_execute_for_location_finds_state_before_losing_region() -> void:
 	assert_eq(bombay.towerLevel, 2)
 	assert_eq(madras.unrest_size, 0)
 	assert_eq(madras.towerLevel, 1)
-	assert_eq(_game_state.companyStanding, 9)
 
 
-func test_reset_lost_regions_this_round_restarts_company_standing_penalty() -> void:
+func test_reset_lost_regions_this_round_restarts_loss_count() -> void:
 	var first_state := _create_state(StateType.StateType.BOMBAY)
 	var second_state := _create_state(StateType.StateType.MADRAS)
 	_game_state.states = [first_state, second_state]
@@ -49,13 +46,10 @@ func test_reset_lost_regions_this_round_restarts_company_standing_penalty() -> v
 	_rule.execute_for_state(_game_state, first_state)
 	_rule.execute_for_state(_game_state, second_state)
 
-	assert_eq(_game_state.companyStanding, 7)
-
 	_rule.reset_lost_regions_this_round()
 	_rule.execute_for_state(_game_state, first_state)
 
 	assert_eq(_rule.lostRegionsThisRound, 1)
-	assert_eq(_game_state.companyStanding, 6)
 
 
 func _create_state(location: StateType.StateType) -> StateModel:

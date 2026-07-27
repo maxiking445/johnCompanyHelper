@@ -42,7 +42,6 @@ value = 1
 script = ExtResource("2_state")
 unrest_size = 1
 troops = 2
-treasury_size = 3
 orders = Array[ExtResource("3_order")]([SubResource("Order_BOM_1"), SubResource("Order_BOM_2"), SubResource("Order_BOM_3")])
 is_connected_to = Array[int]([7, 5, 3, 6])
 isCompanyControlled = true
@@ -66,10 +65,8 @@ state = 6
 [sub_resource type="Resource" id="State_DEL"]
 script = ExtResource("2_state")
 location = 6
-treasury_size = 4
 orders = Array[ExtResource("3_order")]([SubResource("Order_DEL_1"), SubResource("Order_DEL_2"), SubResource("Order_DEL_3")])
 is_connected_to = Array[int]([0, 5])
-trophyToken = 1
 
 [sub_resource type="Resource" id="Elephant"]
 script = ExtResource("6_elephant")
@@ -158,7 +155,6 @@ state = 3
 script = ExtResource("2_state")
 location = 3
 hasGovenor = true
-treasury_size = 2
 orders = Array[ExtResource("3_order")]([SubResource("Order_PUN_1")])
 is_connected_to = Array[int]([0, 6])
 
@@ -203,7 +199,6 @@ maratha = SubResource("State_MAR")
 delhi = SubResource("State_DEL")
 mysore = SubResource("State_MYS")
 elephant = SubResource("Elephant")
-companyStanding = 5
 seaWest = SubResource("Sea_West")
 seaEast = SubResource("Sea_East")
 seaSouth = SubResource("Sea_South")

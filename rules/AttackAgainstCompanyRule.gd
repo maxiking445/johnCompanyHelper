@@ -143,7 +143,9 @@ func resolve_attack(
 		return true
 	else:
 		state.resetUnrest()
-		state.addThropyToken()
+		ActionManager.add_action(
+			ActionFactory.add_trophy_action(StateType.name(state.location))
+		)
 		return false
 
 

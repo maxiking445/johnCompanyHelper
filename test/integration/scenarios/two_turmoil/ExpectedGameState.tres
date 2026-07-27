@@ -23,5 +23,4 @@ isCompanyControlled = true
 [resource]
 script = ExtResource("1_game_state")
 bombay = SubResource("State_bombay")
-companyStanding = 5
 eventsToDraw = 2

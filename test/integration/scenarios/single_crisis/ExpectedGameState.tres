@@ -10,7 +10,6 @@ script = ExtResource("2")
 troops = 2
 exhaustedTroops = 2
 isCompanyControlled = true
-trophyToken = 1
 
 [sub_resource type="Resource" id="Elephant"]
 script = ExtResource("3")

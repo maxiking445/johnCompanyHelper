@@ -48,7 +48,6 @@ func test_execute_resolves_rebellion_when_event_location_is_not_sovereign() -> v
 
 	assert_eq(state.exhaustedTroops, 4)
 	assert_eq(state.unrest_size, 0)
-	assert_eq(state.trophyToken, 1)
 
 
 func test_execute_uses_normal_rebellion_for_dominated_region() -> void:
@@ -83,6 +82,5 @@ func _create_state(location: StateType.StateType) -> StateModel:
 	state.troops = 5
 	state.exhaustedTroops = 0
 	state.towerLevel = 1
-	state.trophyToken = 0
 	state.isSovereign = false
 	return state

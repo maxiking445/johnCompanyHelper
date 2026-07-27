@@ -211,7 +211,6 @@ maratha = SubResource("State_MAR")
 delhi = SubResource("State_DEL")
 mysore = SubResource("State_MYS")
 elephant = SubResource("Elephant")
-companyStanding = 5
 seaWest = SubResource("Sea_West")
 seaEast = SubResource("Sea_East")
 seaSouth = SubResource("Sea_South")

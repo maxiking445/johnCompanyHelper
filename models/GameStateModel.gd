@@ -11,8 +11,6 @@ class_name GameState
 @export var mysore: StateModel
 @export var elephant: ElephantModel
 
-@export var companyStanding: int
-
 @export var seaWest: SeaModel
 @export var seaEast: SeaModel
 @export var seaSouth: SeaModel
@@ -104,14 +102,6 @@ func openAllOrders(location: StateType.StateType):
 	var state: StateModel = findStateByLocation(location)
 	for order in state.orders:
 		order.open()
-
-func lowerCompanyStanding(number: int):
-	var old_value := companyStanding
-	companyStanding = companyStanding - number
-	ActionManager.add_action(
-		ActionFactory.change_company_standing_action(old_value, companyStanding)
-	)
-
 
 func get_sea_name(sea: SeaModel) -> String:
 	if sea == seaWest:

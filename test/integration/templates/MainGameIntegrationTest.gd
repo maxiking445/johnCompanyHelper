@@ -63,7 +63,6 @@ func _assert_game_states_equal(
 	scenario_name: String
 ) -> void:
 	assert_not_null(actual, "%s: resulting GameState" % scenario_name)
-	assert_eq(actual.companyStanding, expected.companyStanding, "%s: Company Standing" % scenario_name)
 	assert_eq(actual.eventsToDraw, expected.eventsToDraw, "%s: events to draw" % scenario_name)
 	_assert_elephants_equal(actual.elephant, expected.elephant, scenario_name)
 	_assert_seas_equal(actual.seaWest, expected.seaWest, "%s: West sea" % scenario_name)
@@ -86,9 +85,9 @@ func _assert_states_equal(
 ) -> void:
 	var fields := [
 		"location", "unrest_size", "hasCommander", "officers",
-		"troops", "exhaustedTroops", "hasGovenor", "treasury_size",
+		"troops", "exhaustedTroops", "hasGovenor",
 		"is_connected_to", "isSovereign", "partOfEmpire", "isEmpireCapital",
-		"isDominated", "isCompanyControlled", "towerLevel", "trophyToken",
+		"isDominated", "isCompanyControlled", "towerLevel",
 		"hasRebelled",
 	]
 	for field in fields:

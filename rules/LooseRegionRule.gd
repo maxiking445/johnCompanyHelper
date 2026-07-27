@@ -70,4 +70,6 @@ func performRestoreLocalAuthority(game_state: GameState, state: StateModel):
 		
 func performHumiliation(game_state: GameState):
 	lostRegionsThisRound = lostRegionsThisRound + 1
-	game_state.lowerCompanyStanding(lostRegionsThisRound)
+	ActionManager.add_action(
+		ActionFactory.lower_company_standing_action(lostRegionsThisRound)
+	)

@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1")
-text = "Change Company Standing from {old_value} to {new_value}."
-title = "Change Company Standing"
+text = "Lower Company Standing by {amount}."
+title = "Lower Company Standing"
 type = 0
-minimum_parameter_count = 2
-maximum_parameter_count = 2
+minimum_parameter_count = 1
+maximum_parameter_count = 1

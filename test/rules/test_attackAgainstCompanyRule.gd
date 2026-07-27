@@ -27,7 +27,6 @@ func test_additional_rebellion_does_not_use_event_modifier() -> void:
 	assert_eq(primary.exhaustedTroops, 3)
 	assert_eq(additional.exhaustedTroops, 2)
 	assert_eq(additional.unrest_size, 0)
-	assert_eq(additional.trophyToken, 1)
 
 
 func test_failed_defense_exhausts_all_available_troops_before_region_loss() -> void:

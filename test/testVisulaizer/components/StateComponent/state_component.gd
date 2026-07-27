@@ -50,7 +50,6 @@ func update_ui() -> void:
 		"Troops:": str(stateModel.troops),
 		"Exhausted troops:": str(stateModel.exhaustedTroops),
 		"Governor:": _yes_no(stateModel.hasGovenor),
-		"Treasury:": str(stateModel.treasury_size),
 		"Orders:": str(stateModel.orders.size()),
 		"Sovereign:": _yes_no(stateModel.isSovereign),
 		"Empire:": EnumTypes.Empires.keys()[stateModel.partOfEmpire],
@@ -59,7 +58,6 @@ func update_ui() -> void:
 		"Dominated by:": _dominator_name(),
 		"Company controlled:": _yes_no(stateModel.isCompanyControlled),
 		"Tower level:": str(stateModel.towerLevel),
-		"Trophy tokens:": str(stateModel.trophyToken),
 		"Rebelled:": _yes_no(stateModel.hasRebelled),
 	}
 

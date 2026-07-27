@@ -113,7 +113,6 @@ func _show_step() -> void:
 
 	match step.kind:
 		"basic":
-			_add_property_editor(game_state, _property_info(game_state, "companyStanding"))
 			_add_property_editor(game_state, _property_info(game_state, "eventsToDraw"))
 		"state":
 			var state: StateModel = game_state.get(step.key)

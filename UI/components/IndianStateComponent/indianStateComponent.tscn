@@ -51,7 +51,3 @@ title = "Armies"
 [node name="Govenor" parent="VBoxContainer" unique_id=1625160985 instance=ExtResource("4_5k0qw")]
 layout_mode = 2
 title = "Govenor"
-
-[node name="Treasury" parent="VBoxContainer" unique_id=1287630156 instance=ExtResource("3_nawlg")]
-layout_mode = 2
-title = "Treasury"
