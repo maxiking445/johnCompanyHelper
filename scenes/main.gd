@@ -1,17 +1,29 @@
 extends Control
 
 const DEFAULT_GAME_STATE := preload("res://resources/gameState/GameState1710.tres")
+const MENU_SCENE := "res://scenes/menue.tscn"
 
 var storm_rule := StormRule.new()
 var gameState: GameState
+var launch_mode: int = -1
 
 
+func _ready() -> void:
+	$StartButton.hide()
+	$ContinueButton.hide()
+	if launch_mode == 0:
+		call_deferred("start_normal_game")
+	elif launch_mode == 1:
+		call_deferred("continue_game")
 
 
 func start_normal_game() -> GameState:
 	ActionManager.clear()
-	_set_game_state(DEFAULT_GAME_STATE)
+	_set_game_state(
+		gameState if gameState != null else DEFAULT_GAME_STATE.duplicate(true)
+	)
 	EventHelper.initEventDeck(true)
+	EventHelper.resetPlayedEvents()
 	start_game_from_state(gameState)
 	initUI()
 	return gameState
@@ -19,6 +31,8 @@ func start_normal_game() -> GameState:
 
 func continue_game() -> GameState:
 	EventHelper.resetPlayedEvents()
+	if EventHelper.draw_pile.is_empty():
+		EventHelper.initEventDeck(true)
 	start_game_from_state(gameState)
 	initUI()
 	return gameState
@@ -150,8 +164,11 @@ func _on_next_button_pressed() -> void:
 
 
 func _on_finish_button_pressed() -> void:
-	$EventSummary.hide()
-	$HBoxContainer/FinishButton.hide()
+	var save_error: Error = get_node("/root/SaveGameManager").save_current(gameState)
+	if save_error != OK:
+		push_error("The current GameState could not be saved.")
+		return
+	get_tree().change_scene_to_file(MENU_SCENE)
 
 
 func _on_event_summary_last_event_shown() -> void:

@@ -1,0 +1,162 @@
+[gd_scene format=3 uid="uid://cnj11f0k1dtxl"]
+
+[ext_resource type="Script" uid="uid://d2qmv50ig1ioe" path="res://UI/GameStateSetup/game_state_setup.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://cnnglhyxqwp4b" path="res://scenes/component/background/background.tscn" id="2_background"]
+[ext_resource type="FontFile" uid="uid://dym0tpcfny0lk" path="res://font/LibreBaskerville-Bold.ttf" id="4_bold"]
+[ext_resource type="FontFile" uid="uid://grk07og35w54" path="res://font/LibreBaskerville-Italic.ttf" id="5_italic"]
+[ext_resource type="Theme" uid="uid://cymebvqn8yi8t" path="res://scenes/component/button/menueButton.tres" id="6_menu_button"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v2ds7"]
+
+[sub_resource type="StyleBoxFlat" id="ProgressBackground"]
+bg_color = Color(0.18, 0.12, 0.08, 0.22)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="ProgressFill"]
+bg_color = Color(0.56, 0.075, 0.095, 0.9)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="GameStateSetup" type="Control" unique_id=446025514]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" parent="." unique_id=439513785 instance=ExtResource("2_background")]
+layout_mode = 1
+
+[node name="Shade" type="ColorRect" parent="." unique_id=1135841213]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.2, 0.11, 0.055, 0.1)
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1684653196]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = 48.0
+offset_right = -80.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="Margin" unique_id=1238976681]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_v2ds7")
+
+[node name="Layout" type="VBoxContainer" parent="Margin/Card" unique_id=1093881806]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="StepLabel" type="Label" parent="Margin/Card/Layout" unique_id=154114513]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.56, 0.075, 0.095, 1)
+theme_override_fonts/font = ExtResource("4_bold")
+theme_override_font_sizes/font_size = 13
+text = "STEP 1 OF 14"
+
+[node name="TitleLabel" type="Label" parent="Margin/Card/Layout" unique_id=889124522]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.045, 0.025, 1)
+theme_override_fonts/font = ExtResource("4_bold")
+theme_override_font_sizes/font_size = 34
+text = "Basic State"
+
+[node name="DescriptionLabel" type="Label" parent="Margin/Card/Layout" unique_id=2022719929]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.23, 0.15, 0.1, 0.85)
+theme_override_fonts/font = ExtResource("5_italic")
+text = "Start with the global values used by the whole game."
+
+[node name="ProgressBar" type="ProgressBar" parent="Margin/Card/Layout" unique_id=87154566]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 7)
+layout_mode = 2
+theme_override_styles/background = SubResource("ProgressBackground")
+theme_override_styles/fill = SubResource("ProgressFill")
+show_percentage = false
+
+[node name="Divider" type="HSeparator" parent="Margin/Card/Layout" unique_id=774234050]
+layout_mode = 2
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/Card/Layout" unique_id=862384837]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Form" type="VBoxContainer" parent="Margin/Card/Layout/Scroll" unique_id=1713052206]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 9
+
+[node name="Divider2" type="HSeparator" parent="Margin/Card/Layout" unique_id=1824250540]
+layout_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="Margin/Card/Layout" unique_id=472217921]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ResetButton" type="Button" parent="Margin/Card/Layout/Footer" unique_id=1396405531]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("6_menu_button")
+theme_override_font_sizes/font_size = 22
+text = "Reload Default"
+
+[node name="BackButton" type="Button" parent="Margin/Card/Layout/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("6_menu_button")
+theme_override_font_sizes/font_size = 22
+text = "Back"
+
+[node name="PathLabel" type="Label" parent="Margin/Card/Layout/Footer" unique_id=451306489]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.25, 0.17, 0.11, 0.75)
+theme_override_fonts/font = ExtResource("5_italic")
+text = "Loaded: default"
+text_overrun_behavior = 3
+
+[node name="PreviousButton" type="Button" parent="Margin/Card/Layout/Footer" unique_id=744859153]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("6_menu_button")
+theme_override_font_sizes/font_size = 22
+text = "Previous"
+
+[node name="NextButton" type="Button" parent="Margin/Card/Layout/Footer" unique_id=319317823]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("6_menu_button")
+theme_override_font_sizes/font_size = 22
+text = "Next"
+
+[node name="SaveButton" type="Button" parent="Margin/Card/Layout/Footer" unique_id=575654128]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme = ExtResource("6_menu_button")
+theme_override_font_sizes/font_size = 22
+text = "Save & Return"
