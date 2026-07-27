@@ -55,7 +55,7 @@ func _build_steps() -> void:
 	for index in STATE_KEYS.size():
 		steps.append({
 			"title": STATE_TITLES[index],
-			"description": "Edit the region, its forces, status and orders.",
+			"description": "Edit the region's forces, government and status.",
 			"kind": "state",
 			"key": STATE_KEYS[index],
 		})
@@ -136,6 +136,11 @@ func _add_resource_editor(resource: Resource, nested: bool) -> void:
 		return
 	for property in resource.get_property_list():
 		if not _is_editable_property(property):
+			continue
+		if (
+			resource is StateModel
+			and property.name in [&"orders", &"is_connected_to"]
+		):
 			continue
 		if property.name == "isDominatedBy":
 			_add_state_reference_editor(resource, property)
