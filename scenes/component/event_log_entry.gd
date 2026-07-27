@@ -1,10 +1,11 @@
-extends Control
+extends PanelContainer
 
 @export var action: Action
 @export var animation_duration: float = 0.35
-@export var slide_distance: float = 45.0
 
-@onready var panel: PanelContainer = $PanelContainer
+@onready var title_label: Label = %Title
+@onready var action_text: Label = %ActionText
+@onready var done_button: Button = %DoneButton
 
 
 func _ready() -> void:
@@ -16,36 +17,37 @@ func initialize(new_event: Action) -> void:
 	action = new_event
 	if is_node_ready() and action != null:
 		_render_event()
-	if action.type == EnumTypes.ActionType.BOARD_CHANGE:
-		$PanelContainer/MarginContainer/VBoxContainer/DoneButton.show()
-	else:
-		$PanelContainer/MarginContainer/VBoxContainer/DoneButton.hide()
 
 
 func _render_event() -> void:
-	$PanelContainer/MarginContainer/VBoxContainer/ActionText.text = action.text
+	title_label.text = action.title if not action.title.is_empty() else _type_title()
+	action_text.text = action.text
+	done_button.visible = action.type == EnumTypes.ActionType.BOARD_CHANGE
 	_play_spawn_animation()
+
+
+func _type_title() -> String:
+	match action.type:
+		EnumTypes.ActionType.BOARD_CHANGE:
+			return "BOARD CHANGE"
+		EnumTypes.ActionType.INFO:
+			return "INFORMATION"
+		EnumTypes.ActionType.ERROR:
+			return "ATTENTION"
+		_:
+			return "ACTION"
 
 
 func _play_spawn_animation() -> void:
 	modulate.a = 0.0
-	panel.position.y += slide_distance
-
-	var target_panel_y := panel.position.y - slide_distance
+	pivot_offset = size * 0.5
+	scale = Vector2(0.985, 0.985)
 	var tween := create_tween().set_parallel(true)
-
 	tween.tween_property(
-		panel,
-		"position:y",
-		target_panel_y,
-		animation_duration
+		self, "scale", Vector2.ONE, animation_duration
 	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-
 	tween.tween_property(
-		self,
-		"modulate:a",
-		1.0,
-		animation_duration
+		self, "modulate:a", 1.0, animation_duration
 	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 
