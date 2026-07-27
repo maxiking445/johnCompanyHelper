@@ -1,83 +1,63 @@
-[gd_scene format=3 uid="uid://oq8pmoo706eu"]
+[gd_scene load_steps=5 format=3 uid="uid://oq8pmoo706eu"]
 
-[ext_resource type="Script" uid="uid://by5fkl0efnbdk" path="res://scenes/main.gd" id="1_o5qli"]
-[ext_resource type="PackedScene" uid="uid://clfeq58guy10u" path="res://scenes/debug/DebugResourceLoader.tscn" id="2_0wfyh"]
-[ext_resource type="Resource" uid="uid://df6g5bknjcaik" path="res://resources/gameState/GameState1710.tres" id="3_sugp2"]
-[ext_resource type="PackedScene" uid="uid://gpfei4wa2jkf" path="res://scenes/EventSummary.tscn" id="5_tbgi4"]
-[ext_resource type="PackedScene" uid="uid://cnnglhyxqwp4b" path="res://scenes/component/background/background.tscn" id="6_tefeu"]
+[ext_resource type="Script" uid="uid://by5fkl0efnbdk" path="res://scenes/main.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://gpfei4wa2jkf" path="res://scenes/EventSummary.tscn" id="2_summary"]
+[ext_resource type="PackedScene" uid="uid://cnnglhyxqwp4b" path="res://scenes/component/background/background.tscn" id="3_background"]
+[ext_resource type="Theme" uid="uid://cymebvqn8yi8t" path="res://scenes/component/button/menueButton.tres" id="4_button"]
 
-[node name="Main" type="Control" unique_id=2144566368]
+[node name="Main" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_o5qli")
+script = ExtResource("1_script")
 
-[node name="Background" parent="." unique_id=1923771803 instance=ExtResource("6_tefeu")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 1600.0
-offset_bottom = 895.0
-grow_horizontal = 1
-grow_vertical = 1
+[node name="Background" parent="." instance=ExtResource("3_background")]
+layout_mode = 1
 
-[node name="ResourceLoader" parent="." unique_id=1308806400 instance=ExtResource("2_0wfyh")]
+[node name="EventSummary" parent="." instance=ExtResource("2_summary")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
-game_state = ExtResource("3_sugp2")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="StartButton" type="Button" parent="." unique_id=1909188046]
-layout_mode = 0
-offset_left = 281.0
-offset_top = 116.0
-offset_right = 387.0
-offset_bottom = 172.0
-text = "Start"
-
-[node name="ContinueButton" type="Button" parent="." unique_id=963600623]
-layout_mode = 0
-offset_left = 275.0
-offset_top = 194.0
-offset_right = 394.0
-offset_bottom = 245.0
-text = "Continue"
-
-[node name="EventSummary" parent="." unique_id=736882236 instance=ExtResource("5_tbgi4")]
-visible = false
+[node name="Navigation" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 21.0
-offset_top = 22.0
-offset_right = 21.0
-offset_bottom = 22.0
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -410.0
+offset_top = -94.0
+offset_right = -74.0
+offset_bottom = -42.0
+grow_horizontal = 0
+grow_vertical = 0
+alignment = 2
+theme_override_constants/separation = 14
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=246972342]
-layout_mode = 0
-offset_left = 1225.0
-offset_top = 772.0
-offset_right = 1327.0
-offset_bottom = 812.0
-
-[node name="NextButton" type="Button" parent="HBoxContainer" unique_id=1419888375]
+[node name="NextButton" type="Button" parent="Navigation"]
+unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("4_button")
+theme_override_font_sizes/font_size = 24
 text = "NEXT"
 
-[node name="FinishButton" type="Button" parent="HBoxContainer" unique_id=1939976980]
+[node name="FinishButton" type="Button" parent="Navigation"]
+unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("4_button")
+theme_override_font_sizes/font_size = 24
+disabled = true
 text = "FINISH ROUND"
 
-[connection signal="download_gamestate" from="ResourceLoader" to="." method="_on_resource_loader_download_gamestate"]
-[connection signal="upload_gamestate" from="ResourceLoader" to="." method="_on_resource_loader_upload_gamestate"]
-[connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="ContinueButton" to="." method="_on_continue_button_pressed"]
 [connection signal="lastEventShown" from="EventSummary" to="." method="_on_event_summary_last_event_shown"]
-[connection signal="pressed" from="HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
-[connection signal="pressed" from="HBoxContainer/FinishButton" to="." method="_on_finish_button_pressed"]
+[connection signal="pressed" from="Navigation/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="Navigation/FinishButton" to="." method="_on_finish_button_pressed"]

@@ -9,8 +9,6 @@ var launch_mode: int = -1
 
 
 func _ready() -> void:
-	$StartButton.hide()
-	$ContinueButton.hide()
 	if launch_mode == 0:
 		call_deferred("start_normal_game")
 	elif launch_mode == 1:
@@ -25,19 +23,24 @@ func start_normal_game() -> GameState:
 	EventHelper.initEventDeck(true)
 	EventHelper.resetPlayedEvents()
 	start_game_from_state(gameState)
-	initUI()
+	_initialize_ui()
 	return gameState
-	
+
 
 func continue_game() -> GameState:
 	EventHelper.resetPlayedEvents()
 	if EventHelper.draw_pile.is_empty():
 		EventHelper.initEventDeck(true)
 	start_game_from_state(gameState)
-	initUI()
+	_initialize_ui()
 	return gameState
 
+
 func start_game_from_state(start_game_state: GameState) -> GameState:
+	if start_game_state == null:
+		push_error("Cannot start a round without a GameState.")
+		return null
+	_set_game_state(start_game_state)
 	RollHelper.clearQueuedResults()
 	storm_rule.execute(gameState)
 	_resolve_events(gameState, gameState.eventsToDraw)
@@ -92,25 +95,21 @@ func execute_event(
 	)
 	event.rule.execute(gameState)
 	EventHelper.eventHandled()
-	return gameState  
+	return gameState
 
 
 func _set_game_state(new_game_state: GameState) -> void:
 	gameState = new_game_state
-	var resource_loader := get_node_or_null("ResourceLoader")
-	if resource_loader != null:
-		resource_loader.game_state = gameState
 
 
 func _resolve_events(target_game_state: GameState, event_count: int) -> void:
 	print("Event count: ", event_count)
-	for event_index in range(event_count):
+	for _event_index in range(event_count):
 		if EventHelper.draw_pile.is_empty():
 			push_error("The event deck is empty before all events were resolved.")
 			return
 
 		var event := EventHelper.drawEvent()
-		
 		ActionManager.add_action(
 			ActionFactory.draw_event_action(
 				event.eventName,
@@ -120,47 +119,19 @@ func _resolve_events(target_game_state: GameState, event_count: int) -> void:
 		event.rule.execute(target_game_state)
 
 
-
-
-
-func _on_resource_loader_download_gamestate(_downloaded_game_state: GameState) -> void:
-	pass
-
-
-func _on_resource_loader_upload_gamestate(loaded_game_state: GameState) -> void:
-	if loaded_game_state == null:
-		push_error("Cannot restart the game without a loaded GameState.")
-		return
-	start_game_from_state(loaded_game_state)
-
-
-func _on_start_button_pressed() -> void:
-	start_normal_game()
-
-
-func _on_continue_button_pressed() -> void:
-	continue_game()
-
-	
-func initUI():	
-	$HBoxContainer/FinishButton.hide()
-	$HBoxContainer/NextButton.show()
-	$EventSummary.removeLog()
-	var firstEventValue = EventHelper.getPlayedEventAt(0)
-	var current_event: IndiaEvent = firstEventValue.currentEvent
-	var top_deck_event: IndiaEvent = firstEventValue.topdeckEvent
-
-	$EventSummary.initialize(
-		0,
-		top_deck_event,
-		current_event
-	)
-	$EventSummary.show()
-	
+func _initialize_ui() -> void:
+	%FinishButton.disabled = true
+	%NextButton.disabled = false
+	%EventSummary.removeLog()
+	var first_event_value: PlayedEvent = EventHelper.getPlayedEventAt(0)
+	var current_event: IndiaEvent = first_event_value.currentEvent
+	var top_deck_event: IndiaEvent = first_event_value.topdeckEvent
+	%EventSummary.initialize(0, top_deck_event, current_event)
+	%EventSummary.show()
 
 
 func _on_next_button_pressed() -> void:
-	$EventSummary.next()
+	%EventSummary.next()
 
 
 func _on_finish_button_pressed() -> void:
@@ -172,5 +143,5 @@ func _on_finish_button_pressed() -> void:
 
 
 func _on_event_summary_last_event_shown() -> void:
-	$HBoxContainer/FinishButton.show()
-	$HBoxContainer/NextButton.hide()
+	%FinishButton.disabled = false
+	%NextButton.disabled = true
