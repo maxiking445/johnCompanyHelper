@@ -2,10 +2,20 @@ extends Resource
 class_name ShipModel
 
 @export var shipType: ShipTypes.ShipType
-@export var shipOwner: String
 @export var isFlipped: bool
 
-	
+
+func display_name() -> String:
+	match shipType:
+		ShipTypes.ShipType.PLAYER:
+			return "Player ship"
+		ShipTypes.ShipType.COMPANY:
+			return "Company ship"
+		ShipTypes.ShipType.EXTRA:
+			return "Extra ship"
+	return "Ship"
+
+
 func isCompanyShip() -> bool:
 	return shipType == ShipTypes.ShipType.COMPANY
 
@@ -20,5 +30,5 @@ func damageShip(sea_zone: String = "Unknown Sea")->void:
 		return
 	self.isFlipped = true
 	ActionManager.add_action(
-		ActionFactory.ship_action(shipOwner, sea_zone, "damaged")
+		ActionFactory.ship_action(display_name(), sea_zone, "damaged")
 	)

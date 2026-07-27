@@ -161,12 +161,10 @@ is_connected_to = Array[int]([0, 6])
 [sub_resource type="Resource" id="Ship_East_1"]
 script = ExtResource("5_ship")
 shipType = 1
-shipOwner = "Player 1"
 
 [sub_resource type="Resource" id="Ship_East_2"]
 script = ExtResource("5_ship")
 shipType = 1
-shipOwner = "Player 2"
 isFlipped = true
 
 [sub_resource type="Resource" id="Sea_East"]

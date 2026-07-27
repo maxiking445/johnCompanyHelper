@@ -5,6 +5,7 @@ signal game_state_ready(game_state: GameState)
 
 const DEFAULT_GAME_STATE := preload("res://resources/gameState/GameState1710.tres")
 const MENU_SCENE := "res://scenes/menue.tscn"
+const MENU_BUTTON_THEME := preload("res://scenes/component/button/menueButton.tres")
 const STATE_KEYS := [
 	"bombay", "madras", "hyperbad", "punjab",
 	"bengal", "maratha", "delhi", "mysore",
@@ -47,11 +48,7 @@ func _ready() -> void:
 
 
 func _build_steps() -> void:
-	steps = [{
-		"title": "Basic State",
-		"description": "Start with the global values used by the whole game.",
-		"kind": "basic",
-	}]
+	steps = []
 	for index in STATE_KEYS.size():
 		steps.append({
 			"title": STATE_TITLES[index],
@@ -65,21 +62,10 @@ func _build_steps() -> void:
 		"kind": "resource",
 		"key": "elephant",
 	})
-	for sea_data in [
-		{"title": "West Sea", "key": "seaWest"},
-		{"title": "East Sea", "key": "seaEast"},
-		{"title": "South Sea", "key": "seaSouth"},
-	]:
-		steps.append({
-			"title": sea_data.title,
-			"description": "Review ships and details for this sea zone.",
-			"kind": "resource",
-			"key": sea_data.key,
-		})
 	steps.append({
-		"title": "Final Details",
-		"description": "Review the remaining crisis values, then save or use the state.",
-		"kind": "final",
+		"title": "Ships",
+		"description": "Edit all ships by sea zone, then save the current GameState.",
+		"kind": "ships",
 	})
 
 
@@ -112,21 +98,92 @@ func _show_step() -> void:
 	save_button.visible = current_step == steps.size() - 1
 
 	match step.kind:
-		"basic":
-			_add_property_editor(game_state, _property_info(game_state, "eventsToDraw"))
 		"state":
 			var state: StateModel = game_state.get(step.key)
 			_add_resource_editor(state, false)
 		"resource":
 			_add_resource_editor(game_state.get(step.key), false)
-		"final":
-			_add_property_editor(
-				game_state, _property_info(game_state, "hadASucessfullInvasionCrisis")
-			)
-			_add_property_editor(
-				game_state, _property_info(game_state, "sucessFullInvasionCapital")
-			)
-			_add_summary()
+		"ships":
+			_add_ship_sections()
+
+
+func _add_ship_sections() -> void:
+	for sea_data in [
+		{"title": "West Sea", "key": "seaWest"},
+		{"title": "East Sea", "key": "seaEast"},
+		{"title": "South Sea", "key": "seaSouth"},
+	]:
+		var sea: SeaModel = game_state.get(sea_data.key)
+		var header := HBoxContainer.new()
+		header.add_theme_constant_override("separation", 12)
+		form.add_child(header)
+		var heading := Label.new()
+		heading.text = sea_data.title
+		heading.add_theme_font_size_override("font_size", 21)
+		heading.add_theme_color_override("font_color", Color("71131f"))
+		heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		header.add_child(heading)
+		var add_button := Button.new()
+		add_button.text = "Add Ship"
+		add_button.theme = MENU_BUTTON_THEME
+		add_button.add_theme_font_size_override("font_size", 19)
+		add_button.pressed.connect(_add_ship.bind(sea))
+		header.add_child(add_button)
+		var rule := HSeparator.new()
+		rule.modulate = Color(0.43, 0.055, 0.075, 0.45)
+		form.add_child(rule)
+		_add_ship_list(sea)
+
+
+func _add_ship_list(sea: SeaModel) -> void:
+	if sea.ships.is_empty():
+		var empty := Label.new()
+		empty.text = "No ships in this sea"
+		empty.modulate = Color(0.18, 0.12, 0.08, 0.62)
+		form.add_child(empty)
+		return
+	for index in sea.ships.size():
+		var ship := sea.ships[index]
+		var panel := PanelContainer.new()
+		panel.add_theme_stylebox_override("panel", _panel_style(Color("e1d2ae")))
+		var content := VBoxContainer.new()
+		content.add_theme_constant_override("separation", 8)
+		panel.add_child(content)
+
+		var header := HBoxContainer.new()
+		content.add_child(header)
+		var title := Label.new()
+		title.text = "Ship %d" % (index + 1)
+		title.add_theme_font_size_override("font_size", 17)
+		title.add_theme_color_override("font_color", Color("71131f"))
+		title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		header.add_child(title)
+		var remove_button := Button.new()
+		remove_button.text = "Remove"
+		remove_button.theme = MENU_BUTTON_THEME
+		remove_button.add_theme_font_size_override("font_size", 18)
+		remove_button.pressed.connect(_remove_ship.bind(sea, index))
+		header.add_child(remove_button)
+
+		var previous_form := form
+		form = content
+		_add_resource_editor(ship, true)
+		form = previous_form
+		form.add_child(panel)
+
+
+func _add_ship(sea: SeaModel) -> void:
+	var ship := ShipModel.new()
+	ship.shipType = ShipTypes.ShipType.PLAYER
+	sea.ships.append(ship)
+	_show_step()
+
+
+func _remove_ship(sea: SeaModel, index: int) -> void:
+	if index < 0 or index >= sea.ships.size():
+		return
+	sea.ships.remove_at(index)
+	_show_step()
 
 
 func _add_resource_editor(resource: Resource, nested: bool) -> void:
@@ -312,29 +369,6 @@ func _add_state_reference_editor(target: Object, property: Dictionary) -> void:
 	)
 	row.add_child(options)
 	form.add_child(HSeparator.new())
-
-
-func _add_summary() -> void:
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", _panel_style(Color("e1d2ae")))
-	var summary := VBoxContainer.new()
-	summary.add_theme_constant_override("separation", 8)
-	panel.add_child(summary)
-	var heading := Label.new()
-	heading.text = "Ready to use"
-	heading.add_theme_font_size_override("font_size", 20)
-	heading.add_theme_color_override("font_color", Color("71131f"))
-	summary.add_child(heading)
-	var info := Label.new()
-	info.text = (
-		"All %d regions, the elephant and 3 sea zones were loaded from the "
-		+ "default 1710 state. Save creates user://custom_game_state.tres "
-		+ "and emits game_state_ready."
-	) % STATE_KEYS.size()
-	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	info.add_theme_color_override("font_color", Color("2b190f"))
-	summary.add_child(info)
-	form.add_child(panel)
 
 
 func _add_notice(text: String) -> void:

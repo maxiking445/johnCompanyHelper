@@ -133,5 +133,4 @@ func _assert_seas_equal(actual: SeaModel, expected: SeaModel, label: String) -> 
 	assert_eq(actual.ships.size(), expected.ships.size(), "%s ship count" % label)
 	for index in expected.ships.size():
 		assert_eq(actual.ships[index].shipType, expected.ships[index].shipType)
-		assert_eq(actual.ships[index].shipOwner, expected.ships[index].shipOwner)
 		assert_eq(actual.ships[index].isFlipped, expected.ships[index].isFlipped)
