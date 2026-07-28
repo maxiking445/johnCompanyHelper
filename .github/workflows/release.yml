@@ -186,4 +186,4 @@ jobs:
             dist/* \
             --target "${GITHUB_SHA}" \
             --generate-notes \
-            --title "John Company Helper ${RELEASE_TAG}"
+            --title "${RELEASE_TAG}"
