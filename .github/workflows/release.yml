@@ -1,56 +1,90 @@
-name: Release
+name: Release Version
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (for example 0.1.2). Leave empty to increment the latest patch version."
+        required: false
+        type: string
 
 permissions:
   contents: write
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release
   cancel-in-progress: false
 
 env:
-  GODOT_VERSION: 4.7-stable
-  GODOT_TEMPLATE_DIRECTORY: 4.7.stable
-  GODOT_BINARY: Godot_v4.7-stable_linux.x86_64
+  GODOT_VERSION: 4.7.1
+  PROJECT_NAME: JohnCompanyHelper
 
 jobs:
-  build-and-release:
-    name: Build and publish release
+  prepare:
+    name: Determine release version
     runs-on: ubuntu-latest
+    outputs:
+      release_tag: ${{ steps.version.outputs.release_tag }}
 
     steps:
-      - name: Check out tagged source
+      - name: Check out source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Install Godot
+      - name: Determine version
+        id: version
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
         run: |
-          curl --fail --location --retry 3 \
-            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/${GODOT_BINARY}.zip" \
-            --output godot.zip
-          unzip -q godot.zip
-          sudo install -m 0755 "${GODOT_BINARY}" /usr/local/bin/godot
-          godot --version
+          if [[ -n "${REQUESTED_VERSION}" ]]; then
+            VERSION="${REQUESTED_VERSION#v}"
+            if [[ ! "${VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "::error::Version '${REQUESTED_VERSION}' must look like 1.2.3."
+              exit 1
+            fi
+            RELEASE_TAG="v${VERSION}"
+          else
+            LATEST_TAG=""
+            while IFS= read -r TAG; do
+              if [[ "${TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                LATEST_TAG="${TAG}"
+                break
+              fi
+            done < <(git tag --list "v*" --sort=-v:refname)
 
-      - name: Install export templates
-        run: |
-          curl --fail --location --retry 3 \
-            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz" \
-            --output export_templates.tpz
-          unzip -q export_templates.tpz
-          mkdir -p "${HOME}/.local/share/godot/export_templates/${GODOT_TEMPLATE_DIRECTORY}"
-          mv templates/* "${HOME}/.local/share/godot/export_templates/${GODOT_TEMPLATE_DIRECTORY}/"
+            if [[ -z "${LATEST_TAG}" ]]; then
+              LATEST_TAG="v0.0.0"
+            fi
+
+            VERSION="${LATEST_TAG#v}"
+            IFS="." read -r MAJOR MINOR PATCH <<< "${VERSION}"
+            RELEASE_TAG="v${MAJOR}.${MINOR}.$((PATCH + 1))"
+          fi
+
+          if git show-ref --tags --verify --quiet "refs/tags/${RELEASE_TAG}"; then
+            echo "::error::Tag '${RELEASE_TAG}' already exists."
+            exit 1
+          fi
+
+          echo "Using release tag ${RELEASE_TAG}"
+          echo "release_tag=${RELEASE_TAG}" >> "${GITHUB_OUTPUT}"
+
+  test:
+    name: Run tests
+    needs: prepare
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:4.7.1
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
 
       - name: Import project
-        run: |
-          godot --headless --path . --import --quit
+        run: godot --headless --path . --import --quit
 
-      - name: Run tests
+      - name: Run all GUT tests recursively
         run: |
           godot --headless --path . \
             -s addons/gut/gut_cmdln.gd \
@@ -58,33 +92,98 @@ jobs:
             -ginclude_subdirs \
             -gexit
 
-      - name: Export Windows and Linux builds
+  export:
+    name: Export ${{ matrix.display_name }}
+    needs:
+      - prepare
+      - test
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:4.7.1
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - display_name: Linux
+            preset: Linux
+            platform: linux
+            filename_suffix: linux-x86_64
+          - display_name: Windows
+            preset: Windows Desktop
+            platform: windows
+            filename_suffix: windows-x86_64.exe
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install export templates
         run: |
-          mkdir -p dist
+          mkdir -p "${HOME}/.local/share/godot/export_templates"
+          mv \
+            "/root/.local/share/godot/export_templates/${GODOT_VERSION}.stable" \
+            "${HOME}/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+
+      - name: Import project
+        run: godot --headless --path . --import --quit
+
+      - name: Export release build
+        env:
+          RELEASE_TAG: ${{ needs.prepare.outputs.release_tag }}
+        run: |
+          mkdir -p "build/${{ matrix.platform }}"
+          OUTPUT="build/${{ matrix.platform }}/${PROJECT_NAME}-${RELEASE_TAG}-${{ matrix.filename_suffix }}"
           godot --headless --path . \
-            --export-release "Windows Desktop" \
-            "dist/JohnCompanyHelper-${GITHUB_REF_NAME}-windows-x86_64.exe"
-          godot --headless --path . \
-            --export-release "Linux" \
-            "dist/JohnCompanyHelper-${GITHUB_REF_NAME}-linux-x86_64"
-          chmod +x "dist/JohnCompanyHelper-${GITHUB_REF_NAME}-linux-x86_64"
+            --export-release "${{ matrix.preset }}" \
+            "${OUTPUT}"
+          if [[ "${{ matrix.platform }}" == "linux" ]]; then
+            chmod +x "${OUTPUT}"
+          fi
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}-${{ needs.prepare.outputs.release_tag }}
+          path: build/${{ matrix.platform }}/*
+          if-no-files-found: error
+
+  release:
+    name: Create GitHub Release
+    needs:
+      - prepare
+      - export
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Download release builds
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*-${{ needs.prepare.outputs.release_tag }}"
+          path: dist
+          merge-multiple: true
 
       - name: Create source archive and checksums
+        env:
+          RELEASE_TAG: ${{ needs.prepare.outputs.release_tag }}
         run: |
           git archive \
             --format=zip \
-            --prefix="johnCompanyHelper-${GITHUB_REF_NAME}/" \
-            --output="dist/JohnCompanyHelper-${GITHUB_REF_NAME}-source.zip" \
+            --prefix="johnCompanyHelper-${RELEASE_TAG}/" \
+            --output="dist/${PROJECT_NAME}-${RELEASE_TAG}-source.zip" \
             "${GITHUB_SHA}"
           cd dist
           sha256sum ./* > SHA256SUMS.txt
 
-      - name: Create GitHub release
+      - name: Create tag and GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.prepare.outputs.release_tag }}
         run: |
-          gh release create "${GITHUB_REF_NAME}" \
+          gh release create "${RELEASE_TAG}" \
             dist/* \
-            --verify-tag \
+            --target "${GITHUB_SHA}" \
             --generate-notes \
-            --title "John Company Helper ${GITHUB_REF_NAME}"
+            --title "John Company Helper ${RELEASE_TAG}"
