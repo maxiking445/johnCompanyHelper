@@ -17,6 +17,7 @@ reasoning_effort="medium"
 [application]
 
 config/name="JohnCompanyHelper"
+run/main_scene="uid://ddci5qppxv6cq"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 

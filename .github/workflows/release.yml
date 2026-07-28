@@ -1,0 +1,90 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  GODOT_VERSION: 4.7-stable
+  GODOT_TEMPLATE_DIRECTORY: 4.7.stable
+  GODOT_BINARY: Godot_v4.7-stable_linux.x86_64
+
+jobs:
+  build-and-release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Godot
+        run: |
+          curl --fail --location --retry 3 \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/${GODOT_BINARY}.zip" \
+            --output godot.zip
+          unzip -q godot.zip
+          sudo install -m 0755 "${GODOT_BINARY}" /usr/local/bin/godot
+          godot --version
+
+      - name: Install export templates
+        run: |
+          curl --fail --location --retry 3 \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz" \
+            --output export_templates.tpz
+          unzip -q export_templates.tpz
+          mkdir -p "${HOME}/.local/share/godot/export_templates/${GODOT_TEMPLATE_DIRECTORY}"
+          mv templates/* "${HOME}/.local/share/godot/export_templates/${GODOT_TEMPLATE_DIRECTORY}/"
+
+      - name: Import project
+        run: |
+          godot --headless --path . --import --quit
+
+      - name: Run tests
+        run: |
+          godot --headless --path . \
+            -s addons/gut/gut_cmdln.gd \
+            -gdir=res://test \
+            -ginclude_subdirs \
+            -gexit
+
+      - name: Export Windows and Linux builds
+        run: |
+          mkdir -p dist
+          godot --headless --path . \
+            --export-release "Windows Desktop" \
+            "dist/JohnCompanyHelper-${GITHUB_REF_NAME}-windows-x86_64.exe"
+          godot --headless --path . \
+            --export-release "Linux" \
+            "dist/JohnCompanyHelper-${GITHUB_REF_NAME}-linux-x86_64"
+          chmod +x "dist/JohnCompanyHelper-${GITHUB_REF_NAME}-linux-x86_64"
+
+      - name: Create source archive and checksums
+        run: |
+          git archive \
+            --format=zip \
+            --prefix="johnCompanyHelper-${GITHUB_REF_NAME}/" \
+            --output="dist/JohnCompanyHelper-${GITHUB_REF_NAME}-source.zip" \
+            "${GITHUB_SHA}"
+          cd dist
+          sha256sum ./* > SHA256SUMS.txt
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            dist/* \
+            --verify-tag \
+            --generate-notes \
+            --title "John Company Helper ${GITHUB_REF_NAME}"
