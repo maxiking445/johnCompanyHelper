@@ -64,6 +64,17 @@ No installation is required.
 
 The Linux build targets x86_64 desktop systems.
 
+### macOS
+
+1. Download `JohnCompanyHelper-vX.Y.Z-macos-universal.zip`.
+2. Extract the archive and move `JohnCompanyHelper.app` to the
+   `Applications` folder.
+3. Open the application. If macOS blocks the unsigned application, open
+   **System Settings > Privacy & Security** and select **Open Anyway** only if
+   you trust the download.
+
+The macOS build is universal and supports both Apple Silicon and Intel Macs.
+
 
 ## Disclaimers
 

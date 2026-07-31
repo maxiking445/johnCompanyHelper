@@ -112,6 +112,10 @@ jobs:
             preset: Windows Desktop
             platform: windows
             filename_suffix: windows-x86_64.exe
+          - display_name: macOS
+            preset: macOS
+            platform: macos
+            filename_suffix: macos-universal.zip
 
     steps:
       - name: Check out source
