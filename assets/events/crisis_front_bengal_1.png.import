@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cataxjup4qh8u"
 path.s3tc="res://.godot/imported/crisis_front_bengal_1.png-7aebb3875bc661a3e31e6b21a4163d3b.s3tc.ctex"
+path.etc2="res://.godot/imported/crisis_front_bengal_1.png-7aebb3875bc661a3e31e6b21a4163d3b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/events/crisis_front_bengal_1.png"
-dest_files=["res://.godot/imported/crisis_front_bengal_1.png-7aebb3875bc661a3e31e6b21a4163d3b.s3tc.ctex"]
+dest_files=["res://.godot/imported/crisis_front_bengal_1.png-7aebb3875bc661a3e31e6b21a4163d3b.s3tc.ctex", "res://.godot/imported/crisis_front_bengal_1.png-7aebb3875bc661a3e31e6b21a4163d3b.etc2.ctex"]
 
 [params]
 
