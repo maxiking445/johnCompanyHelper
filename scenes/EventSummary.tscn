@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://byauixe5cx7ng" path="res://scenes/event_summary.gd" id="1_7wnqb"]
 [ext_resource type="PackedScene" uid="uid://c8ni8qxid5sny" path="res://scenes/component/EventShowComponent.tscn" id="2_2of6r"]
+[ext_resource type="LabelSettings" uid="uid://rli1xj7qgpnm" path="res://font/english_label.tres" id="3_counter"]
 
 [node name="EventSummary" type="Control" unique_id=736882236]
 layout_mode = 3
@@ -11,6 +12,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7wnqb")
+
+[node name="EventCounter" type="Label" parent="." unique_id=265580085]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 1350.0
+offset_top = 48.0
+offset_right = -27.0
+offset_bottom = 81.0
+grow_horizontal = 2
+text = "EVENT 1 / 1"
+label_settings = ExtResource("3_counter")
+horizontal_alignment = 1
 
 [node name="EventShowComponent" parent="." unique_id=1761235851 instance=ExtResource("2_2of6r")]
 layout_mode = 1
@@ -37,9 +52,8 @@ offset_bottom = 380.0
 grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
-theme_override_constants/scroll_deadzone = 8
 
-[node name="ListMargin" type="MarginContainer" parent="ScrollContainer"]
+[node name="ListMargin" type="MarginContainer" parent="ScrollContainer" unique_id=1495274260]
 custom_minimum_size = Vector2(800, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -48,7 +62,7 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 24
 
-[node name="Center" type="CenterContainer" parent="ScrollContainer/ListMargin"]
+[node name="Center" type="CenterContainer" parent="ScrollContainer/ListMargin" unique_id=938142529]
 layout_mode = 2
 size_flags_horizontal = 3
 

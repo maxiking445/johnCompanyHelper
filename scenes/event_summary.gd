@@ -8,6 +8,7 @@ const EVENT_LOG_ENTRY_SCENE := preload("res://scenes/component/EventLogEntry.tsc
 @export var currentEvent: IndiaEvent 
 @export var index: int 
 @onready var eventLogList: VBoxContainer = %EventLogList
+@onready var event_counter: Label = %EventCounter
 
 signal lastEventShown
 
@@ -25,6 +26,9 @@ func initialize(
 	currentEvent = new_current_event
 	actionList = ActionManager.get_actions_by_event_id(currentEvent.eventId)
 	$EventShowComponent.initialize_events(topDeckEvent, currentEvent)
+	_update_event_counter()
+	if index + 1 == EventHelper.getPlayedEvents().size():
+		lastEventShown.emit()
 	
 
 func populate_event_log() -> void:
@@ -45,22 +49,29 @@ func _on_event_show_component_flip_finished() -> void:
 
 
 func next() -> void:
-	if index+1 == EventHelper.getPlayedEvents().size():
-		lastEventShown.emit()
-	if index >= EventHelper.getPlayedEvents().size():
+	var event_count := EventHelper.getPlayedEvents().size()
+	var next_index := index + 1
+	if next_index >= event_count:
 		print("NO MORE EVENTS!")
 		return
 
-
-	var firstEventValue = EventHelper.getPlayedEventAt(index)
+	var firstEventValue = EventHelper.getPlayedEventAt(next_index)
 	var current_event: IndiaEvent = firstEventValue.currentEvent
 	var top_deck_event: IndiaEvent = firstEventValue.topdeckEvent
 	topDeckEvent = top_deck_event
 	currentEvent = current_event
 	actionList = ActionManager.get_actions_by_event_id(currentEvent.eventId)
 	removeLog()
-	index = index + 1
+	index = next_index
+	_update_event_counter()
 	$EventShowComponent.initialize_events(topDeckEvent, currentEvent, true)
+	if index + 1 == event_count:
+		lastEventShown.emit()
+
+
+func _update_event_counter() -> void:
+	var event_count := EventHelper.getPlayedEvents().size()
+	event_counter.text = "EVENT %d / %d" % [index + 1, event_count]
 	
 func removeLog():
 	for child in eventLogList.get_children():
