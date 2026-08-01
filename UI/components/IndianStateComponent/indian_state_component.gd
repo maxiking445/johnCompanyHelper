@@ -6,7 +6,7 @@ extends Control
 
 @export var unrest_size: int
 @export var armies_size: int
-@export var hasGovenor: bool
+@export var hasGovernor: bool
 
 @onready var background_panel: PanelContainer = $"."
 
@@ -25,9 +25,9 @@ func update_ui()-> void:
 	$VBoxContainer/Title.color = title_color
 	$VBoxContainer/Unrest.amount = unrest_size
 	$VBoxContainer/Armies.amount = armies_size
-	$VBoxContainer/Govenor.isChecked = hasGovenor
+	$VBoxContainer/Governor.isChecked = hasGovernor
 	
 	$VBoxContainer/Title.update_ui()
 	$VBoxContainer/Unrest.update_ui()
 	$VBoxContainer/Armies.update_ui()
-	$VBoxContainer/Govenor.update_ui()
+	$VBoxContainer/Governor.update_ui()

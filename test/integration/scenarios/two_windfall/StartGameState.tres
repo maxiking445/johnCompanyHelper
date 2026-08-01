@@ -19,4 +19,4 @@ orders = Array[ExtResource("3")]([SubResource("Order1"), SubResource("Order2")])
 
 [resource]
 script = ExtResource("1")
-hyperbad = SubResource("Hyderabad")
+hyderabad = SubResource("Hyderabad")

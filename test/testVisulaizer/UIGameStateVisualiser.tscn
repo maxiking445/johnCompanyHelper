@@ -177,7 +177,7 @@ value = 7
 state = 2
 metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
-[sub_resource type="Resource" id="State_HYPERBAD"]
+[sub_resource type="Resource" id="State_HYDERABAD"]
 script = ExtResource("8_n2hrg")
 location = 2
 orders = Array[ExtResource("7_glbnv")]([SubResource("Order_HYP_1")])
@@ -284,7 +284,7 @@ tradeOrderStatus = 1
 [node name="Delhi" parent="." unique_id=1240419331 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(660, 62)
-state_name = "Delih"
+state_name = "Delhi"
 stateModel = SubResource("State_DELHI")
 
 [node name="TradeOrder1" parent="Delhi" unique_id=2059909582 instance=ExtResource("4_ub78g")]
@@ -339,13 +339,13 @@ position = Vector2(128, 174)
 orderModel = SubResource("Order_MAR_3")
 tradeOrderStatus = 1
 
-[node name="Hyperbad" parent="." unique_id=828023437 instance=ExtResource("7_nfqf3")]
+[node name="Hyderabad" parent="." unique_id=828023437 instance=ExtResource("7_nfqf3")]
 z_index = 10
 position = Vector2(662, 362)
-state_name = "Hyperbad"
-stateModel = SubResource("State_HYPERBAD")
+state_name = "Hyderabad"
+stateModel = SubResource("State_HYDERABAD")
 
-[node name="TradeOrder1" parent="Hyperbad" unique_id=93655973 instance=ExtResource("4_ub78g")]
+[node name="TradeOrder1" parent="Hyderabad" unique_id=93655973 instance=ExtResource("4_ub78g")]
 position = Vector2(152, 99)
 orderModel = SubResource("Order_HYP_1")
 tradeOrderStatus = 1
@@ -418,20 +418,20 @@ rotation = 0.64503765
 borderA = 2
 borderB = 5
 
-[node name="Maratha_Delih" parent="ElephantBorder" unique_id=1930650116 instance=ExtResource("10_glbnv")]
+[node name="Maratha_Delhi" parent="ElephantBorder" unique_id=1930650116 instance=ExtResource("10_glbnv")]
 position = Vector2(776.99994, 145)
 rotation = 0.04350373
 borderA = 5
 borderB = 6
 elephantIsHere = true
 
-[node name="Delih_Bengal" parent="ElephantBorder" unique_id=287328363 instance=ExtResource("10_glbnv")]
+[node name="Delhi_Bengal" parent="ElephantBorder" unique_id=287328363 instance=ExtResource("10_glbnv")]
 position = Vector2(983, 127.999985)
 rotation = 0.04350373
 borderA = 6
 borderB = 4
 
-[node name="Delih_Punjab" parent="ElephantBorder" unique_id=25560054 instance=ExtResource("10_glbnv")]
+[node name="Delhi_Punjab" parent="ElephantBorder" unique_id=25560054 instance=ExtResource("10_glbnv")]
 position = Vector2(587.99994, 63.999992)
 rotation = -1.216948
 borderA = 6
@@ -459,7 +459,7 @@ rotation = 1.2900753
 borderA = 3
 borderB = 3
 
-[node name="Delih" parent="ElephantBorder" unique_id=1482022272 instance=ExtResource("10_glbnv")]
+[node name="Delhi" parent="ElephantBorder" unique_id=1482022272 instance=ExtResource("10_glbnv")]
 position = Vector2(800, 90)
 rotation = 1.2900753
 borderA = 6
@@ -519,7 +519,7 @@ popup/item_0/text = "BOMBAY"
 popup/item_0/id = 0
 popup/item_1/text = "MADRAS"
 popup/item_1/id = 1
-popup/item_2/text = "HYPERBAD"
+popup/item_2/text = "HYDERABAD"
 popup/item_2/id = 2
 popup/item_3/text = "PUNJAB"
 popup/item_3/id = 3

@@ -154,7 +154,7 @@ state = 3
 [sub_resource type="Resource" id="State_PUN"]
 script = ExtResource("2_state")
 location = 3
-hasGovenor = true
+hasGovernor = true
 orders = Array[ExtResource("3_order")]([SubResource("Order_PUN_1")])
 is_connected_to = Array[int]([0, 6])
 
@@ -190,7 +190,7 @@ ships = Array[ExtResource("5_ship")]([SubResource("Ship_West")])
 script = ExtResource("1_game")
 bombay = SubResource("State_BOM")
 madras = SubResource("State_MAD")
-hyperbad = SubResource("State_HYP")
+hyderabad = SubResource("State_HYP")
 punjab = SubResource("State_PUN")
 bengal = SubResource("State_BEN")
 maratha = SubResource("State_MAR")

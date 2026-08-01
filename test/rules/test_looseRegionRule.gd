@@ -59,5 +59,5 @@ func _create_state(location: StateType.StateType) -> StateModel:
 	state.towerLevel = 2
 	state.hasCommander = false
 	state.officers = 0
-	state.hasGovenor = false
+	state.hasGovernor = false
 	return state

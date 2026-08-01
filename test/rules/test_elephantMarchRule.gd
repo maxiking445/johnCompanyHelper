@@ -70,15 +70,15 @@ func test_sovereign_region_uses_border_selected_by_event_shape() -> void:
 func test_sovereign_region_uses_square_border_from_top_deck_event() -> void:
 	var sovereign := _create_state(StateType.StateType.BOMBAY)
 	sovereign.isSovereign = true
-	var hyperbad := _create_state(StateType.StateType.HYPERBAD)
-	_game_state.states = [sovereign, hyperbad]
+	var hyderabad := _create_state(StateType.StateType.HYDERABAD)
+	_game_state.states = [sovereign, hyderabad]
 	_set_top_deck_location(sovereign.location, EnumTypes.ElephantMarker.SQUARE)
 
 	_rule.execute(_game_state)
 
 	assert_true(_elephant.is_on_border())
 	assert_eq(_elephant.get_backward_state(), sovereign.location)
-	assert_eq(_elephant.get_facing_state(), hyperbad.location)
+	assert_eq(_elephant.get_facing_state(), hyderabad.location)
 
 
 func test_sovereign_region_uses_triangle_border_from_top_deck_event() -> void:
@@ -99,8 +99,8 @@ func test_madras_resolves_every_shape_to_expected_border() -> void:
 	var madras := _create_state(StateType.StateType.MADRAS)
 	madras.isSovereign = true
 	var mysore := _create_state(StateType.StateType.MYSORE)
-	var hyperbad := _create_state(StateType.StateType.HYPERBAD)
-	_game_state.states = [madras, mysore, hyperbad]
+	var hyderabad := _create_state(StateType.StateType.HYDERABAD)
+	_game_state.states = [madras, mysore, hyderabad]
 
 	_assert_elephant_march_faces(
 		madras.location,
@@ -110,7 +110,7 @@ func test_madras_resolves_every_shape_to_expected_border() -> void:
 	_assert_elephant_march_faces(
 		madras.location,
 		EnumTypes.ElephantMarker.CIRCLE,
-		hyperbad.location
+		hyderabad.location
 	)
 	_assert_elephant_march_faces(
 		madras.location,
@@ -140,9 +140,9 @@ func test_madras_square_and_triangle_share_the_same_border() -> void:
 func test_active_event_shape_is_used_over_top_deck_shape() -> void:
 	var sovereign := _create_state(StateType.StateType.BOMBAY)
 	sovereign.isSovereign = true
-	var hyperbad := _create_state(StateType.StateType.HYPERBAD)
+	var hyderabad := _create_state(StateType.StateType.HYDERABAD)
 	var maratha := _create_state(StateType.StateType.MARATHA)
-	_game_state.states = [sovereign, hyperbad, maratha]
+	_game_state.states = [sovereign, hyderabad, maratha]
 	_set_top_deck_location(sovereign.location, EnumTypes.ElephantMarker.SQUARE)
 	EventHelper.activeEvent = _create_event(
 		sovereign.location,
@@ -167,13 +167,13 @@ func test_sovereign_region_skips_own_dominated_neighbor_clockwise() -> void:
 	punjab.isDominated = true
 	punjab.isDominatedBy = sovereign
 	punjab.partOfEmpire = EnumTypes.Empires.A
-	var hyperbad := _create_state(StateType.StateType.HYPERBAD)
-	_game_state.states = [sovereign, punjab, hyperbad]
+	var hyderabad := _create_state(StateType.StateType.HYDERABAD)
+	_game_state.states = [sovereign, punjab, hyderabad]
 	_set_top_deck_location(sovereign.location, EnumTypes.ElephantMarker.TRIANGLE)
 
 	_rule.execute(_game_state)
 
-	assert_eq(_elephant.get_facing_state(), hyperbad.location)
+	assert_eq(_elephant.get_facing_state(), hyderabad.location)
 
 
 func test_sovereign_region_skips_multiple_own_dominated_neighbors_clockwise() -> void:
@@ -185,12 +185,12 @@ func test_sovereign_region_skips_multiple_own_dominated_neighbors_clockwise() ->
 	punjab.isDominated = true
 	punjab.isDominatedBy = sovereign
 	punjab.partOfEmpire = EnumTypes.Empires.A
-	var hyperbad := _create_state(StateType.StateType.HYPERBAD)
-	hyperbad.isDominated = true
-	hyperbad.isDominatedBy = sovereign
-	hyperbad.partOfEmpire = EnumTypes.Empires.A
+	var hyderabad := _create_state(StateType.StateType.HYDERABAD)
+	hyderabad.isDominated = true
+	hyderabad.isDominatedBy = sovereign
+	hyderabad.partOfEmpire = EnumTypes.Empires.A
 	var maratha := _create_state(StateType.StateType.MARATHA)
-	_game_state.states = [sovereign, punjab, hyperbad, maratha]
+	_game_state.states = [sovereign, punjab, hyderabad, maratha]
 	_set_top_deck_location(sovereign.location, EnumTypes.ElephantMarker.TRIANGLE)
 
 	_rule.execute(_game_state)
@@ -204,14 +204,14 @@ func test_fully_formed_empire_redirects_elephant_to_capital() -> void:
 	sovereign.isEmpireCapital = true
 	sovereign.partOfEmpire = EnumTypes.Empires.A
 	sovereign.is_connected_to = [
-		StateType.StateType.HYPERBAD,
+		StateType.StateType.HYDERABAD,
 		StateType.StateType.PUNJAB,
 		StateType.StateType.MARATHA,
 	]
-	var hyperbad := _create_state(StateType.StateType.HYPERBAD)
-	hyperbad.isDominated = true
-	hyperbad.isDominatedBy = sovereign
-	hyperbad.partOfEmpire = EnumTypes.Empires.A
+	var hyderabad := _create_state(StateType.StateType.HYDERABAD)
+	hyderabad.isDominated = true
+	hyderabad.isDominatedBy = sovereign
+	hyderabad.partOfEmpire = EnumTypes.Empires.A
 	var dominated := _create_state(StateType.StateType.PUNJAB)
 	dominated.isDominated = true
 	dominated.isDominatedBy = sovereign
@@ -220,7 +220,7 @@ func test_fully_formed_empire_redirects_elephant_to_capital() -> void:
 	maratha.isDominated = true
 	maratha.isDominatedBy = sovereign
 	maratha.partOfEmpire = EnumTypes.Empires.A
-	_game_state.states = [sovereign, hyperbad, dominated, maratha]
+	_game_state.states = [sovereign, hyderabad, dominated, maratha]
 	_set_top_deck_location(sovereign.location, EnumTypes.ElephantMarker.CIRCLE)
 
 	_rule.execute(_game_state)

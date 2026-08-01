@@ -3,7 +3,7 @@ class_name GameState
 
 @export var bombay: StateModel
 @export var madras: StateModel
-@export var hyperbad: StateModel
+@export var hyderabad: StateModel
 @export var punjab: StateModel
 @export var bengal: StateModel
 @export var maratha: StateModel
@@ -29,7 +29,7 @@ func getStates() -> Array[StateModel]:
 	return [
 		bombay,
 		madras,
-		hyperbad,
+		hyderabad,
 		punjab,
 		bengal,
 		maratha,

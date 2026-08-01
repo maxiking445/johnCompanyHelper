@@ -85,7 +85,7 @@ func _assert_states_equal(
 ) -> void:
 	var fields := [
 		"location", "unrest_size", "hasCommander", "officers",
-		"troops", "exhaustedTroops", "hasGovenor",
+		"troops", "exhaustedTroops", "hasGovernor",
 		"is_connected_to", "isSovereign", "partOfEmpire", "isEmpireCapital",
 		"isDominated", "isCompanyControlled", "towerLevel",
 		"hasRebelled",

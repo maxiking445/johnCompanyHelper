@@ -52,7 +52,7 @@ func test_execute_resolves_rebellion_when_event_location_is_not_sovereign() -> v
 
 func test_execute_uses_normal_rebellion_for_dominated_region() -> void:
 	var attacker := _create_state(StateType.StateType.PUNJAB)
-	var defender := _create_state(StateType.StateType.DELIH)
+	var defender := _create_state(StateType.StateType.DELHI)
 	attacker.isDominated = true
 	attacker.isDominatedBy = defender
 	attacker.towerLevel = 3

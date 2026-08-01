@@ -7,7 +7,7 @@ const DEFAULT_GAME_STATE := preload("res://resources/gameState/GameState1710.tre
 const MENU_SCENE := "res://scenes/menue.tscn"
 const MENU_BUTTON_THEME := preload("res://scenes/component/button/menueButton.tres")
 const STATE_KEYS := [
-	"bombay", "madras", "hyperbad", "punjab",
+	"bombay", "madras", "hyderabad", "punjab",
 	"bengal", "maratha", "delhi", "mysore",
 ]
 const STATE_TITLES := [

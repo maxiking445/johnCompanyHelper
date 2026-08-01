@@ -150,12 +150,11 @@ func _states_by_name() -> Dictionary:
 	return {
 		"bombay": state.bombay,
 		"madras": state.madras,
-		"hyperbad": state.hyperbad,
+		"hyderabad": state.hyderabad,
 		"punjab": state.punjab,
 		"bengal": state.bengal,
 		"maratha": state.maratha,
 		"delhi": state.delhi,
-		"delih": state.delhi,
 		"mysore": state.mysore,
 	}
 
@@ -232,5 +231,4 @@ func _on_location_selected(id: int) -> void:
 
 
 func _location_name(location: StateType.StateType) -> String:
-	var location_name := StateType.name(location)
-	return "DELHI" if location_name == "DELIH" else location_name
+	return StateType.name(location)

@@ -49,7 +49,7 @@ func update_ui() -> void:
 		"Officers:": str(stateModel.officers),
 		"Troops:": str(stateModel.troops),
 		"Exhausted troops:": str(stateModel.exhaustedTroops),
-		"Governor:": _yes_no(stateModel.hasGovenor),
+		"Governor:": _yes_no(stateModel.hasGovernor),
 		"Orders:": str(stateModel.orders.size()),
 		"Sovereign:": _yes_no(stateModel.isSovereign),
 		"Empire:": EnumTypes.Empires.keys()[stateModel.partOfEmpire],

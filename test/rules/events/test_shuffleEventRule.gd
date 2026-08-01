@@ -3,7 +3,7 @@ extends GutTest
 const SHUFFLE_EVENT_RULE := preload("res://rules/events/ShuffleEventRule.gd")
 const SHUFFLE_MADRAS := preload("res://resources/events/shuffle/Shuffle_MAD.tres")
 const TURMOIL_BOMBAY := preload("res://resources/events/turmoil/Turmoil_BOM.tres")
-const WINDFALL_HYPERBAD := preload("res://resources/events/windfall/Windfall_HYP.tres")
+const WINDFALL_HYDERABAD := preload("res://resources/events/windfall/Windfall_HYP.tres")
 const GAME_STATE := preload("res://resources/gameState/GameState1710.tres")
 
 var _rule: ShuffleEventRule
@@ -14,7 +14,7 @@ func before_each() -> void:
 	_rule = SHUFFLE_EVENT_RULE.new()
 	_game_state = GAME_STATE.duplicate(true)
 	EventHelper.draw_pile = [TURMOIL_BOMBAY]
-	EventHelper.discard_pile = [SHUFFLE_MADRAS, WINDFALL_HYPERBAD]
+	EventHelper.discard_pile = [SHUFFLE_MADRAS, WINDFALL_HYDERABAD]
 	EventHelper.activeEvent = SHUFFLE_MADRAS
 
 
@@ -29,7 +29,7 @@ func test_execute_moves_active_event_back_into_draw_pile_and_empties_discard_pil
 
 	assert_true(EventHelper.draw_pile.has(SHUFFLE_MADRAS))
 	assert_true(EventHelper.draw_pile.has(TURMOIL_BOMBAY))
-	assert_true(EventHelper.draw_pile.has(WINDFALL_HYPERBAD))
+	assert_true(EventHelper.draw_pile.has(WINDFALL_HYDERABAD))
 	assert_eq(EventHelper.draw_pile.size(), 3)
 	assert_true(EventHelper.discard_pile.is_empty())
 

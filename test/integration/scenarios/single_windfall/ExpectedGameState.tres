@@ -19,5 +19,5 @@ orders = Array[ExtResource("1_gvxaj")]([SubResource("Order_1"), SubResource("Ord
 
 [resource]
 script = ExtResource("1")
-hyperbad = SubResource("Hyderabad")
+hyderabad = SubResource("Hyderabad")
 eventsToDraw = 1

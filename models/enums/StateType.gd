@@ -4,11 +4,11 @@ class_name StateType
 enum StateType {
 	BOMBAY,
 	MADRAS,
-	HYPERBAD,
+	HYDERABAD,
 	PUNJAB,
 	BENGAL,
 	MARATHA,
-	DELIH,
+	DELHI,
 	MYSORE,
 	NONE
 }

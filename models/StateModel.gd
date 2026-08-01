@@ -8,7 +8,7 @@ class_name StateModel
 @export var officers: int
 @export var troops: int
 @export var exhaustedTroops: int
-@export var hasGovenor: bool
+@export var hasGovernor: bool
 @export var orders: Array[OrderModel]
 @export var is_connected_to: Array[StateType.StateType]
 @export var isSovereign: bool

@@ -105,7 +105,7 @@ value = 7
 state = 2
 metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
-[sub_resource type="Resource" id="State_HYPERBAD"]
+[sub_resource type="Resource" id="State_HYDERABAD"]
 script = ExtResource("2_state")
 location = 2
 orders = Array[ExtResource("3_order")]([SubResource("Order_HYP_1")])
@@ -229,7 +229,7 @@ metadata/_custom_type_script = "uid://bcb1pbdmq18c"
 script = ExtResource("1_game_state")
 bombay = SubResource("State_BOMBAY")
 madras = SubResource("State_MADRAS")
-hyperbad = SubResource("State_HYPERBAD")
+hyderabad = SubResource("State_HYDERABAD")
 punjab = SubResource("State_PUNJAB")
 bengal = SubResource("State_BENGAL")
 maratha = SubResource("State_MARATHA")

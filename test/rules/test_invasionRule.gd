@@ -20,7 +20,7 @@ func after_each() -> void:
 
 func test_stronger_sovereign_attacker_creates_new_empire() -> void:
 	var attacker := _create_state(StateType.StateType.PUNJAB, 3)
-	var defender := _create_state(StateType.StateType.DELIH, 2)
+	var defender := _create_state(StateType.StateType.DELHI, 2)
 	attacker.isSovereign = true
 	defender.isSovereign = true
 	_game_state.states = [attacker, defender]
@@ -36,7 +36,7 @@ func test_stronger_sovereign_attacker_creates_new_empire() -> void:
 
 func test_tied_invasion_fails_and_removes_attacker_tower() -> void:
 	var attacker := _create_state(StateType.StateType.PUNJAB, 2)
-	var defender := _create_state(StateType.StateType.DELIH, 2)
+	var defender := _create_state(StateType.StateType.DELHI, 2)
 	attacker.isSovereign = true
 	defender.isSovereign = true
 	_game_state.states = [attacker, defender]
@@ -59,7 +59,7 @@ func test_invasion_strength_includes_all_regions_in_attacker_empire() -> void:
 
 
 func test_invasion_result_uses_complete_defending_empire_strength() -> void:
-	var defender := _create_state(StateType.StateType.DELIH, 2)
+	var defender := _create_state(StateType.StateType.DELHI, 2)
 	var ally := _create_state(StateType.StateType.BENGAL, 2)
 	defender.isSovereign = true
 	defender.partOfEmpire = EnumTypes.Empires.B

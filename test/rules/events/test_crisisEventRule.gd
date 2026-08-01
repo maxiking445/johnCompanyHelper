@@ -38,7 +38,7 @@ func test_invasion_against_company_uses_empire_strength_and_unrest() -> void:
 	var attacker := _create_state(StateType.StateType.PUNJAB)
 	attacker.isSovereign = true
 	attacker.towerLevel = 2
-	var company_state := _create_state(StateType.StateType.DELIH)
+	var company_state := _create_state(StateType.StateType.DELHI)
 	company_state.isCompanyControlled = true
 	company_state.unrest_size = 1
 	company_state.troops = 3
@@ -58,7 +58,7 @@ func test_failed_invasion_against_company_removes_attacker_tower() -> void:
 	var attacker := _create_state(StateType.StateType.PUNJAB)
 	attacker.isSovereign = true
 	attacker.towerLevel = 2
-	var company_state := _create_state(StateType.StateType.DELIH)
+	var company_state := _create_state(StateType.StateType.DELHI)
 	company_state.isCompanyControlled = true
 	company_state.troops = 5
 	_game_state.states = [attacker, company_state]

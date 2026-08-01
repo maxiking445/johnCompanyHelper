@@ -57,7 +57,7 @@ func performOfficerRoute(game_state: GameState, state: StateModel):
 			state.removeOfficer()
 
 func performGovernerElimination(game_state: GameState, state: StateModel):
-	if state.hasGovenor:
+	if state.hasGovernor:
 		print("return it to the unused offices stack and return the officeholder's family member to that player's supply")
 
 func performRestoreLocalAuthority(game_state: GameState, state: StateModel):
