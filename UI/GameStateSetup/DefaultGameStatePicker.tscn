@@ -1,0 +1,79 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://UI/GameStateSetup/default_game_state_picker.gd" id="1_script"]
+[ext_resource type="Theme" path="res://scenes/component/button/menueButton.tres" id="2_theme"]
+[ext_resource type="FontFile" path="res://font/LibreBaskerville-Bold.ttf" id="3_bold"]
+[ext_resource type="FontFile" path="res://font/LibreBaskerville-Italic.ttf" id="4_italic"]
+
+[sub_resource type="StyleBoxFlat" id="PaperPanel"]
+bg_color = Color(0.91, 0.84, 0.67, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.035, 0.025, 0.02, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.08, 0.035, 0.015, 0.7)
+shadow_size = 14
+shadow_offset = Vector2(0, 6)
+
+[node name="DefaultGameStatePicker" type="PopupPanel"]
+title = "Load default GameState"
+transparent_bg = true
+theme_override_styles/panel = SubResource("PaperPanel")
+script = ExtResource("1_script")
+
+[node name="Margin" type="MarginContainer" parent="."]
+offset_right = 420.0
+offset_bottom = 292.0
+theme_override_constants/margin_left = 34
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 34
+theme_override_constants/margin_bottom = 28
+
+[node name="Choices" type="VBoxContainer" parent="Margin"]
+custom_minimum_size = Vector2(352, 0)
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Heading" type="Label" parent="Margin/Choices"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.21, 0.075, 0.045, 1)
+theme_override_fonts/font = ExtResource("3_bold")
+theme_override_font_sizes/font_size = 24
+text = "Choose a default GameState"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="Margin/Choices"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.26, 0.16, 0.1, 0.82)
+theme_override_fonts/font = ExtResource("4_italic")
+theme_override_font_sizes/font_size = 14
+text = "Load the historical situation for the selected scenario."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Scenario1710Button" type="Button" parent="Margin/Choices"]
+layout_mode = 2
+theme = ExtResource("2_theme")
+theme_override_font_sizes/font_size = 22
+text = "1710 Scenario"
+
+[node name="Scenario1758Button" type="Button" parent="Margin/Choices"]
+layout_mode = 2
+theme = ExtResource("2_theme")
+theme_override_font_sizes/font_size = 22
+text = "1758 Scenario"
+
+[node name="Scenario1813Button" type="Button" parent="Margin/Choices"]
+layout_mode = 2
+theme = ExtResource("2_theme")
+theme_override_font_sizes/font_size = 22
+text = "1813 Scenario"
+
+[connection signal="pressed" from="Margin/Choices/Scenario1710Button" to="." method="_on_1710_button_pressed"]
+[connection signal="pressed" from="Margin/Choices/Scenario1758Button" to="." method="_on_1758_button_pressed"]
+[connection signal="pressed" from="Margin/Choices/Scenario1813Button" to="." method="_on_1813_button_pressed"]

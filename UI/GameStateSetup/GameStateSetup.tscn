@@ -136,7 +136,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("6_menu_button")
 theme_override_font_sizes/font_size = 22
-text = "Reload Default"
+text = "Load Default"
 
 [node name="BackButton" type="Button" parent="Margin/Card/Layout/Footer"]
 unique_name_in_owner = true

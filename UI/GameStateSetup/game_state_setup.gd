@@ -3,9 +3,11 @@ class_name GameStateSetup
 
 signal game_state_ready(game_state: GameState)
 
-const DEFAULT_GAME_STATE := preload("res://resources/gameState/GameState1710.tres")
 const MENU_SCENE := "res://scenes/menue.tscn"
 const MENU_BUTTON_THEME := preload("res://scenes/component/button/menueButton.tres")
+const DEFAULT_PICKER_SCENE := preload(
+	"res://UI/GameStateSetup/DefaultGameStatePicker.tscn"
+)
 const STATE_KEYS := [
 	"bombay", "madras", "hyderabad", "punjab",
 	"bengal", "maratha", "delhi", "mysore",
@@ -30,6 +32,7 @@ const STATE_TITLES := [
 var game_state: GameState
 var current_step := 0
 var steps: Array[Dictionary] = []
+var default_picker: DefaultGameStatePicker
 
 
 func _ready() -> void:
@@ -38,7 +41,10 @@ func _ready() -> void:
 	previous_button.pressed.connect(_previous_step)
 	next_button.pressed.connect(_next_step)
 	save_button.pressed.connect(_save_game_state)
-	reset_button.pressed.connect(_load_default)
+	reset_button.pressed.connect(_show_default_picker)
+	default_picker = DEFAULT_PICKER_SCENE.instantiate()
+	default_picker.game_state_selected.connect(_on_default_game_state_selected)
+	add_child(default_picker)
 	%BackButton.pressed.connect(_return_to_menu)
 	%DownloadJsonButton.pressed.connect(_download_json)
 	%UploadJsonButton.pressed.connect(_upload_json)
@@ -69,10 +75,16 @@ func _build_steps() -> void:
 	})
 
 
-func _load_default() -> void:
-	game_state = DEFAULT_GAME_STATE.duplicate(true) as GameState
+func _show_default_picker() -> void:
+	default_picker.open()
+
+
+func _on_default_game_state_selected(
+	selected_game_state: GameState, scenario: String
+) -> void:
+	game_state = selected_game_state
 	current_step = 0
-	path_label.text = "Loaded: res://resources/gameState/GameState1710.tres"
+	path_label.text = "Loaded: res://resources/gameState/GameState%s.tres" % scenario
 	_show_step()
 
 
