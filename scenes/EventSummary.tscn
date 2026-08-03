@@ -51,6 +51,7 @@ offset_right = 410.0
 offset_bottom = 380.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 horizontal_scroll_mode = 0
 
 [node name="ListMargin" type="MarginContainer" parent="ScrollContainer" unique_id=1495274260]
