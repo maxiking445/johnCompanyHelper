@@ -1,4 +1,4 @@
-# John Company Helper
+# Unofficial John Company Helper
 
 <p align="center">
   <img src="assets/mainMenueLogo.png" alt="John Company Helper icon" width="192">
@@ -16,6 +16,10 @@
   <img src="https://img.shields.io/github/v/release/maxiking445/johnCompanyHelper" alt="Latest release">
   <img src="https://img.shields.io/badge/Godot-4.7.1-478CBF?logo=godot-engine&logoColor=white" alt="Godot 4.7.1">
 </p>
+
+> [!WARNING]
+This project is still in active testing.
+Some features may be incomplete, and bugs or incorrect rule resolutions can occur. Please verify important game decisions against the official John Company rules.
 
 John Company Helper is a small companion application for resolving the India
 Phase in **John Company**. It keeps track of the current game state, guides the
