@@ -21,11 +21,14 @@ const ClientRegistry := preload("res://addons/godot_ai/clients/_registry.gd")
 const JsonStrategy := preload("res://addons/godot_ai/clients/_json_strategy.gd")
 const TomlStrategy := preload("res://addons/godot_ai/clients/_toml_strategy.gd")
 const YamlStrategy := preload("res://addons/godot_ai/clients/_yaml_strategy.gd")
+const DshStrategy := preload("res://addons/godot_ai/clients/_dsh_strategy.gd")
 const CliStrategy := preload("res://addons/godot_ai/clients/_cli_strategy.gd")
 const ManualCommand := preload("res://addons/godot_ai/clients/_manual_command.gd")
 const CliFinder := preload("res://addons/godot_ai/clients/_cli_finder.gd")
+const MutationLock := preload("res://addons/godot_ai/utils/client_mutation_lock.gd")
 const WindowsPortReservation := preload("res://addons/godot_ai/utils/windows_port_reservation.gd")
 const PortResolver := preload("res://addons/godot_ai/utils/port_resolver.gd")
+const UvResolution := preload("res://addons/godot_ai/utils/uv_resolution_policy.gd")
 
 const SERVER_NAME := "godot-ai"
 
@@ -45,8 +48,15 @@ const MAX_PORT := 65535
 ## takes one or two probes, so this only bounds the worst case.
 const SUGGEST_PORT_MAX_PROBES := 64
 const SETTING_WS_PORT := "godot_ai/ws_port"
+const SETTING_V4_ENDPOINT_PORTS := "godot_ai/v4_endpoint_ports"
 const SETTING_STARTUP_TRACE := "godot_ai/log_startup_timing"
 const SETTING_KEEP_SERVER_ON_EXIT := "godot_ai/keep_server_on_exit"
+## External cwd the user can set when an MCP client (Pi, code-server, …) reads
+## project-tier config files from a directory this editor can't see. The
+## merge-tier strategies include it as an extra `_project_candidate_paths` root
+## so project overrides there are detected instead of silently shadowed by a
+## global-tier write. Codex-review finding F1.
+const SETTING_EXTERNAL_CLIENT_CWD := "godot_ai/external_client_cwd"
 const _DISCOVERY_TIMEOUT_MS := 3000
 ## Codex launches Windows console-subsystem MCP commands in a visible terminal.
 ## A GUI-subsystem Python keeps the bridge attached to Codex's redirected MCP
@@ -68,12 +78,101 @@ const _WINDOWS_STDIO_BOOTSTRAP := (
 
 ## Active HTTP port: user override (if in range) or `DEFAULT_HTTP_PORT`.
 static func http_port() -> int:
+	var override := v4_endpoint_ports_status()
+	if bool(override.present):
+		return int(override.get("http_port", 0))
 	return _read_port_setting(McpSettings.SETTING_HTTP_PORT, DEFAULT_HTTP_PORT)
 
 
 ## Active WebSocket port: user override (if in range) or `DEFAULT_WS_PORT`.
 static func ws_port() -> int:
+	var override := v4_endpoint_ports_status()
+	if bool(override.present):
+		return int(override.get("ws_port", 0))
 	return _read_port_setting(SETTING_WS_PORT, DEFAULT_WS_PORT)
+
+
+## An absent override preserves historical settings. A malformed present
+## override grants no endpoint; callers can surface its error before startup.
+static func v4_endpoint_ports_status() -> Dictionary:
+	var es := EditorInterface.get_editor_settings()
+	if es == null or not es.has_setting(SETTING_V4_ENDPOINT_PORTS):
+		return {"ok": true, "present": false}
+	var pair: Variant = es.get_setting(SETTING_V4_ENDPOINT_PORTS)
+	var invalid := {"ok": false, "present": true,
+		"error": "Invalid %s: set distinct integer http_port and ws_port values between %d and %d, or remove the override." % [SETTING_V4_ENDPOINT_PORTS, MIN_PORT, MAX_PORT]}
+	if not (pair is Dictionary) or pair.size() != 2:
+		return invalid
+	for key in ["http_port", "ws_port"]:
+		var value: Variant = pair.get(key)
+		if not (value is int or value is float) or not is_finite(float(value)):
+			return invalid
+		if float(value) < MIN_PORT or float(value) > MAX_PORT or float(value) != float(int(value)):
+			return invalid
+	if int(pair.http_port) == int(pair.ws_port):
+		return invalid
+	return {"ok": true, "present": true, "http_port": int(pair.http_port), "ws_port": int(pair.ws_port)}
+
+
+## Call only after a verified successful upgrade and the activation barrier.
+## This selects independent ports, not authority over the legacy backend.
+static func prepare_major_upgrade_endpoints(from_version: String, to_version: String) -> Dictionary:
+	var previous := McpServerVersionCheck.version_tuple(from_version)
+	var installed := McpServerVersionCheck.version_tuple(to_version)
+	if previous.is_empty() or installed.is_empty() or int(previous[0]) >= 4 or int(installed[0]) < 4:
+		return {"ok": true, "changed": false}
+	if OS.get_thread_caller_id() != OS.get_main_thread_id():
+		return {"ok": false, "error": "upgrade endpoint selection requires the main thread"}
+	var existing := v4_endpoint_ports_status()
+	if not bool(existing.ok) or bool(existing.present):
+		existing["changed"] = false
+		return existing
+	var es := EditorInterface.get_editor_settings()
+	if es == null:
+		return {"ok": false, "error": "EditorSettings is unavailable"}
+	var legacy_http := _read_port_setting(McpSettings.SETTING_HTTP_PORT, DEFAULT_HTTP_PORT)
+	var legacy_ws := _read_port_setting(SETTING_WS_PORT, DEFAULT_WS_PORT)
+	var occupancy := PortResolver.windows_listener_snapshot() if OS.get_name() == "Windows" else {}
+	if OS.get_name() == "Windows" and not occupancy.known:
+		return {"ok": false, "error": "Windows could not query listening ports; retry endpoint selection."}
+	var selected: Array[int] = []
+	var candidate := legacy_http + 1 if legacy_http < MAX_PORT else MIN_PORT
+	candidate = WindowsPortReservation.suggest_non_excluded_port(candidate, MAX_PORT - candidate + 1, MAX_PORT)
+	var reserved_output := str(WindowsPortReservation._get_cached_excluded_output().get("text", ""))
+	for _probe in range(SUGGEST_PORT_MAX_PROBES):
+		candidate = WindowsPortReservation.suggest_non_excluded_port_from_output(reserved_output, candidate, MAX_PORT - candidate + 1, MAX_PORT)
+		if candidate < MIN_PORT or candidate > MAX_PORT:
+			break
+		if candidate not in [legacy_http, legacy_ws] and not selected.has(candidate) and PortResolver.can_bind_local_port(candidate):
+			var available: bool
+			if OS.get_name() == "Windows":
+				available = PortResolver.windows_port_occupancy(candidate, occupancy) == PortResolver.PortOccupancy.FREE
+			else:
+				available = not PortResolver.is_port_in_use(candidate)
+			if available:
+				selected.append(candidate)
+				if selected.size() == 2:
+					break
+		candidate += 1
+		if candidate > MAX_PORT:
+			candidate = MIN_PORT
+	if selected.size() != 2:
+		return {"ok": false, "error": "No independent HTTP/WebSocket port pair was available for this major upgrade."}
+	if OS.get_name() == "Windows":
+		occupancy = PortResolver.windows_listener_snapshot()
+		if not occupancy.known:
+			return {"ok": false, "error": "Windows could not query listening ports; retry endpoint selection."}
+	for port in selected:
+		var available: bool
+		if OS.get_name() == "Windows":
+			available = PortResolver.windows_port_occupancy(port, occupancy) == PortResolver.PortOccupancy.FREE
+		else:
+			available = not PortResolver.is_port_in_use(port)
+		if WindowsPortReservation.parse_excluded(reserved_output, port) or not PortResolver.can_bind_local_port(port) or not available:
+			return {"ok": false, "error": "The selected upgrade port %d became unavailable; retry endpoint selection." % port}
+	var pair := {"http_port": selected[0], "ws_port": selected[1]}
+	es.set_setting(SETTING_V4_ENDPOINT_PORTS, pair)
+	return {"ok": true, "changed": true, "http_port": selected[0], "ws_port": selected[1]}
 
 
 static func http_url() -> String:
@@ -111,6 +210,11 @@ static func ensure_settings_registered() -> void:
 	_register_port_setting(es, SETTING_WS_PORT, DEFAULT_WS_PORT)
 	_register_bool_setting(es, SETTING_STARTUP_TRACE, false)
 	_register_bool_setting(es, SETTING_KEEP_SERVER_ON_EXIT, false)
+	_register_string_setting(es, McpSettings.SETTING_EXCLUDED_DOMAINS, "")
+	_register_bool_setting(es, McpSettings.SETTING_TELEMETRY_ENABLED, true)
+	_register_string_setting(es, McpSettings.SETTING_ALLOW_HOSTS, "")
+	_register_client_scope_setting(es)
+	_register_string_setting(es, SETTING_EXTERNAL_CLIENT_CWD, "")
 
 
 static func _register_port_setting(es: EditorSettings, key: String, default_port: int) -> void:
@@ -125,6 +229,22 @@ static func _register_port_setting(es: EditorSettings, key: String, default_port
 	})
 
 
+## Surface the CLI registration scope as an enum in Settings > Plugins so it is
+## discoverable without hand-editing editor_settings-4.tres. Kept at `user` by
+## default; `project` writes the entry into <project>/.mcp.json instead.
+static func _register_client_scope_setting(es: EditorSettings) -> void:
+	var key := McpSettings.SETTING_CLIENT_SCOPE
+	if not es.has_setting(key):
+		es.set_setting(key, McpSettings.DEFAULT_CLIENT_SCOPE)
+	es.set_initial_value(key, McpSettings.DEFAULT_CLIENT_SCOPE, false)
+	es.add_property_info({
+		"name": key,
+		"type": TYPE_STRING,
+		"hint": PROPERTY_HINT_ENUM,
+		"hint_string": ",".join(PackedStringArray(McpSettings.CLIENT_SCOPES)),
+	})
+
+
 static func _register_bool_setting(es: EditorSettings, key: String, default_value: bool) -> void:
 	if not es.has_setting(key):
 		es.set_setting(key, default_value)
@@ -132,6 +252,21 @@ static func _register_bool_setting(es: EditorSettings, key: String, default_valu
 	es.add_property_info({
 		"name": key,
 		"type": TYPE_BOOL,
+	})
+
+
+static func _register_string_setting(es: EditorSettings, key: String, default_value: String) -> void:
+	## Same idempotent set-then-hint dance as the bool helper; `PROPERTY_HINT_NONE`
+	## leaves the editor's plain text-input widget in place (the cwd string is
+	## freeform). The hint-string slot is required by the API even when empty.
+	if not es.has_setting(key):
+		es.set_setting(key, default_value)
+	es.set_initial_value(key, default_value, false)
+	es.add_property_info({
+		"name": key,
+		"type": TYPE_STRING,
+		"hint": PROPERTY_HINT_NONE,
+		"hint_string": "",
 	})
 
 
@@ -172,6 +307,12 @@ static func keep_server_on_exit() -> bool:
 ## before any worker dispatch.
 static var _setting_snapshot := {}
 static var _setting_snapshot_mutex := Mutex.new()
+## The aggregate MCP status command runs on a worker thread. Keep the same
+## main-thread-only LaunchContext contract used by dock workers by publishing a
+## deep snapshot whenever capture_launch_context() runs on the main thread.
+static var _launch_context_snapshot := {}
+static var _endpoint_policy_snapshot := {}
+static var _launch_context_snapshot_mutex := Mutex.new()
 
 
 static func _editor_setting_lookup(key: String) -> Variant:
@@ -225,21 +366,170 @@ static func _canonicalize_excluded_domains(raw: String) -> String:
 	return ",".join(parts)
 
 
-## Snapshot every EditorSettings-backed value needed to render or verify an
-## attach launch command. Dock actions/status run on worker threads; they must
-## receive this data object rather than calling EditorInterface there (#691).
-## Call on the main thread before dispatching a worker.
-static func capture_launch_context() -> Dictionary:
-	var captured_http_port := http_port()
+## One activation-scoped desired endpoint policy. The composition root resolves
+## the WS port, publishes this value once, and derives both managed-server and
+## attach plans from it. Returned dictionaries never alias the retained copy.
+static func capture_endpoint_policy(resolved_ws_port: int = -1) -> Dictionary:
+	var selected_ws_port := ws_port() if resolved_ws_port <= 0 else resolved_ws_port
 	return {
-		"http_port": captured_http_port,
-		"ws_port": ws_port(),
+		"http_port": http_port(),
+		"ws_port": selected_ws_port,
 		"excluded_domains": excluded_domains(),
+		"allow_hosts": allow_hosts(),
+		"keep_alive": keep_server_on_exit(),
+		"telemetry_enabled": McpSettings.telemetry_enabled(),
+	}
+
+
+## Snapshot every value needed to render or verify an attach launch command.
+## Endpoint fields come only from the root-published activation policy; later
+## main-thread refreshes update discovery/project values without re-reading a
+## divergent desired endpoint. Workers receive the deep snapshot only (#691).
+static func capture_launch_context(endpoint_policy: Dictionary = {}) -> Dictionary:
+	if OS.get_thread_caller_id() != OS.get_main_thread_id():
+		_launch_context_snapshot_mutex.lock()
+		var cached := _launch_context_snapshot.duplicate(true)
+		_launch_context_snapshot_mutex.unlock()
+		return cached
+	var policy := endpoint_policy.duplicate(true)
+	if policy.is_empty():
+		_launch_context_snapshot_mutex.lock()
+		policy = _endpoint_policy_snapshot.duplicate(true)
+		_launch_context_snapshot_mutex.unlock()
+	if policy.is_empty():
+		## Standalone/test callers without a composition root still get a
+		## complete context. A real plugin activation always publishes first.
+		policy = capture_endpoint_policy()
+	var captured_http_port := int(policy.get("http_port", DEFAULT_HTTP_PORT))
+	var context := {
+		"http_port": captured_http_port,
+		"ws_port": int(policy.get("ws_port", DEFAULT_WS_PORT)),
+		"excluded_domains": str(policy.get("excluded_domains", "")),
 		"plugin_version": get_plugin_version(),
 		"allow_dev_venv": mode_override() != "user",
 		"platform": OS.get_name(),
 		"server_url": "http://127.0.0.1:%d/mcp" % captured_http_port,
+		"project_roots": capture_project_roots(),
+		## The opt-out must ride the attach argv: the client spawns the bridge
+		## (and the bridge its backend) with no editor in the loop, so the
+		## env-injection path in server_lifecycle.gd never runs for them.
+		"telemetry_enabled": bool(policy.get("telemetry_enabled", true)),
 	}
+	_launch_context_snapshot_mutex.lock()
+	_endpoint_policy_snapshot = policy.duplicate(true)
+	_launch_context_snapshot = context.duplicate(true)
+	_launch_context_snapshot_mutex.unlock()
+	return context
+
+
+## Validate and persist a Dock settings intent at the existing configurator
+## boundary. Validation completes before the first write, so a bad mixed delta
+## cannot partially change desired launch policy.
+static func apply_endpoint_settings(changes: Dictionary) -> Dictionary:
+	if OS.get_thread_caller_id() != OS.get_main_thread_id():
+		return {"ok": false, "error": "settings writes require the main thread"}
+	var normalized := {}
+	for key in changes:
+		var value: Variant = changes[key]
+		match str(key):
+			"http_port":
+				if not (value is int or value is float):
+					return {"ok": false, "error": "HTTP port must be an integer"}
+				var port := int(value)
+				if float(value) != float(port) or port < MIN_PORT or port > MAX_PORT:
+					return {"ok": false, "error": "HTTP port is outside the supported range"}
+				normalized[McpSettings.SETTING_HTTP_PORT] = port
+			"ws_port":
+				if not (value is int or value is float):
+					return {"ok": false, "error": "WebSocket port must be an integer"}
+				var ws_port_value := int(value)
+				if (
+					float(value) != float(ws_port_value)
+					or ws_port_value < MIN_PORT
+					or ws_port_value > MAX_PORT
+				):
+					return {"ok": false, "error": "WebSocket port is outside the supported range"}
+				normalized[SETTING_WS_PORT] = ws_port_value
+			"excluded_domains":
+				if not (value is String):
+					return {"ok": false, "error": "excluded domains must be text"}
+				normalized[McpSettings.SETTING_EXCLUDED_DOMAINS] = _canonicalize_excluded_domains(value)
+			"telemetry_enabled":
+				if not (value is bool):
+					return {"ok": false, "error": "telemetry preference must be boolean"}
+				normalized[McpSettings.SETTING_TELEMETRY_ENABLED] = value
+			"allow_hosts":
+				if not (value is String):
+					return {"ok": false, "error": "allow-host policy must be text"}
+				var allowed := McpAllowHosts.normalize(value)
+				if not McpAllowHosts.invalid_tokens(allowed).is_empty():
+					return {"ok": false, "error": "allow-host policy is invalid"}
+				normalized[McpSettings.SETTING_ALLOW_HOSTS] = allowed
+			_:
+				return {"ok": false, "error": "unknown endpoint setting: %s" % key}
+	var next_http := int(normalized.get(McpSettings.SETTING_HTTP_PORT, http_port()))
+	var next_ws := int(normalized.get(SETTING_WS_PORT, ws_port()))
+	var override := v4_endpoint_ports_status()
+	var ports_changed := normalized.has(McpSettings.SETTING_HTTP_PORT) or normalized.has(SETTING_WS_PORT)
+	if bool(override.present) and ports_changed:
+		if next_http < MIN_PORT or next_http > MAX_PORT or next_ws < MIN_PORT or next_ws > MAX_PORT:
+			return {"ok": false, "error": "A complete valid HTTP/WebSocket pair is required to repair the v4 override."}
+		normalized.erase(McpSettings.SETTING_HTTP_PORT)
+		normalized.erase(SETTING_WS_PORT)
+		normalized[SETTING_V4_ENDPOINT_PORTS] = {"http_port": next_http, "ws_port": next_ws}
+	if next_http == next_ws and (ports_changed or not bool(override.present)):
+		return {"ok": false, "error": "HTTP and WebSocket ports must differ"}
+	var es := EditorInterface.get_editor_settings()
+	if es == null:
+		return {"ok": false, "error": "EditorSettings is unavailable"}
+	for key in normalized:
+		es.set_setting(key, normalized[key])
+	return {"ok": true, "changes": normalized.duplicate(true)}
+
+
+## Resolve roots used by cwd-relative client project config tiers while the
+## engine singletons are safe to access. Workers receive this immutable snapshot.
+static func capture_project_roots() -> PackedStringArray:
+	var current_access := DirAccess.open(".")
+	var current_root := "" if current_access == null else current_access.get_current_dir().simplify_path()
+	var project_root := ProjectSettings.globalize_path("res://").simplify_path()
+	# Codex F1: when the user sets `godot_ai/external_client_cwd` we probe that
+	# directory in addition to the two guessed roots. The setter / setter-snapshot
+	# pathway is the same as the existing EditorSettings (warm_env_snapshot
+	# pre-warms this key so worker-thread callers see the snapshot, not the live
+	# EditorInterface). Empty string is filtered out by `_canonicalize_roots_for_test`.
+	var external_cwd := str(_editor_setting_lookup(SETTING_EXTERNAL_CLIENT_CWD))
+	return _canonicalize_roots_for_test(PackedStringArray([current_root, project_root, external_cwd]))
+
+
+## Canonicalize a list of root paths to one filesystem representation per
+## directory and deduplicate. `ProjectSettings.globalize_path` maps any
+## `res://` / `user://` form to the absolute path and is idempotent on an
+## already-absolute path, so a `res://`-form candidate and its absolute twin
+## collapse to the same entry. Without this pass, `_project_candidate_paths`
+## would probe `<root>/.pi/mcp.json` against both representations of the same
+## directory and `manual_target_details` would mis-report a single project
+## override as multiple tiers (codex-review finding F4). Public-ish seam
+## (named `_..._for_test`) so the clients suite can pin the behaviour without
+## having to mock `DirAccess.open(".")`.
+static func _canonicalize_roots_for_test(raws: PackedStringArray) -> PackedStringArray:
+	var seen := {}
+	var roots := PackedStringArray()
+	for raw in raws:
+		var s := str(raw).strip_edges()
+		if s.is_empty():
+			continue
+		var canon := ProjectSettings.globalize_path(s).simplify_path()
+		if canon.is_empty() or seen.has(canon):
+			continue
+		seen[canon] = true
+		roots.append(canon)
+	return roots
+
+
+static func _project_roots_from_context(context: Dictionary) -> PackedStringArray:
+	var roots = context.get("project_roots", PackedStringArray())
+	return roots if roots is PackedStringArray else PackedStringArray()
 
 
 ## Read the `godot_ai/allow_remote_hosts` EditorSetting as a canonicalized
@@ -263,13 +553,17 @@ static func allow_hosts() -> String:
 ## "free" honest on macOS/Linux, where the reservation table is empty but the
 ## next port up may still be occupied — the same suggestion feeds the dock
 ## crash body, the port-picker spinbox, and the non-recoverable INCOMPATIBLE
-## log line. Falls back to the clamped candidate if nothing in the window
-## clears both checks (caller surfaces it as a best-effort hint; the user can
-## retry or pick another). Best-effort by nature: a TOCTOU window remains
+## log line. Returns zero when discovery fails or no candidate is
+## available. A TOCTOU window remains
 ## between the probe and the caller actually binding the port. The bind probe
 ## is bounded to `SUGGEST_PORT_MAX_PROBES` attempts so this cold path can't
 ## stall on a pathological run of occupied ports.
-static func suggest_free_port(start: int, span: int = 2048) -> int:
+static func suggest_free_port(start: int, span: int = 2048, occupancy: Dictionary = {}) -> int:
+	if OS.get_name() == "Windows":
+		if occupancy.is_empty():
+			occupancy = PortResolver.windows_listener_snapshot()
+		if not occupancy.known:
+			return 0
 	var candidate := clampi(start, MIN_PORT, MAX_PORT - span + 1)
 	var limit := mini(candidate + span - 1, MAX_PORT)
 	var p := candidate
@@ -284,10 +578,11 @@ static func suggest_free_port(start: int, span: int = 2048) -> int:
 			break
 		p = not_reserved
 		probes += 1
-		if PortResolver.can_bind_local_port(p):
+		var occupied := OS.get_name() == "Windows" and PortResolver.windows_port_occupancy(p, occupancy) != PortResolver.PortOccupancy.FREE
+		if not occupied and PortResolver.can_bind_local_port(p):
 			return p
 		p += 1
-	return candidate
+	return 0
 
 
 # --- Client operations (string id) ---------------------------------------
@@ -310,9 +605,22 @@ static func client_display_name(id: String) -> String:
 ## Empty defaults to the live server URL — appropriate for MCP-tool callers
 ## that always run on main.
 static func configure(id: String, url: String = "", launch_context: Dictionary = {}) -> Dictionary:
+	if ClientRegistry.stale_session_detected():
+		return {"status": "error", "message": ClientRegistry.RESTART_TO_FINISH_UPDATE}
 	var client := ClientRegistry.get_by_id(id)
 	if client == null:
 		return {"status": "error", "message": "Unknown client: %s" % id}
+	if not client.automatic_config_edits:
+		return _manual_edit_result(client, "configure")
+	var path_error := _config_path_resolution_error(client)
+	if path_error.is_empty():
+		path_error = _config_write_error(client, "configure")
+	if path_error.is_empty():
+		path_error = _config_create_error(client)
+	if path_error.is_empty():
+		path_error = _credentials_error(client)
+	if not path_error.is_empty():
+		return {"status": "error", "message": path_error}
 	## Capture `url` once so a port flip in EditorSettings between write and
 	## verify can't trigger a spurious CONFIGURED_MISMATCH against an entry
 	## that just landed correctly.
@@ -331,16 +639,27 @@ static func configure(id: String, url: String = "", launch_context: Dictionary =
 		if client.command_shape != Client.CommandShape.NONE
 		else {}
 	)
-	var result := _dispatch_configure(client, url, launch)
+	var claim := MutationLock.acquire(client.id, "configure")
+	if not bool(claim.get("ok", false)):
+		return {
+			"status": "error",
+			"message": str(claim.get("error", MutationLock.recovery_message())),
+		}
+	var result := _dispatch_configure(client, url, launch, context)
 	## Trust-but-verify: a strategy may report ok and have actually written the
 	## file, yet the entry is missing/stale on the read-back path — most often
 	## because the user's installed client is reading a different file than
 	## `path_template` resolves to (issue #201). Re-read the live state and
 	## surface a clear error before the dock reports a bogus green dot.
-	return _verify_post_state(client, result, Client.Status.CONFIGURED, url, "configure", launch)
+	var verified := _verify_post_state(
+		client, result, Client.Status.CONFIGURED, url, "configure", launch, context
+	)
+	return _finish_client_mutation(claim, verified)
 
 
 static func check_status(id: String) -> Client.Status:
+	if ClientRegistry.stale_session_detected():
+		return Client.Status.ERROR
 	var client := ClientRegistry.get_by_id(id)
 	if client == null:
 		return Client.Status.NOT_CONFIGURED
@@ -354,14 +673,72 @@ static func check_status_for_url_with_cli_path(
 	return check_status_details_for_url_with_cli_path(id, url, cli_path, launch_context).get("status", Client.Status.NOT_CONFIGURED)
 
 
+## True when <id>'s stored entry verifies EXACTLY against the launch this
+## editor would have rendered at `from_version` — same ports, exclusions,
+## telemetry flag, command shape; nothing differs but the version pin. This
+## is the post-update auto-repin gate: only such entries are provably "what
+## Configure wrote before the update", so rewriting them to the current
+## version restores the user's own prior intent. Anything else — entries
+## pointing at another editor's ports (the smoke-fixture blast radius that
+## motivated this gate), hand-edits, changed settings — stays untouched for
+## the drift banner's human click. An empty `from_version` (marker written
+## by a pre-gate runner) fails closed.
+##
+## The version-substituted context is safe to resolve and cache:
+## `plugin_version` is part of both the attach-launch resolution
+## (`_resolve_attach_launch_uncached`) and its cache key.
+static func entry_drift_is_version_pin_only(
+	id: String, from_version: String, launch_context: Dictionary = {}
+) -> bool:
+	var pinned_from := from_version.strip_edges()
+	if pinned_from.is_empty():
+		return false
+	## Never shell out from this gate — it runs on the MAIN thread from the
+	## dock's sweep-completion callback (#890 review P2). The cli-descriptor
+	## probe paths run a subprocess with a multi-second timeout (`claude mcp
+	## get` is 6s), which would freeze the editor; those clients fail closed
+	## to the drift banner's click flow, whose fan-out already runs on
+	## worker threads. Every path left after these guards is a bounded
+	## config-file read plus cached launch discovery (worst case one CLI
+	## lookup on a cold CliFinder cache — the same bounded one-shot the
+	## dock's `_reprobe_uv_if_negative` accepts on this thread).
+	var client := ClientRegistry.get_by_id(id)
+	if client == null:
+		return false
+	if client.config_type == "cli":
+		if client.command_shape == Client.CommandShape.NONE:
+			return false
+		if not client.has_json_fallback():
+			return false
+		if _scope_diverges_from_json_fallback(client):
+			return false
+	var context := launch_context if not launch_context.is_empty() else capture_launch_context()
+	var old_context := context.duplicate(true)
+	old_context["plugin_version"] = pinned_from
+	## Same URL under both versions: the URL carries the port, not the
+	## version, so URL-mode entries can never be version-pin-only drift and
+	## correctly fail this check.
+	var url := str(context.get("server_url", http_url()))
+	var status := check_status_for_url_with_cli_path(id, url, "", old_context)
+	return status == Client.Status.CONFIGURED
+
+
 ## Detailed variant used by the dock refresh worker. Returns
 ## `{"status": Status, "error_msg": String}` so the worker can surface
 ## "probe timed out" on the row instead of silently flipping it to
 ## NOT_CONFIGURED. Callers that only need the status can use the simpler
 ## helper above.
 static func check_status_details_for_url_with_cli_path(
-	id: String, url: String, cli_path: String, launch_context: Dictionary = {}
+	id: String,
+	url: String,
+	cli_path: String,
+	launch_context: Dictionary = {},
+	resolved_launch: Dictionary = {},
 ) -> Dictionary:
+	## One comprehensible line per row beats a wall of per-field type errors —
+	## the dock keeps painting, every row names the same repair (restart).
+	if ClientRegistry.stale_session_detected():
+		return {"status": Client.Status.ERROR, "error_msg": ClientRegistry.RESTART_TO_FINISH_UPDATE}
 	var client := ClientRegistry.get_by_id(id)
 	if client == null:
 		return {"status": Client.Status.NOT_CONFIGURED, "error_msg": ""}
@@ -371,32 +748,54 @@ static func check_status_details_for_url_with_cli_path(
 	# a fallback-configured entry instead of always showing red.
 	if client.config_type == "cli" and cli_path.is_empty() and not client.has_json_fallback():
 		return {"status": Client.Status.NOT_CONFIGURED, "error_msg": ""}
+	var path_error := _config_path_resolution_error(client)
+	if not path_error.is_empty():
+		return {"status": Client.Status.ERROR, "error_msg": path_error}
 	if client.command_shape != Client.CommandShape.NONE and launch_context.is_empty():
 		return {
 			"status": Client.Status.ERROR,
 			"error_msg": "Missing launch-context snapshot; retry the status refresh.",
 		}
-	return _dispatch_check_status_with_cli_path_details(client, url, cli_path, launch_context)
+	return _dispatch_check_status_with_cli_path_details(
+		client, url, cli_path, launch_context, resolved_launch
+	)
 
 
 ## #691: main-thread pre-warm of McpPathTemplate's env snapshot, covering
-## the base vars plus every descriptor-declared `config_home_env`
-## (CLAUDE_CONFIG_DIR, CODEX_HOME, …), so worker-thread config-path
+## the base vars plus every descriptor-declared config-file/config-home env
+## (OPENCODE_CONFIG, CLAUDE_CONFIG_DIR, CODEX_HOME, …), so worker-thread config-path
 ## resolution never calls OS.get_environment concurrently with the spawn
 ## window's setenv/unsetenv. Also warms the EditorSettings snapshot for
 ## the mode/trace overrides so worker-thread mode_override() /
 ## startup_trace_enabled() never touch EditorInterface. Idempotent;
 ## called from plugin _enter_tree and before each dock worker dispatch.
-static func warm_env_snapshot() -> void:
+static func warm_env_snapshot(endpoint_policy: Dictionary = {}) -> void:
 	var extras := PackedStringArray()
 	for id in client_ids():
 		var client := ClientRegistry.get_by_id(String(id))
-		if client != null and not client.config_home_env.is_empty():
-			extras.append(client.config_home_env)
+		if client == null:
+			continue
+		## Reflected get(): after an in-session self-update these fields can
+		## read as Nil on stale instances, and String(Nil) is a hard error (#850). Skipping just degrades env-override
+		## resolution until the restart the registry is already asking for.
+		for env_name in [client.get("config_file_env"), client.get("config_home_env")]:
+			if env_name is String and not env_name.is_empty() and not extras.has(env_name):
+				extras.append(env_name)
+		var scope_envs: Variant = client.get("config_scope_envs")
+		if scope_envs is PackedStringArray:
+			for env_name in scope_envs:
+				if not env_name.is_empty() and not extras.has(env_name):
+					extras.append(env_name)
 	McpPathTemplate.warm_env_snapshot(extras)
+	UvResolution.warm_environment()
 	_editor_setting_lookup(MODE_OVERRIDE_SETTING)
 	_editor_setting_lookup(SETTING_STARTUP_TRACE)
 	_editor_setting_lookup(SETTING_KEEP_SERVER_ON_EXIT)
+	_editor_setting_lookup(SETTING_EXTERNAL_CLIENT_CWD)
+	McpSettings.warm_client_scope()
+	# Publish the complete launch context while EditorInterface access is safe;
+	# worker callers of capture_launch_context() read this snapshot only.
+	capture_launch_context(endpoint_policy)
 
 
 static func client_status_probe_snapshot(id: String) -> Dictionary:
@@ -412,16 +811,62 @@ static func client_status_probe_snapshot(id: String) -> Dictionary:
 		installed = not cli_path.is_empty() or client.is_installed()
 	else:
 		installed = client.is_installed()
-	return {"id": id, "cli_path": cli_path, "installed": installed}
+	return {
+		"id": id,
+		"cli_path": cli_path,
+		"installed": installed,
+		"automatic_config_edits": client.automatic_config_edits,
+	}
+
+
+## Pure response projection shared by the one client-work owner and tests.
+## Missing rows are explicit errors, never silently reported as unconfigured.
+static func client_status_response(results: Dictionary) -> Dictionary:
+	var clients := []
+	for client_id in client_ids():
+		var details: Dictionary = results.get(client_id, {
+			"status": Client.Status.ERROR,
+			"installed": false,
+			"error_msg": "Client status probe returned no result.",
+		})
+		clients.append(_client_status_sweep_entry(
+			client_id, details, bool(details.get("installed", false))
+		))
+	return {"data": {"clients": clients}}
+
+
+static func _client_status_sweep_entry(
+	client_id: String, details: Dictionary, installed: bool
+) -> Dictionary:
+	var status = details.get("status", Client.Status.NOT_CONFIGURED)
+	var entry := {
+		"id": client_id,
+		"display_name": client_display_name(client_id),
+		"status": Client.status_label(status),
+		"installed": installed,
+	}
+	var error_msg := str(details.get("error_msg", ""))
+	if not error_msg.is_empty():
+		entry["error"] = error_msg
+	return entry
 
 
 ## Pass an explicit `url` when calling from a worker thread — see
 ## `configure()` above for why. The url is only used to format the
 ## verify-after-write diagnostic message; the remove itself doesn't need it.
 static func remove(id: String, url: String = "", launch_context: Dictionary = {}) -> Dictionary:
+	if ClientRegistry.stale_session_detected():
+		return {"status": "error", "message": ClientRegistry.RESTART_TO_FINISH_UPDATE}
 	var client := ClientRegistry.get_by_id(id)
 	if client == null:
 		return {"status": "error", "message": "Unknown client: %s" % id}
+	if not client.automatic_config_edits:
+		return _manual_edit_result(client, "remove")
+	var path_error := _config_path_resolution_error(client)
+	if path_error.is_empty():
+		path_error = _config_write_error(client, "remove")
+	if not path_error.is_empty():
+		return {"status": "error", "message": path_error}
 	if url.is_empty():
 		url = http_url()
 	var context := launch_context
@@ -437,42 +882,137 @@ static func remove(id: String, url: String = "", launch_context: Dictionary = {}
 		if client.command_shape != Client.CommandShape.NONE
 		else {}
 	)
-	var result := _dispatch_remove(client)
-	return _verify_post_state(client, result, Client.Status.NOT_CONFIGURED, url, "remove", launch)
+	var claim := MutationLock.acquire(client.id, "remove")
+	if not bool(claim.get("ok", false)):
+		return {
+			"status": "error",
+			"message": str(claim.get("error", MutationLock.recovery_message())),
+		}
+	var result := _dispatch_remove(client, context)
+	var verified := _verify_post_state(
+		client, result, Client.Status.NOT_CONFIGURED, url, "remove", launch, context
+	)
+	return _finish_client_mutation(claim, verified)
+
+
+## Resolve config-backed path errors before attach-launch discovery. This both
+## gives ambiguity precedence over unrelated launcher failures and avoids
+## spending the status worker's command budget on a Configure action that must
+## fail closed regardless. CLI clients keep their existing CLI/fallback dispatch.
+static func _config_path_resolution_error(client: Client) -> String:
+	if client.config_type == "cli":
+		return ""
+	return str(client.resolved_config_path_details().get("error", ""))
+
+
+## Why Configure must not create this client's file although status may still
+## read the path: `create_error` in `McpClient`'s candidate rules. Kept apart
+## from the function above, whose signature `script/local-self-update-smoke`
+## patches by exact match, in release trees as well as this one.
+static func _config_create_error(client: Client) -> String:
+	if client.config_type == "cli":
+		return ""
+	return str(client.resolved_config_path_details().get("create_error", ""))
+
+
+## Why neither Configure nor Remove may touch this client's file: this editor's
+## Flatpak sandbox does not share it with the host (`McpClient.config_write_error`,
+## or the CLI strategy's own rule for a client that writes through its CLI, where
+## Configure and Remove differ). Every strategy refuses on it too; checking here
+## puts the refusal ahead of launcher discovery and the lock.
+static func _config_write_error(client: Client, action: String) -> String:
+	if client.config_type == "cli":
+		if action == "configure":
+			return CliStrategy.configure_write_error(client)
+		return CliStrategy.remove_write_error(client)
+	return client.config_write_error()
+
+
+## Why Configure must not write an attach entry although the client's file is
+## writable: this editor's Flatpak sandbox keeps Godot AI's credentials where
+## the bridge that entry launches does not look. A missing entry is better
+## than one known to be broken. Remove is not held to it.
+static func _credentials_error(client: Client) -> String:
+	if client.command_shape == Client.CommandShape.NONE:
+		return ""
+	if not McpPathTemplate.flatpak_hides_credentials():
+		return ""
+	var app_id := McpPathTemplate.flatpak_app_id()
+	return (
+		"Godot runs in a Flatpak sandbox that keeps Godot AI's credentials to "
+		+ "itself, so the bridge %s starts could not connect and nothing was "
+		+ "changed. Run `flatpak override --user "
+		+ "--filesystem=xdg-config/godot-ai:create %s`, restart Godot, and try "
+		+ "again. docs/steam-capability-directory.md covers the other ways to "
+		+ "share them."
+	) % [client.display_name, app_id if not app_id.is_empty() else "<Godot's Flatpak ID>"]
 
 
 # --- Strategy dispatch + verify (testable seam) --------------------------
 
-static func _dispatch_configure(client: Client, url: String, launch: Dictionary = {}) -> Dictionary:
+static func _manual_edit_result(client: Client, action: String) -> Dictionary:
+	return {
+		"status": "error",
+		"message": (
+			"%s settings require a manual edit; godot-ai will not %s this file automatically. "
+			+ "Use the configuration shown below."
+		) % [client.display_name, action],
+	}
+
+
+## One global claim covers the mutation and its read-back proof for every
+## automatic strategy. Ambiguous CLI termination deliberately strands it;
+## every other outcome releases the exact token or fails closed.
+static func _finish_client_mutation(claim: Dictionary, result: Dictionary) -> Dictionary:
+	if bool(result.get("termination_failed", false)):
+		return result
+	if MutationLock.release(claim):
+		return result
+	return {
+		"status": "error",
+		"message": MutationLock.recovery_message(),
+		"mutation_lock_release_failed": true,
+	}
+
+static func _dispatch_configure(
+	client: Client, url: String, launch: Dictionary = {}, launch_context: Dictionary = {}
+) -> Dictionary:
+	launch = launch_for_client(client, launch)
 	match client.config_type:
 		"json":
-			return JsonStrategy.configure(client, SERVER_NAME, url)
+			return JsonStrategy.configure(client, SERVER_NAME, url, launch, _project_roots_from_context(launch_context))
 		"toml":
 			return TomlStrategy.configure(client, SERVER_NAME, url, launch)
 		"yaml":
-			return YamlStrategy.configure(client, SERVER_NAME, url)
+			return YamlStrategy.configure(client, SERVER_NAME, url, launch)
+		"dsh":
+			return DshStrategy.configure(client, SERVER_NAME, url, launch)
 		"cli":
 			# #463: fall back to writing the config file directly when the CLI
 			# binary isn't on PATH (Claude Code as a VS Code/Cursor extension).
 			if client.has_json_fallback() and CliStrategy.resolve_cli_path(client).is_empty():
-				return JsonStrategy.configure(client, SERVER_NAME, url)
-			return CliStrategy.configure(client, SERVER_NAME, url)
+				return _note_unhonoured_scope(
+					client, JsonStrategy.configure(client, SERVER_NAME, url, launch, _project_roots_from_context(launch_context))
+				)
+			return CliStrategy.configure(client, SERVER_NAME, url, launch)
 	return {"status": "error", "message": "Unknown config_type for %s: %s" % [client.id, client.config_type]}
 
 
-static func _dispatch_remove(client: Client) -> Dictionary:
+static func _dispatch_remove(client: Client, launch_context: Dictionary = {}) -> Dictionary:
 	match client.config_type:
 		"json":
-			return JsonStrategy.remove(client, SERVER_NAME)
+			return JsonStrategy.remove(client, SERVER_NAME, _project_roots_from_context(launch_context))
 		"toml":
 			return TomlStrategy.remove(client, SERVER_NAME)
 		"yaml":
 			return YamlStrategy.remove(client, SERVER_NAME)
+		"dsh":
+			return DshStrategy.remove(client, SERVER_NAME)
 		"cli":
 			# #463: mirror the configure fallback so Remove also works without
 			# the CLI binary — otherwise a fallback-written entry is unremovable.
 			if client.has_json_fallback() and CliStrategy.resolve_cli_path(client).is_empty():
-				return JsonStrategy.remove(client, SERVER_NAME)
+				return JsonStrategy.remove(client, SERVER_NAME, _project_roots_from_context(launch_context))
 			return CliStrategy.remove(client, SERVER_NAME)
 	return {"status": "error", "message": "Unknown config_type for %s: %s" % [client.id, client.config_type]}
 
@@ -498,26 +1038,144 @@ static func _dispatch_check_status_with_cli_path_details(
 ) -> Dictionary:
 	match client.config_type:
 		"json":
-			return JsonStrategy.check_status_details(client, SERVER_NAME, url)
+			var launch := {}
+			if client.command_shape != Client.CommandShape.NONE:
+				launch = _resolved_or_discovered_launch(client, resolved_launch, launch_context)
+			return JsonStrategy.check_status_details(client, SERVER_NAME, url, launch, _project_roots_from_context(launch_context))
 		"toml":
 			var launch := {}
 			if client.command_shape != Client.CommandShape.NONE:
-				launch = (
-					resolved_launch
-					if not resolved_launch.is_empty()
-					else resolve_attach_launch(launch_context)
-				)
+				launch = _resolved_or_discovered_launch(client, resolved_launch, launch_context)
 			return TomlStrategy.check_status_details(client, SERVER_NAME, url, launch)
 		"yaml":
-			return YamlStrategy.check_status_details(client, SERVER_NAME, url)
+			var yaml_launch := {}
+			if client.command_shape != Client.CommandShape.NONE:
+				yaml_launch = _resolved_or_discovered_launch(client, resolved_launch, launch_context)
+			return YamlStrategy.check_status_details(client, SERVER_NAME, url, yaml_launch)
+		"dsh":
+			var dsh_launch := {}
+			if client.command_shape != Client.CommandShape.NONE:
+				dsh_launch = _resolved_or_discovered_launch(client, resolved_launch, launch_context)
+			return DshStrategy.check_status_details(client, SERVER_NAME, url, dsh_launch)
 		"cli":
+			# Command-shape CLI clients register through their CLI, but the entry
+			# lands in the same file the JSON fallback reads (`claude mcp add
+			# --scope user` writes mcpServers in ~/.claude.json). Reading that
+			# file gives exact launch-drift detection — a changed port, version
+			# pin, or exclusion list — which scanning `mcp list` stdout cannot,
+			# so it is preferred even when the CLI binary resolves.
+			# #872: ...but only while the selected scope is still the one
+			# `path_template` points at — see _scope_diverges_from_json_fallback.
+			if (
+				client.command_shape != Client.CommandShape.NONE
+				and client.has_json_fallback()
+				and not _scope_diverges_from_json_fallback(client)
+			):
+				var command_launch := _resolved_or_discovered_launch(client, resolved_launch, launch_context)
+				return JsonStrategy.check_status_details(client, SERVER_NAME, url, command_launch, _project_roots_from_context(launch_context))
 			var resolved_cli := cli_path if not cli_path.is_empty() else CliStrategy.resolve_cli_path(client)
 			# #463: with no CLI binary, read the JSON fallback config so a
 			# fallback-configured entry reports CONFIGURED instead of red.
 			if resolved_cli.is_empty() and client.has_json_fallback():
-				return JsonStrategy.check_status_details(client, SERVER_NAME, url)
-			return CliStrategy.check_status_details(client, SERVER_NAME, url, resolved_cli)
+				var fallback_launch := {}
+				if client.command_shape != Client.CommandShape.NONE:
+					fallback_launch = _resolved_or_discovered_launch(client, resolved_launch, launch_context)
+				return JsonStrategy.check_status_details(client, SERVER_NAME, url, fallback_launch, _project_roots_from_context(launch_context))
+			var cli_launch := {}
+			if client.command_shape != Client.CommandShape.NONE:
+				cli_launch = _resolved_or_discovered_launch(client, resolved_launch, launch_context)
+			# #872: at a scope `path_template` can't see, a plain listing probe
+			# cannot tell our entry from a leftover one in another scope. When
+			# the descriptor offers a scope-aware probe, use it — same single
+			# subprocess, but it reports which scope actually resolved.
+			if (
+				not client.cli_scope_status_template.is_empty()
+				and CliStrategy.uses_scope_token(client)
+			):
+				return CliStrategy.check_scope_status_details(
+					client, SERVER_NAME, url, resolved_cli, cli_launch, McpSettings.client_scope()
+				)
+			return CliStrategy.check_status_details(client, SERVER_NAME, url, resolved_cli, cli_launch)
 	return {"status": Client.Status.NOT_CONFIGURED, "error_msg": ""}
+
+
+## #872: the #463 JSON fallback writes the user-scope file whatever
+## `godot_ai/mcp_client_scope` says — that file IS `path_template`, and
+## `clients/_path_template.gd` has no project-relative token to aim it
+## elsewhere. Returning a bare "configured" would hide that the requested
+## scope was not honoured, so say so in the message.
+##
+## Deliberately a message and not a status. `_verify_post_state` compares the
+## post-write status against CONFIGURED and replaces the ok with an error on
+## any mismatch (pinned by test_verify_post_state_treats_drift_as_failure_
+## after_configure), so reporting this write as NOT_CONFIGURED or MISMATCH
+## would turn a *successful* configure into a user-facing failure — the same
+## false-error class #872's blocker was about, just moved onto the fallback
+## path. The entry is genuinely written and genuinely works; only its scope
+## differs from the request, and that is a caveat, not a failure.
+static func _note_unhonoured_scope(client: Client, result: Dictionary) -> Dictionary:
+	if result.get("status") != "ok":
+		return result
+	if not CliStrategy.uses_scope_token(client):
+		return result
+	var scope := McpSettings.client_scope()
+	if scope == McpSettings.DEFAULT_CLIENT_SCOPE:
+		return result
+	var noted := result.duplicate(true)
+	noted["message"] = (
+		"%s — wrote %s scope, not %s: the %s CLI wasn't found, and the file fallback can only write %s"
+		% [
+			str(result.get("message", "")),
+			McpSettings.DEFAULT_CLIENT_SCOPE,
+			scope,
+			client.display_name,
+			client.resolved_config_path(),
+		]
+	)
+	return noted
+
+
+## True when this client's CLI writes its entry somewhere `path_template`
+## cannot see, so reading that file would describe the wrong thing (#872).
+##
+## `claude mcp add --scope project` writes <cwd>/.mcp.json and `--scope local`
+## writes a per-project block inside ~/.claude.json — neither is the top-level
+## `mcpServers` map `path_template` + `server_key_path` resolve to. Reading it
+## anyway makes `_verify_post_state` turn every successful project-scope
+## Configure into "configure ok but verification still reads Not configured",
+## and pins the dock row red (or green, describing a stale user-scope entry).
+##
+## Diverging sends status down the CLI probe instead: `mcp list` is
+## scope-agnostic and inherits the same cwd the register ran in, so read-back
+## and write agree by construction. The cost is losing exact launch-drift
+## detection — a stdout scan sees the command, not the full argv — which is the
+## documented trade for a status that is merely coarse instead of wrong.
+##
+## Deliberately says nothing about whether the CLI resolves (#879). An earlier
+## version walked PATH here and returned false for an unresolvable binary, on
+## the reasoning that configure would then have taken the #463 JSON fallback —
+## which writes user scope whatever the setting says — so the file was the
+## right thing to read again. That extra clause could not change any outcome:
+## this is only consulted from the one call site below, already guarded on
+## `has_json_fallback()`, and when the CLI does not resolve the very next
+## branch (`resolved_cli.is_empty() and client.has_json_fallback()`) takes the
+## fallback read anyway. All it bought was a second full `McpCliFinder.find`
+## sweep per status check, on top of the one that immediately follows.
+static func _scope_diverges_from_json_fallback(client: Client) -> bool:
+	if not CliStrategy.uses_scope_token(client):
+		return false
+	return McpSettings.client_scope() != McpSettings.DEFAULT_CLIENT_SCOPE
+
+
+static func _resolved_or_discovered_launch(
+	client: Client, resolved_launch: Dictionary, launch_context: Dictionary
+) -> Dictionary:
+	var launch := (
+		resolved_launch
+		if not resolved_launch.is_empty()
+		else resolve_attach_launch(launch_context)
+	)
+	return launch_for_client(client, launch)
 
 
 ## After a configure/remove returns ok, re-read the live status. If it doesn't
@@ -531,16 +1189,17 @@ static func _verify_post_state(
 	url: String,
 	action: String,
 	resolved_launch: Dictionary = {},
+	launch_context: Dictionary = {},
 ) -> Dictionary:
 	if result.get("status") != "ok":
 		return result
-	var actual := _dispatch_check_status_with_cli_path_details(
-		client, url, "", {}, resolved_launch
-	).get("status", Client.Status.NOT_CONFIGURED)
+	var details := _dispatch_check_status_with_cli_path_details(
+		client, url, "", launch_context, resolved_launch
+	)
+	var actual := details.get("status", Client.Status.NOT_CONFIGURED)
 	if actual == expected:
 		return result
-	var path := client.resolved_config_path()
-	var path_hint := "" if path.is_empty() else " Inspect %s and remove the godot-ai entry by hand if needed." % path
+	var path_hint := _post_state_path_hint(client, str(details.get("resolved_scope", "")))
 	return {
 		"status": "error",
 		"message": "%s reported %s ok but verification still reads %s (expected %s).%s" % [
@@ -551,13 +1210,74 @@ static func _verify_post_state(
 	}
 
 
+## Where to send the user when verification finds an entry that should not be
+## there. `resolved_config_path()` is `path_template` — right only for the
+## default user scope. Naming ~/.claude.json for a project-scope survivor sends
+## them to a file with nothing in it, which is worse than naming no file at all
+## (#879). The scope probe supplies `resolved_scope`; `path_template` has no
+## project-relative token (see `_note_unhonoured_scope`), so the project case is
+## described rather than resolved to a path.
+static func _post_state_path_hint(client: Client, resolved_scope: String) -> String:
+	match resolved_scope:
+		"project":
+			return (
+				" The surviving entry is project-scoped: inspect the .mcp.json in the"
+				+ " directory the editor was launched from and remove the godot-ai entry"
+				+ " by hand if needed."
+			)
+		"local":
+			var local_path := client.resolved_config_path()
+			if local_path.is_empty():
+				return ""
+			return (
+				" The surviving entry is local-scoped: inspect the block for the"
+				+ " directory the editor was launched from in %s and remove the"
+				+ " godot-ai entry by hand if needed."
+			) % local_path
+		_:
+			var path := client.resolved_config_path()
+			if path.is_empty():
+				return ""
+			return " Inspect %s and remove the godot-ai entry by hand if needed." % path
+
+
+## #877: Configure's first act is the all-scope pre-cleanup — it deletes the
+## `godot-ai` entry from every scope the descriptor can write to, including a
+## `.mcp.json` resolved against the CLI's working directory, which need not be
+## this project's folder. The manual-command panel that spells those removes
+## out is only shown when Configure FAILS (`mcp_dock.gd`), so on the success
+## path — the one where the sweep actually ran — this note is its only
+## disclosure. Empty for descriptors without a scope token: their single
+## implicit pass removes exactly the entry the register is about to rewrite,
+## which needs no warning (the same rule `_sweep_caveat` applies).
+##
+## "attempted", not "cleared": `CliStrategy.configure` discards every
+## pre-cleanup result, and `mcp remove` exits non-zero for an absent entry as
+## well as for a real failure, so a timed-out or failed remove leaves the scope
+## untouched while the register still returns ok. The note names what ran,
+## not what it can prove.
+static func configure_sweep_note(id: String) -> String:
+	var client := ClientRegistry.get_by_id(id)
+	if client == null or client.config_type != "cli":
+		return ""
+	if client.cli_unregister_template.is_empty() or not CliStrategy.uses_scope_token(client):
+		return ""
+	return "attempted to clear %s from %s" % [
+		SERVER_NAME, ", ".join(CliStrategy.cleanup_scopes(client)),
+	]
+
+
 static func manual_command(id: String) -> String:
 	var client := ClientRegistry.get_by_id(id)
 	if client == null:
 		return ""
+	var path_resolution := client.resolved_config_path_details()
+	var path_error := str(path_resolution.get("error", ""))
+	if not path_error.is_empty():
+		return "Config path unavailable: %s" % path_error
 	var context := capture_launch_context() if client.command_shape != Client.CommandShape.NONE else {}
 	var launch := (
-		resolve_attach_launch(context)
+		launch_for_client(client, resolve_attach_launch(context))
 		if client.command_shape != Client.CommandShape.NONE
 		else {}
 	)
@@ -565,11 +1285,22 @@ static func manual_command(id: String) -> String:
 		client,
 		SERVER_NAME,
 		server_url_from(context),
-		client.resolved_config_path(),
+		str(path_resolution.get("path", "")),
 		launch,
+		_project_roots_from_context(context),
 	)
 	if cmd.is_empty():
 		return cmd
+	## The path above is the one outside Flatpak. When this sandboxed editor
+	## cannot see where a Flatpak build keeps the same file, that may be the
+	## wrong one for this user, and this text is all a refused Configure (or a
+	## manual-only client) leaves them to go on.
+	var hidden_paths: Variant = path_resolution.get("hidden_paths", null)
+	if hidden_paths is PackedStringArray and not hidden_paths.is_empty():
+		cmd += (
+			"\n\nA Flatpak build keeps this file at %s instead. Godot's own Flatpak "
+			+ "sandbox cannot see it, so edit that one if it is the build you use."
+		) % " or ".join(hidden_paths)
 	## #507: when the allow-host opt-in names a non-loopback range, also
 	## surface the LAN URL so the user can copy-paste the right address into
 	## a remote agent. Informational only — configure/remove still WRITE the
@@ -583,6 +1314,58 @@ static func manual_command(id: String) -> String:
 static func config_path(id: String) -> String:
 	var client := ClientRegistry.get_by_id(id)
 	return client.resolved_config_path() if client != null else ""
+
+
+## Resolve the highest-precedence config tier that actually contains the server
+## entry. For Pi-style merge clients, returns the tier path the entry lives in
+## (e.g. `~/.pi/agent/.mcp.json`) instead of the lowest-tier `path_template`
+## `config_path()` returns. Falls back to `path_template` when no entry is
+## found anywhere. Empty `launch_context` is allowed; command-shape clients
+## synthesize one via `capture_launch_context()` so dock row construction can
+## call this without first capturing launch state.
+static func effective_config_path(id: String, launch_context: Dictionary = {}) -> String:
+	var client := ClientRegistry.get_by_id(id)
+	if client == null:
+		return ""
+	var resolution := client.resolved_config_path_details()
+	var fallback := str(resolution.get("path", ""))
+	var context := launch_context
+	if context.is_empty() and client.command_shape != Client.CommandShape.NONE:
+		context = capture_launch_context()
+	var roots := _project_roots_from_context(context)
+	var target := JsonStrategy.manual_target_details(client, SERVER_NAME, fallback, roots)
+	if bool(target.get("ok", false)):
+		return str(target.get("path", fallback))
+	return fallback
+
+
+## Path that `_check_status_merged` would consider authoritative for the
+## server entry, or `path_template` when no entry is found anywhere.
+## For Pi-style merge clients this is the latest project tier when one
+## exists (matching the F2 last-wins status logic), falling back to the
+## latest global tier, then to `path_template`.
+##
+## The dock uses this for Open/Reveal so the file the user inspects is
+## the same file that drives the status check — `effective_config_path`
+## fails closed (returns `path_template`) when there are multiple project
+## tiers, which historically sent users to the wrong file (codex round 3,
+## F-3-4). Splitting this from `effective_config_path` keeps the manual
+## instructions fail-closed while letting the dock follow the
+## authoritative tier.
+static func effective_authoritative_path(id: String, launch_context: Dictionary = {}) -> String:
+	var client := ClientRegistry.get_by_id(id)
+	if client == null:
+		return ""
+	var resolution := client.resolved_config_path_details()
+	var fallback := str(resolution.get("path", ""))
+	var context := launch_context
+	if context.is_empty() and client.command_shape != Client.CommandShape.NONE:
+		context = capture_launch_context()
+	var roots := _project_roots_from_context(context)
+	var authoritative: String = JsonStrategy.authoritative_tier_path(client, SERVER_NAME, roots)
+	if not authoritative.is_empty():
+		return authoritative
+	return fallback
 
 
 static func is_installed(id: String) -> bool:
@@ -666,6 +1449,13 @@ static func _resolve_attach_launch_uncached(
 	var exclusions := str(launch_context.get("excluded_domains", "")).strip_edges()
 	if not exclusions.is_empty():
 		common_args.append_array(["--exclude-domains", exclusions])
+	## Default true when the key is absent (hand-built contexts in tests, stale
+	## pre-upgrade snapshots) — matching the server's send-by-default posture.
+	## Toggling the setting changes the rendered argv, so existing entries read
+	## CONFIGURED_MISMATCH and the dock offers Reconfigure, like any other
+	## launch-affecting value.
+	if not bool(launch_context.get("telemetry_enabled", true)):
+		common_args.append("--disable-telemetry")
 
 	var venv_python := ""
 	if discovery_override.has("venv_python"):
@@ -683,17 +1473,16 @@ static func _resolve_attach_launch_uncached(
 	if discovery_override.has("uvx_path"):
 		uvx = str(discovery_override["uvx_path"])
 	else:
-		## Strict lookup for new attach entries. Do not use
-		## McpClient.resolve_uvx_path(): its bare-`uvx` fallback is retained
-		## solely for the existing Claude Desktop bridge until that client is
-		## migrated in its own rollout PR.
+		## Strict lookup for attach entries: never write a bare `uvx` command
+		## that a GUI-launched client may be unable to resolve from its PATH.
 		uvx = find_uvx()
 	if not uvx.is_empty():
-		var uvx_args: Array[String] = [
+		var uvx_args := UvResolution.args()
+		uvx_args.append_array([
 			"--link-mode", "copy",
 			"--from", "godot-ai==%s" % _pypi_pin_version(plugin_version),
 			"godot-ai",
-		]
+		])
 		uvx_args.append_array(common_args)
 		return _finalize_attach_launch(
 			"uvx", uvx, uvx_args, launch_context, discovery_override
@@ -730,7 +1519,7 @@ static func _resolve_attach_launch_uncached(
 		)
 
 	return _attach_discovery_error(
-		"No compatible godot-ai launcher was found. Install uv (provides uvx), or use the manual URL-mode instructions with their reconnect limitation."
+		"No compatible godot-ai launcher was found. Install uv (provides uvx), then retry Configure."
 	)
 
 
@@ -754,12 +1543,40 @@ static func _finalize_attach_launch(
 			"Windows requires pythonw.exe to launch the MCP bridge without opening a terminal window. Repair this Python or uv installation, then retry Configure."
 		)
 
+	## `console_command`/`console_args` carry the unwrapped console-subsystem
+	## launch for clients that opt out of pythonw via
+	## `needs_consoleless_launcher = false` (#863). Strategies only consume
+	## `command`/`args`/`ok`; `launch_for_client` swaps the shapes per client.
 	if tier == "dev_venv":
-		return {"ok": true, "tier": tier, "command": pythonw, "args": args}
+		return {
+			"ok": true, "tier": tier, "command": pythonw, "args": args,
+			"console_command": command, "console_args": args,
+		}
 
 	var wrapped_args: Array[String] = ["-c", _WINDOWS_STDIO_BOOTSTRAP, command]
 	wrapped_args.append_array(args)
-	return {"ok": true, "tier": tier, "command": pythonw, "args": wrapped_args}
+	return {
+		"ok": true, "tier": tier, "command": pythonw, "args": wrapped_args,
+		"console_command": command, "console_args": args,
+	}
+
+
+## Select the launch shape a specific client should see. Clients with
+## `needs_consoleless_launcher = false` (Antigravity, #863) get the plain
+## console command captured by `_finalize_attach_launch`; everyone else keeps
+## the pythonw shape unchanged. Idempotent: the returned dict carries no
+## console keys, so a second application is a no-op.
+static func launch_for_client(client: Client, launch: Dictionary) -> Dictionary:
+	if client == null or client.needs_consoleless_launcher:
+		return launch
+	if not launch.has("console_command"):
+		return launch
+	var selected := launch.duplicate(true)
+	selected["command"] = selected["console_command"]
+	selected["args"] = selected["console_args"]
+	selected.erase("console_command")
+	selected.erase("console_args")
+	return selected
 
 
 static func _resolve_consoleless_python(
@@ -792,13 +1609,41 @@ static func _resolve_consoleless_python(
 			if int(probe.get("exit_code", -1)) == 0:
 				var python := str(probe.get("stdout", "")).strip_edges()
 				if not python.is_empty():
-					var managed_pythonw := python.get_base_dir().path_join("pythonw.exe")
-					if FileAccess.file_exists(managed_pythonw):
+					var managed_pythonw := _consoleless_python_for_interpreter(python)
+					if not managed_pythonw.is_empty():
 						return managed_pythonw
 
 	## A system Python GUI launcher is sufficient for the non-dev bootstrap;
 	## it does not import godot_ai itself.
 	return CliFinder.find(["pythonw.exe"])
+
+
+## uv can return a launcher in ~/.local/bin whose GUI interpreter lives in
+## the managed Python installation. Ask that interpreter for its base path.
+## The optional result keeps tests independent of installed executables.
+static func _consoleless_python_for_interpreter(
+	python: String, probe_result: Dictionary = {}
+) -> String:
+	if not python.is_absolute_path() or not FileAccess.file_exists(python):
+		return ""
+	var sibling := python.get_base_dir().path_join("pythonw.exe")
+	if FileAccess.file_exists(sibling):
+		return sibling
+	var probe := probe_result
+	if probe.is_empty():
+		probe = McpCliExec.run(
+			python, ["-I", "-c", "import sys; print(getattr(sys, '_base_executable', sys.executable))"],
+			_DISCOVERY_TIMEOUT_MS, false
+		)
+	if int(probe.get("exit_code", -1)) != 0 or not probe.get("stdout") is String:
+		return ""
+	var base_python := str(probe["stdout"]).strip_edges()
+	if base_python.contains("\n") or base_python.contains("\r"):
+		return ""
+	if not base_python.is_absolute_path() or not FileAccess.file_exists(base_python):
+		return ""
+	var base_pythonw := base_python.get_base_dir().path_join("pythonw.exe")
+	return base_pythonw if FileAccess.file_exists(base_pythonw) else ""
 
 
 static func _system_version_from_probe(probe: Dictionary) -> Dictionary:
@@ -892,12 +1737,7 @@ static func _is_symlink(path: String) -> bool:
 	return dir.is_link(path)
 
 
-## `refresh` forces uvx to re-fetch PyPI index metadata on spawn — used by
-## `_start_server`'s one-shot retry when the first attempt exited fast with
-## no pid-file on the uvx tier (stale-index-cache failure mode). No-op on
-## other tiers: dev_venv and system resolve locally, so the flag has nowhere
-## to go. See plugin.gd::_should_retry_with_refresh.
-static func get_server_command(refresh: bool = false) -> Array[String]:
+static func get_server_command(trace: Callable = Callable()) -> Array[String]:
 	## `mode_override() == "user"` skips the dev_venv tier even when a nearby
 	## .venv exists — the override then becomes an actual workaround for
 	## the "user venv misidentified as dev checkout" bug, not just a
@@ -908,7 +1748,7 @@ static func get_server_command(refresh: bool = false) -> Array[String]:
 			print("MCP | using dev venv: %s" % venv_python)
 			return [venv_python, "-m", "godot_ai"]
 
-	var uvx := find_uvx()
+	var uvx := find_uvx(trace)
 	if not uvx.is_empty():
 		var version := get_plugin_version()
 		## PEP 440 local build tags (e.g. 3.0.2+local.1) are not on PyPI.
@@ -926,18 +1766,17 @@ static func get_server_command(refresh: bool = false) -> Array[String]:
 		## every spawn. See issue #133.
 		if pypi_version != version:
 			print(
-				"MCP | using uvx (godot-ai==%s; local plugin %s not on PyPI)%s"
-				% [pypi_version, version, " [refresh]" if refresh else ""]
+				"MCP | using uvx (godot-ai==%s; local plugin %s not on PyPI)"
+				% [pypi_version, version]
 			)
 		else:
-			print("MCP | using uvx (godot-ai==%s)%s" % [pypi_version, " [refresh]" if refresh else ""])
+			print("MCP | using uvx (godot-ai==%s)" % pypi_version)
 		var cmd: Array[String] = [uvx]
-		if refresh:
-			cmd.append("--refresh")
+		cmd.append_array(UvResolution.args())
 		cmd.append_array(["--from", "godot-ai==%s" % pypi_version, "godot-ai"])
 		return cmd
 
-	var system_cmd := _find_system_install()
+	var system_cmd := _find_system_install(trace)
 	if not system_cmd.is_empty():
 		print("MCP | using system install: %s" % system_cmd)
 		return [system_cmd]
@@ -959,8 +1798,133 @@ static func get_server_launch_mode() -> String:
 	return "unknown"
 
 
-static func find_uvx() -> String:
-	return CliFinder.find(_uvx_cli_names())
+## Wall-clock budget for the Configure-time pre-warm. Far above
+## `McpCliExec.DEFAULT_TIMEOUT_MS` (8s) on purpose: this call is *expected* to
+## take tens of seconds on a cold cache — downloading and unpacking the tool
+## environment is the entire point — so the usual CLI-registry budget would
+## kill it right when it is doing useful work. Still bounded so a wedged uv
+## can't hold the worker thread forever.
+const PREWARM_TIMEOUT_MS := 180000
+
+
+static func find_uvx(trace: Callable = Callable()) -> String:
+	return CliFinder.find(_uvx_cli_names(), trace)
+
+
+## Pure argv builder for the pre-warm spawn, split out so tests can pin the
+## exact command without spawning a process. Empty array when there is no
+## version to pin, or when the version carries characters outside the PEP
+## 440 alphabet — the value can originate from a GitHub release tag, and
+## while OS.create_process argv can't be shell-injected, constraining the
+## pin keeps a hostile tag from smuggling anything into the requirement
+## spec uv parses (#890 review).
+static func prewarm_server_package_argv(version: String) -> Array[String]:
+	var pinned := version.strip_edges()
+	if pinned.is_empty():
+		return []
+	## No `*`: PEP 440 reserves it for prefix-match SPECIFIERS (`==3.2.*`),
+	## not version identifiers — letting it through would turn the exact pin
+	## into a prefix match (#890 CodeRabbit).
+	var re := RegEx.new()
+	if re.compile("^[A-Za-z0-9.+!-]+$") != OK or re.search(pinned) == null:
+		return []
+	var args := UvResolution.args()
+	args.append_array(["--from", "godot-ai==%s" % pinned, "godot-ai", "--version"])
+	return args
+
+
+## Bounded worker-thread prewarm for Configure and the post-update client
+## migration barrier (#851, and the reconnect timeouts reported alongside it).
+##
+## The Configure case that bites is when the plugin ADOPTS an already-running
+## server (no uvx
+## spawn, so nothing warms the env), the user clicks Configure, and the first
+## client launch is the one that pays for building the whole tool environment.
+## That build is ~67 packages; a warm launch is ~0.1s. Two symptoms fall out
+## of the cold path: a visible terminal window on Windows (#851), and a spawn
+## that overruns the MCP client's default 30s connect timeout, which the user
+## sees as the Godot AI tools silently disappearing.
+##
+## The work is deliberately owned and joined rather than detached. Configure is
+## an explicit click, so the cost is attributable and the Dock can show it as
+## progress rather than as an unexplained pause. Runs on the dock's client
+## action worker thread — never the main thread — and `McpCliExec.run` bounds
+## it, so a wedged uv cannot trap the worker.
+##
+## Best-effort by contract. The config file is already written and correct
+## when this runs; a failure here only means the next client launch pays the
+## cold cost it always used to. Callers must NOT downgrade a successful
+## Configure because of this result.
+##
+## Returns the `McpCliExec.run` dict, plus `skipped` (true when there is no
+## uvx tier to warm or no usable version pin).
+static func prewarm_server_package_blocking(
+	version: String,
+	timeout_ms: int = PREWARM_TIMEOUT_MS,
+	cancel_check: Callable = Callable(),
+) -> Dictionary:
+	var args := prewarm_server_package_argv(version)
+	if args.is_empty():
+		return {"skipped": true, "reason": "no version pin"}
+	var uvx := find_uvx()
+	if uvx.is_empty():
+		## dev-venv and system tiers have no per-version cache to warm.
+		return {"skipped": true, "reason": "no uvx"}
+	var command: Array[String] = [uvx]
+	command.append_array(args)
+	var result := McpCliExec.run(
+		uvx,
+		args,
+		timeout_ms,
+		true,
+		cancel_check,
+		UvResolution.is_production_command(command),
+	)
+	result["skipped"] = false
+	return result
+
+
+## Decide whether the freshly-written entry has an environment worth warming.
+##
+## Pure and side-effect free, split from the spawn below so tests can pin the
+## decision without building a real uv environment — the same split
+## `prewarm_server_package_argv` uses for the argv (#890).
+##
+## Warms only the `uvx` tier: dev-venv and system launches run an
+## already-installed package and have no per-version environment to build.
+## Resolving the tier here rather than in the dock keeps launcher knowledge in
+## the configurator; the dock stays free of tier branching.
+##
+## Returns `{warm: bool, version: String, reason: String}`.
+static func prewarm_attach_plan(
+	launch_context: Dictionary, discovery_override: Dictionary = {}
+) -> Dictionary:
+	var launch := resolve_attach_launch(launch_context, discovery_override)
+	if not bool(launch.get("ok", false)):
+		return {"warm": false, "version": "", "reason": "launch discovery failed"}
+	var tier := str(launch.get("tier", ""))
+	if tier != "uvx":
+		return {"warm": false, "version": "", "reason": "tier %s has no env to warm" % tier}
+	var version := _pypi_pin_version(str(launch_context.get("plugin_version", "")))
+	if version.is_empty():
+		return {"warm": false, "version": "", "reason": "no version pin"}
+	return {"warm": true, "version": version, "reason": ""}
+
+
+## Warm the environment the freshly-written entry will actually launch.
+## Thin wrapper over `prewarm_attach_plan` + `prewarm_server_package_blocking`.
+static func prewarm_attach_launch(
+	launch_context: Dictionary,
+	timeout_ms: int = PREWARM_TIMEOUT_MS,
+	discovery_override: Dictionary = {},
+	cancel_check: Callable = Callable(),
+) -> Dictionary:
+	var plan := prewarm_attach_plan(launch_context, discovery_override)
+	if not bool(plan.get("warm", false)):
+		return {"skipped": true, "reason": str(plan.get("reason", ""))}
+	return prewarm_server_package_blocking(
+		str(plan.get("version", "")), timeout_ms, cancel_check
+	)
 
 
 static func _uvx_cli_names() -> Array[String]:
@@ -1076,6 +2040,7 @@ static func _attach_launch_cache_key(launch_context: Dictionary) -> String:
 		launch_context.get("plugin_version", null),
 		launch_context.get("allow_dev_venv", null),
 		launch_context.get("platform", null),
+		launch_context.get("telemetry_enabled", null),
 	])
 
 
@@ -1140,11 +2105,8 @@ static func _find_venv_python() -> String:
 ## monkey-patching `res://`. Only treats a `.venv/bin/python` as a godot-ai dev
 ## venv if a sibling `src/godot_ai/` exists in the same parent dir — otherwise
 ## an unrelated user venv (e.g. `~/.venv` from a data-science side project)
-## gets picked up and `python -m godot_ai` fails with ModuleNotFoundError about
-## 5s into startup, cascading into an infinite reconnect loop. The retry-with-
-## refresh recovery in `plugin.gd::_should_retry_with_refresh` only fires on
-## the uvx tier, so the dev_venv misidentification has no escape hatch — the
-## detection has to be right the first time.
+	## gets picked up and `python -m godot_ai` fails with ModuleNotFoundError.
+	## The detection therefore has to be right before launch.
 static func _find_venv_python_in(start_dir: String) -> String:
 	var dir := start_dir.rstrip("/").rstrip("\\")
 	var python_name := "python" if OS.get_name() != "Windows" else "python.exe"
@@ -1184,11 +2146,11 @@ static func find_worktree_src_dir(start_dir: String) -> String:
 ## directly: the finder adds the well-known-install-dirs and login-shell
 ## PATH tiers plus its per-exe cache, and this drops the private
 ## `_pick_best_path` cross-class reach (#711).
-static func _find_system_install() -> String:
+static func _find_system_install(trace: Callable = Callable()) -> String:
 	## Built with append, not a ternary of untyped literals — assigning a
 	## ternary's Array to Array[String] is a runtime error on newer Godot
 	## builds (same idiom as _uvx_cli_names above).
 	var names: Array[String] = ["godot-ai"]
 	if OS.get_name() == "Windows":
 		names.push_front("godot-ai.exe")
-	return CliFinder.find(names)
+	return CliFinder.find(names, trace)

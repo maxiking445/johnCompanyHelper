@@ -55,6 +55,34 @@ static func _user_root() -> String:
 	return _cached_user_root
 
 
+## True when `path` carries a codepoint that must never reach a filesystem API.
+##
+## Issue #889: the previous guard built its sentinel with `String.chr(0)`, and
+## Godot emits `Unicode parsing error … Unexpected NUL character` while
+## *constructing* that string. Every validated call — including reads that then
+## failed with "File not found" — printed an alarming engine error that had
+## nothing to do with the caller's path. Reading codepoints instead never
+## materialises a NUL String, so the noise is gone.
+##
+## Both codepoints are rejected, for different reasons:
+##   * `0x0000` — a real embedded NUL can truncate a C string, so the path that
+##     is validated is not the path that gets opened. Current Godot cannot
+##     retain one in a String, making this a no-op today; it stays as
+##     defense-in-depth for any build or input path that can.
+##   * `0xFFFD` — what current Godot actually substitutes for a NUL or any other
+##     undecodable input. Once the engine has replaced the byte there is no way
+##     left to tell an attempted NUL from malformed UTF-8 from a literal
+##     replacement character, so the only safe reading at a security boundary is
+##     to refuse all three. A legitimate filename containing U+FFFD is rejected
+##     too; that false positive is deliberate and vanishingly rare.
+static func _contains_invalid_path_codepoint(path: String) -> bool:
+	for i in path.length():
+		var codepoint := path.unicode_at(i)
+		if codepoint == 0x0000 or codepoint == 0xFFFD:
+			return true
+	return false
+
+
 ## Returns "" when the path is a safe `res://`-rooted reference inside the
 ## project root. Returns a human-readable error message otherwise.
 ## Prefer `path_error` over calling this directly — it wraps the message in the
@@ -68,12 +96,8 @@ static func _user_root() -> String:
 static func validate_resource_path(path: String, for_write: bool = false) -> String:
 	if path.is_empty():
 		return "Missing required param: path"
-	## Guard the sentinel: on builds where String.chr(0) yields "" (some engines
-	## normalize embedded nulls away, e.g. 4.3), contains("") would be true and
-	## reject every path. A String that can't hold a null can't smuggle one.
-	var nul := String.chr(0)
-	if not nul.is_empty() and path.contains(nul):
-		return "Path must not contain null bytes"
+	if _contains_invalid_path_codepoint(path):
+		return "Path must not contain null bytes or invalid Unicode"
 	if not path.begins_with("res://"):
 		return "Path must start with res://"
 	var confine_err := _confine_under(path, _res_root(), "res://")
@@ -94,12 +118,8 @@ static func validate_resource_path(path: String, for_write: bool = false) -> Str
 static func validate_loadable_path(path: String) -> String:
 	if path.is_empty():
 		return "Missing required param: path"
-	## Guard the sentinel: on builds where String.chr(0) yields "" (some engines
-	## normalize embedded nulls away, e.g. 4.3), contains("") would be true and
-	## reject every path. A String that can't hold a null can't smuggle one.
-	var nul := String.chr(0)
-	if not nul.is_empty() and path.contains(nul):
-		return "Path must not contain null bytes"
+	if _contains_invalid_path_codepoint(path):
+		return "Path must not contain null bytes or invalid Unicode"
 	if path.begins_with("uid://"):
 		return ""
 	if path.begins_with("user://"):
@@ -133,14 +153,32 @@ static func _confine_under(path: String, root: String, label: String) -> String:
 ## source-controlled). The blocked set is the startup-execution surface only:
 ## the manifest, its `override.cfg` shadow, and the `.godot/` cache dir.
 static func _reject_sensitive_write(path: String) -> String:
-	var file_lower := path.get_file().to_lower()
+	# Normalize once, then reuse for filename and segment checks. The writer
+	# (`FileAccess::fix_path` / `FileAccessWindows`) folds `\`, `//`, and `.`
+	# the same way, so `res://project.godot/.` and `res://override.cfg/.` must
+	# not slip past `get_file()` as a trailing `.` while still opening the
+	# protected file.
+	#
+	#   - `res://.godot\uid_cache.bin` used to collapse to one fused segment
+	#     and match neither this check nor the loaded-plugin one below, while the
+	#     write itself still landed in `.godot/`.
+	#   - a `.` segment shifts the *anchored* plugin-tree check below, so
+	#     `res://./addons/godot_ai/plugin.gd` slipped past it even once the
+	#     separators were normalized.
+	#
+	# `..` never reaches here -- `_confine_under` refuses it first -- so its
+	# folding is inert. Because the engine normalizes backslashes on Linux too,
+	# a POSIX file literally named `addons\godot_ai\x.gd` is not addressable
+	# through `res://` at all, so normalizing costs no legitimate write.
+	var normalized := path.replace("\\", "/").simplify_path()
+	var file_lower := normalized.get_file().to_lower()
 	if file_lower == "project.godot":
 		return "Refusing to write res://project.godot (project manifest)"
 	if file_lower == "override.cfg":
 		return "Refusing to write res://override.cfg (startup config override)"
 	# Reject the `.godot/` editor-metadata dir at any depth. Split drops empty
 	# segments so a trailing slash can't hide a segment from the check.
-	var segments := path.trim_prefix("res://").split("/", false)
+	var segments := normalized.trim_prefix("res://").split("/", false)
 	for segment in segments:
 		if segment.to_lower() == ".godot":
 			return "Refusing to write under res://.godot/ (editor metadata)"

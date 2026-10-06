@@ -85,6 +85,8 @@ var _eval_token_counter: int = 0
 ## _handle_take_screenshot (running inside that capture) detects the freeze
 ## synchronously. -1 until the first tick.
 var _last_loop_tick_msec: int = -1
+var _mcp_runtime_process_ticks: int = 0
+var _last_debug_status_reply: Dictionary = {}
 ## Rendering-freeze beacon for the Windows-minimize state (#794 smoke, 1b):
 ## the frames_drawn value last observed in _process, and when it last
 ## advanced. -1 until the first observed advance, so a booting or
@@ -92,6 +94,11 @@ var _last_loop_tick_msec: int = -1
 ## render-stalled and keeps the fresh-frame await path's error replies.
 var _last_frames_drawn_seen: int = -1
 var _last_frames_advance_msec: int = -1
+## #859: test/diagnostic seam for the synchronous eval liveness reply. The
+## debugger capture remains callable while the game loop is parked, so the
+## reply reports whether the _process beacon is actually advancing rather
+## than merely proving that the capture was registered once.
+var _last_eval_liveness_reply: Dictionary = {}
 
 
 func _ready() -> void:
@@ -130,6 +137,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	_mcp_runtime_process_ticks += 1
 	## #777: liveness beacon for _handle_take_screenshot's stalled-loop check.
 	## Recorded before the early returns below so the signal stays truthful
 	## even when the logger or debugger channel is unavailable.
@@ -148,8 +156,13 @@ func _process(_delta: float) -> void:
 	## through the debugger packet path in a single tick. Surplus stays in
 	## `_pending_outbound` and bleeds out across subsequent frames.
 	if not _logger_attached or _logger == null:
+		_pending_outbound.clear()
 		return
 	if not EngineDebugger.is_active():
+		## No remote can consume these lines. Drop current and already-drained
+		## batches so a detached/headless run cannot retain logs indefinitely (#1123).
+		_logger.clear()
+		_pending_outbound.clear()
 		return
 	if _pending_outbound.is_empty():
 		if not _logger.has_pending():
@@ -180,6 +193,12 @@ func _on_debug_message(message: String, data: Array) -> bool:
 		"take_screenshot":
 			_handle_take_screenshot(data)
 			return true
+		"eval_liveness":
+			_reply_eval_liveness(data)
+			return true
+		"debug_status":
+			_reply_debug_status(data)
+			return true
 		"eval":
 			_handle_eval(data)
 			return true
@@ -190,6 +209,46 @@ func _on_debug_message(message: String, data: Array) -> bool:
 			_handle_game_command(data)
 			return true
 	return false
+
+
+## #859: answer from the debugger capture without awaiting a game frame. The
+## capture can still run while a backgrounded/frozen game's main loop cannot,
+## so the _process beacon is the liveness signal that matters for game_eval.
+func _reply_eval_liveness(data: Array) -> void:
+	var request_id: String = data[0] if data.size() > 0 else ""
+	var loop_live := not _main_loop_appears_stalled()
+	_last_eval_liveness_reply = {"request_id": request_id, "loop_live": loop_live}
+	if EngineDebugger.is_active():
+		EngineDebugger.send_message("mcp:eval_liveness_response", [request_id, loop_live])
+
+
+func _debug_status_snapshot() -> Dictionary:
+	var inside_tree := is_inside_tree()
+	var tree := get_tree() if inside_tree else null
+	return {
+		"probe_version": 1,
+		"helper_found": true,
+		## GameHelper is PROCESS_MODE_ALWAYS, so pause does not stop it; native
+		## SceneTree suspension does. This exposes Godot's debugger-owned suspend
+		## bit through Node::can_process() without conflating it with pause/time scale.
+		"suspended": inside_tree and not can_process(),
+		"loop_live": not _main_loop_appears_stalled(),
+		"loop_tick_msec": _last_loop_tick_msec,
+		"process_ticks": _mcp_runtime_process_ticks,
+		"tree_paused": tree.paused if tree != null else false,
+		"frames_drawn": Engine.get_frames_drawn(),
+		"process_frames": Engine.get_process_frames(),
+		"physics_frames": Engine.get_physics_frames(),
+		"time_scale": Engine.time_scale,
+	}
+
+
+func _reply_debug_status(data: Array) -> void:
+	var request_id: String = data[0] if data.size() > 0 else ""
+	var state := _debug_status_snapshot()
+	_last_debug_status_reply = {"request_id": request_id, "state": state.duplicate(true)}
+	if EngineDebugger.is_active():
+		EngineDebugger.send_message("mcp:debug_status_response", [request_id, state])
 
 
 func _handle_take_screenshot(data: Array) -> void:
@@ -251,6 +310,9 @@ static func _should_capture_stale_sync(
 ## #777: true when _process hasn't ticked within MAIN_LOOP_STALL_MSEC —
 ## i.e. the main loop is frozen (backgrounded window) or has never run.
 func _main_loop_appears_stalled() -> bool:
+	## The hello→probe round trip normally follows at least one _process tick.
+	## Treat the never-ticked sentinel as stalled defensively rather than
+	## dispatching an eval into a game whose main loop has not started.
 	if _last_loop_tick_msec < 0:
 		return true
 	return Time.get_ticks_msec() - _last_loop_tick_msec > MAIN_LOOP_STALL_MSEC
@@ -286,7 +348,7 @@ func _capture_and_reply(
 		_reply_error(request_id, "Captured an empty image from game viewport")
 		return
 
-	var encoded: Dictionary = ScreenshotEncode.downscale_and_encode(image, max_resolution)
+	var encoded: Dictionary = ScreenshotEncode.downscale_and_encode(image, max_resolution, viewport.use_hdr_2d)
 	var frames_drawn := Engine.get_frames_drawn()
 	var stale := frames_drawn <= frames_at_request
 
@@ -362,6 +424,12 @@ func _handle_game_command(data: Array) -> void:
 			result = _game_input_action(json.data)
 		"input_state":
 			result = _game_input_state(json.data)
+		"input_sequence":
+			## Async: steps frames and replies itself (deferred), so bail out
+			## before the synchronous send below — same shape as the eval and
+			## screenshot capture paths.
+			_run_input_sequence(request_id, json.data)
+			return
 		_:
 			_reply_game_command_error(request_id, "Unknown game op: %s" % op)
 			return
@@ -682,6 +750,190 @@ func _game_input_state(params: Dictionary) -> Dictionary:
 	return {"actions": states}
 
 
+## --- input_sequence: frame-timed action timeline (deferred) ---
+##
+## Per-step round-trips can't hit a target frame — network jitter lands each
+## input on whatever frame its reply happens to arrive on, so a jump arc or a
+## timed combo is unreproducible (#814). input_sequence takes the whole
+## timeline in one call and drives it game-side, applying each step's action on
+## its scheduled frame, then replies once (deferred). Frame count (not ms) is
+## the timing basis: it's what reproduces identically across runs.
+
+## Hard caps mirrored by the server-side schema (see game handlers). The game
+## side re-checks them so a malformed direct message can't park the coroutine
+## on an unbounded await; the server rejects the same cases up front with a
+## clearer error.
+##
+## The frame cap bounds the sequence in *frames*, which is a wall-clock time
+## only at a given FPS: 600 frames is ~10s at 60fps but longer under load or on
+## a throttled runner. It is not sized to the ~30s deferred budget
+## (editor_handler.INPUT_SEQUENCE_TIMEOUT_SEC) — the two are independent
+## safeguards. If a genuinely slow run exceeds the budget, the dispatcher
+## returns a clean DEFERRED_TIMEOUT rather than hanging, so the cap can stay a
+## simple frame count.
+const MAX_SEQUENCE_STEPS := 256
+const MAX_SEQUENCE_FRAMES := 600
+
+## Testing seam: the last input_sequence reply (response or error), recorded
+## before the EngineDebugger channel (inactive in the editor-side test
+## harness). Mirrors _last_screenshot_reply / _last_eval_reply.
+var _last_game_command_reply: Dictionary = {}
+
+## Testing seam: overrides the per-frame wait in _run_input_sequence. Left
+## invalid in production (real `process_frame` awaits). A test sets it to a
+## synchronously-returning Callable so the multi-frame loop runs to completion
+## in one call — the editor test runner invokes tests synchronously and never
+## pumps `process_frame`, so a real frame-await would suspend and record zero
+## assertions. Timing itself (one frame per step) is engine-guaranteed; this
+## seam covers the scheduling/application/reply logic layered on top.
+var _frame_waiter: Callable = Callable()
+
+
+## Validate + normalize an input_sequence request. Pure (no engine state), so
+## the ordering/cap/shape rules are unit-testable without a running game.
+## Returns {"error": String} or {"steps": Array, "end_frame": int}.
+func _plan_input_sequence(params: Dictionary) -> Dictionary:
+	var raw_steps: Variant = params.get("steps", null)
+	if not (raw_steps is Array):
+		return {"error": "steps must be an array"}
+	var steps_arr: Array = raw_steps
+	if steps_arr.is_empty():
+		return {"error": "steps must not be empty"}
+	if steps_arr.size() > MAX_SEQUENCE_STEPS:
+		return {"error": "steps exceeds cap of %d (got %d)" % [MAX_SEQUENCE_STEPS, steps_arr.size()]}
+
+	## Validate field *kinds* rather than coercing them: the server already
+	## rejects bad shapes, but this planner is also the backstop for a
+	## malformed direct debugger message, so it must not silently turn
+	## pressed="false" into true or at_frame="oops" into 0. _is_number accepts
+	## int or float (JSON round-trips whole numbers as either) but not bool or
+	## string, so this stays consistent with the server without tripping on
+	## JSON's number typing.
+	var settle_raw: Variant = params.get("settle_frames", 0)
+	if not _is_number(settle_raw):
+		return {"error": "settle_frames must be a number"}
+	var settle_frames := int(settle_raw)
+	if settle_frames < 0:
+		return {"error": "settle_frames must be >= 0"}
+
+	var normalized: Array = []
+	var prev_frame := -1
+	for i in steps_arr.size():
+		var raw: Variant = steps_arr[i]
+		if not (raw is Dictionary):
+			return {"error": "steps[%d] must be an object" % i}
+		var step: Dictionary = raw
+		if not (step.get("action", "") is String) or str(step.get("action", "")).is_empty():
+			return {"error": "steps[%d].action is required" % i}
+		var action: String = step["action"]
+		var at_frame_raw: Variant = step.get("at_frame", 0)
+		if not _is_number(at_frame_raw):
+			return {"error": "steps[%d].at_frame must be a number" % i}
+		var at_frame := int(at_frame_raw)
+		if at_frame < 0:
+			return {"error": "steps[%d].at_frame must be >= 0" % i}
+		if at_frame < prev_frame:
+			return {"error": "steps must be ordered by at_frame (steps[%d]=%d < previous %d)" % [i, at_frame, prev_frame]}
+		prev_frame = at_frame
+		var pressed_raw: Variant = step.get("pressed", true)
+		if not (pressed_raw is bool):
+			return {"error": "steps[%d].pressed must be a boolean" % i}
+		var strength_raw: Variant = step.get("strength", 1.0)
+		if not _is_number(strength_raw):
+			return {"error": "steps[%d].strength must be a number" % i}
+		normalized.append({
+			"at_frame": at_frame,
+			"action": action,
+			"pressed": pressed_raw,
+			"strength": clampf(float(strength_raw), 0.0, 1.0),
+		})
+
+	var end_frame: int = int(normalized[-1]["at_frame"]) + settle_frames
+	if end_frame > MAX_SEQUENCE_FRAMES:
+		return {"error": "sequence spans %d frames, exceeds cap of %d" % [end_frame, MAX_SEQUENCE_FRAMES]}
+	return {"steps": normalized, "end_frame": end_frame}
+
+
+## Async: apply each step's action on its scheduled frame, awaiting one
+## process_frame per frame, then reply (deferred). Bails out before applying
+## anything if the plan is invalid or any action is unknown to the running
+## game's InputMap — a half-applied timeline leaves inputs in an undefined
+## state, so it's all-or-nothing on the pre-checks.
+func _run_input_sequence(request_id: String, params: Dictionary) -> void:
+	var plan := _plan_input_sequence(params)
+	if plan.has("error"):
+		_reply_input_sequence_error(request_id, plan["error"])
+		return
+
+	var steps: Array = plan["steps"]
+	var end_frame: int = plan["end_frame"]
+
+	## Resolve action names against the *game's* InputMap up front — the server
+	## can't see it, so this is the first place unknown actions surface.
+	for step in steps:
+		if not InputMap.has_action(step["action"]):
+			_reply_input_sequence_error(request_id, "Unknown action: %s" % step["action"])
+			return
+
+	var tree := get_tree()
+	if tree == null:
+		_reply_input_sequence_error(request_id, "No SceneTree available for input sequence")
+		return
+
+	var applied: Array = []
+	var step_i := 0
+	for f in range(0, end_frame + 1):
+		while step_i < steps.size() and int(steps[step_i]["at_frame"]) == f:
+			var step: Dictionary = steps[step_i]
+			_game_input_action(step)
+			applied.append({"at_frame": f, "action": step["action"], "pressed": step["pressed"]})
+			step_i += 1
+		if f < end_frame:
+			if _frame_waiter.is_valid():
+				await _frame_waiter.call()
+			else:
+				await tree.process_frame
+
+	_reply_input_sequence_ok(request_id, {
+		"completed": true,
+		"steps_applied": applied.size(),
+		"frames_elapsed": end_frame,
+		"applied": applied,
+		"actions_pressed_at_end": _actions_pressed_at_end(steps),
+	})
+
+
+## Distinct actions the sequence touched that are still held at the end, so the
+## caller knows what it must release (a press with no matching release leaves
+## the action stuck on across the next frames).
+func _actions_pressed_at_end(steps: Array) -> Array:
+	var seen := {}
+	var pressed: Array = []
+	for step in steps:
+		var action: String = step["action"]
+		if seen.has(action):
+			continue
+		seen[action] = true
+		if Input.is_action_pressed(action):
+			pressed.append(action)
+	return pressed
+
+
+func _reply_input_sequence_ok(request_id: String, result: Dictionary) -> void:
+	result["source"] = "game"
+	result["op"] = "input_sequence"
+	_last_game_command_reply = {"kind": "response", "op": "input_sequence", "result": result}
+	if EngineDebugger.is_active():
+		EngineDebugger.send_message("mcp:game_command_response",
+			[request_id, JSON.stringify(_variant_to_json(result))])
+
+
+func _reply_input_sequence_error(request_id: String, message: String) -> void:
+	_last_game_command_reply = {"kind": "error", "op": "input_sequence", "message": message}
+	if EngineDebugger.is_active():
+		EngineDebugger.send_message("mcp:game_command_error", [request_id, message])
+
+
 ## Resolve a mouse-position param. Absent (null, or an empty {}) falls back to
 ## the live cursor position — a deliberate default. A present but wrong-shaped
 ## value is rejected instead of silently substituting the cursor, which
@@ -752,8 +1004,8 @@ func _mouse_button_index(name: String) -> int:
 ## EVAL_HUNG code, #518, but the editor's message can't name the cause).
 ## Raise this at/above the editor timer (or drop that timer below this) and
 ## the less specific editor message wins the race, silently losing the
-## diagnostic this fix exists to provide. Nothing enforces the order —
-## change one, re-check the other two.
+## diagnostic this fix exists to provide. The cross-file contract is enforced
+## by tests/unit/test_game_eval_timeout_ordering.py.
 ##
 ## NOTE: this catches a hung `await`, not a CPU-bound loop with no `await` —
 ## a tight `while true:` with no yield blocks the main thread, so nothing
@@ -777,13 +1029,7 @@ func _handle_eval(data: Array) -> void:
 	_eval_token_counter += 1
 	var token := str(_eval_token_counter)
 	var run_fn := "_mcp_run_%s" % token
-	var script_source := (
-		"extends Node\n"
-		+ "func execute():\n"
-		+ "\treturn await %s()\n\n" % run_fn
-		+ "func %s():\n" % run_fn
-		+ _indent_eval_code(code)
-	)
+	var script_source := _build_eval_script_source(run_fn, code)
 
 	## Snapshot the logger's script-error seq BEFORE running so we only attribute
 	## errors raised by this eval. In a debug build a parse error aborts reload()
@@ -980,7 +1226,23 @@ func _handle_eval_check(data: Array) -> void:
 	_try_report_eval_runtime_error(request_id)
 
 
-func _indent_eval_code(code: String) -> String:
+## `execute()` always returns, so it carries a return type. The inner function
+## holds caller code that need not return on every path; a declared return type
+## there makes Godot reject it with "Not all code paths return a value". It
+## stays untyped and suppresses `untyped_declaration` on its own declaration
+## instead (#1119). The annotation shares the `func` line so the line numbers
+## reported for caller code do not move.
+static func _build_eval_script_source(run_fn: String, code: String) -> String:
+	return (
+		"extends Node\n"
+		+ "func execute() -> Variant:\n"
+		+ "\treturn await %s()\n\n" % run_fn
+		+ "@warning_ignore(\"untyped_declaration\") func %s():\n" % run_fn
+		+ _indent_eval_code(code)
+	)
+
+
+static func _indent_eval_code(code: String) -> String:
 	var lines: PackedStringArray = code.split("\n")
 	var out := ""
 	for line in lines:

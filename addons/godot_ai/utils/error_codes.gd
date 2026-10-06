@@ -26,9 +26,15 @@ const EDITOR_NOT_READY := "EDITOR_NOT_READY"
 const UNKNOWN_COMMAND := "UNKNOWN_COMMAND"
 const INTERNAL_ERROR := "INTERNAL_ERROR"
 const DEFERRED_TIMEOUT := "DEFERRED_TIMEOUT"
-## Python-originated attach bridge codes. GDScript has no emit path, but the
-## public registry intentionally mirrors protocol/errors.py.
+## #1120: filesystem mutation discovery failed before any disk effect
+## (deadline/cancellation, entry/byte limits, or unreadable owner metadata).
+## Keep this separate from INVALID_PARAMS so callers can distinguish an
+## environmental discovery failure from a bad filesystem_manage request.
+const FILESYSTEM_DISCOVERY_FAILED := "FILESYSTEM_DISCOVERY_FAILED"
+## Python-originated transport/attach bridge codes. GDScript has no emit path,
+## but the public registry intentionally mirrors protocol/errors.py.
 const TRANSPORT_OUTCOME_UNKNOWN := "TRANSPORT_OUTCOME_UNKNOWN"
+const TRANSPORT_OVERLOADED := "TRANSPORT_OVERLOADED"
 const NEW_CLIENT_SESSION_REQUIRED := "NEW_CLIENT_SESSION_REQUIRED"
 const ATTACH_LOCK_TIMEOUT := "ATTACH_LOCK_TIMEOUT"
 const ATTACH_LOCK_ERROR := "ATTACH_LOCK_ERROR"
@@ -39,14 +45,12 @@ const BACKEND_START_TIMEOUT := "BACKEND_START_TIMEOUT"
 # game_eval failure codes (#490) — keep in sync with protocol/errors.py
 const EVAL_COMPILE_ERROR := "EVAL_COMPILE_ERROR"
 const EVAL_RUNTIME_ERROR := "EVAL_RUNTIME_ERROR"
-## #518: the play session is up (EditorInterface.is_playing_scene() is true, so
-## editor_handler's EDITOR_NOT_READY "game is not running" gate already passed)
-## but the game-side _mcp_game_helper autoload never registered its debugger
-## capture within EVAL_READY_WAIT_SEC. Carved out of INTERNAL_ERROR so this
-## boot-window / missing-autoload race stops masquerading as the opaque "eval
-## hung" 10s timeout in telemetry — the same split #490 made for compile/runtime
-## errors. NOT a hang: it fires fast (~3s) and is caller-actionable (let the game
-## finish booting and retry, or check the autoload is enabled).
+## #518/#859: the play session is up (EditorInterface.is_playing_scene() is true,
+## so editor_handler's EDITOR_NOT_READY "game is not running" gate already
+## passed) but the game cannot service evals: the helper did not register within
+## EVAL_READY_WAIT_SEC, its main-loop beacon is stale, or its debugger session
+## closed mid-eval. Carved out of INTERNAL_ERROR so these fast,
+## caller-actionable failures do not burn the opaque 10s eval backstop.
 const EVAL_GAME_NOT_READY := "EVAL_GAME_NOT_READY"
 ## #518: the eval genuinely never finished inside the timeout ladder — the
 ## game-side 8s deadline aborted a hung await, or the editor-side 10s backstop
@@ -96,6 +100,8 @@ const PROPERTY_NOT_ON_CLASS := "PROPERTY_NOT_ON_CLASS"
 const VALUE_OUT_OF_RANGE := "VALUE_OUT_OF_RANGE"
 const WRONG_TYPE := "WRONG_TYPE"
 const MISSING_REQUIRED_PARAM := "MISSING_REQUIRED_PARAM"
+const CUSTOM_TOOL_NOT_UNDOABLE := "CUSTOM_TOOL_NOT_UNDOABLE"
+const CUSTOM_TOOL_DISABLED := "CUSTOM_TOOL_DISABLED"
 
 ## #651 stage 1: EDITOR_NOT_READY sub-codes. These travel in
 ## `error.data.sub_code`, NEVER as the top-level `error.code` — existing
