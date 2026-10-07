@@ -1,0 +1,87 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scenes/component/dialog/confirmation_dialog.gd" id="1_script"]
+[ext_resource type="Theme" path="res://scenes/component/button/actionButton.tres" id="2_action_button"]
+[ext_resource type="FontFile" path="res://font/LibreBaskerville-Bold.ttf" id="3_title_font"]
+[ext_resource type="FontFile" path="res://font/LibreBaskerville-Regular.ttf" id="4_body_font"]
+
+[sub_resource type="StyleBoxFlat" id="DialogPaper"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+content_margin_left = 24.0
+content_margin_top = 20.0
+content_margin_right = 24.0
+content_margin_bottom = 20.0
+
+[node name="ConfirmationDialog" type="ColorRect"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.075, 0.045, 0.48)
+mouse_filter = 0
+script = ExtResource("1_script")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DialogPanel" type="PanelContainer" parent="CenterContainer" unique_id=149009600]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("DialogPaper")
+
+[node name="Content" type="VBoxContainer" parent="CenterContainer/DialogPanel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="CenterContainer/DialogPanel/Content" unique_id=2027918103]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_title_font")
+theme_override_font_sizes/font_size = 25
+text = "Confirmation"
+horizontal_alignment = 1
+
+[node name="Message" type="Label" parent="CenterContainer/DialogPanel/Content" unique_id=1861179773]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_body_font")
+theme_override_font_sizes/font_size = 19
+text = "Are you sure?"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="CenterContainer/DialogPanel/Content"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="ConfirmButton" type="Button" parent="CenterContainer/DialogPanel/Content/Buttons" unique_id=1479904746]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 68)
+layout_mode = 2
+theme = ExtResource("2_action_button")
+text = "Confirm"
+
+[node name="CancelButton" type="Button" parent="CenterContainer/DialogPanel/Content/Buttons" unique_id=1312667833]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 68)
+layout_mode = 2
+theme = ExtResource("2_action_button")
+text = "Cancel"
