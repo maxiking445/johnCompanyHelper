@@ -3,8 +3,8 @@ extends VBoxContainer
 @export var title_font_size := 36
 @export var header_separation := 12
 
-@onready var title_label: Label = %Title
-@onready var add_button: Button = %AddButton
+@onready var title_label: Label = $Header/Title
+@onready var add_button: Button = $Header/AddButton
 
 
 func configure(title: String) -> void:

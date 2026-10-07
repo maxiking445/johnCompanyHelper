@@ -4,6 +4,7 @@ class_name GameStateSetup
 signal game_state_ready(game_state: GameState)
 
 const MENU_SCENE := "res://scenes/menue.tscn"
+const MAIN_SCENE := preload("res://scenes/main.tscn")
 const FIELD_PANEL_SCENE := preload("res://UI/GameStateSetup/components/PropertyFieldPanel.tscn")
 const BOOLEAN_FIELD_SCENE := preload("res://UI/GameStateSetup/components/BooleanField.tscn")
 const NUMBER_STEPPER_SCENE := preload("res://UI/GameStateSetup/components/NumberStepper.tscn")
@@ -24,6 +25,10 @@ const SCROLL_GESTURE_DEADZONE := 14.0
 const SCROLL_GESTURE_DIRECTION_RATIO := 1.15
 const SCROLL_WHEEL_STEP := 100
 
+## When opened from Continue, the wizard reviews the saved state before resuming
+## the event phase. Set this before adding the scene to the tree.
+@export var continue_saved_game := false
+
 @onready var step_label: Label = %StepLabel
 @onready var title_label: Label = %TitleLabel
 @onready var description_label: Label = %DescriptionLabel
@@ -41,6 +46,7 @@ const SCROLL_WHEEL_STEP := 100
 @onready var download_button: Button = %DownloadJsonButton
 @onready var upload_button: Button = %UploadJsonButton
 @onready var back_button: Button = %BackButton
+@onready var utility_row: HBoxContainer = %UtilityRow
 
 var game_state: GameState
 var current_step := 0
@@ -57,6 +63,10 @@ var scroll_gesture_axis := 0
 func _ready() -> void:
 	_build_steps()
 	_load_current()
+	if continue_saved_game:
+		utility_row.hide()
+		save_button.text = "Save & Continue"
+		path_label.text = "Review the saved game before continuing"
 	previous_button.pressed.connect(_previous_step)
 	next_button.pressed.connect(_next_step)
 	save_button.pressed.connect(_save_game_state)
@@ -464,12 +474,27 @@ func _next_step() -> void:
 func _save_game_state() -> void:
 	var error: Error = get_node("/root/SaveGameManager").save_current(game_state)
 	if error == OK:
-		path_label.text = "Current GameState saved"
-		save_button.text = "Saved"
-		game_state_ready.emit(game_state)
-		get_tree().change_scene_to_file(MENU_SCENE)
+		if continue_saved_game:
+			var main_scene := MAIN_SCENE.instantiate()
+			main_scene.gameState = game_state
+			main_scene.launch_mode = 1
+			_replace_scene(main_scene)
+		else:
+			path_label.text = "Current GameState saved"
+			save_button.text = "Saved"
+			game_state_ready.emit(game_state)
+			get_tree().change_scene_to_file(MENU_SCENE)
 	else:
 		path_label.text = "Could not save GameState (error %d)" % error
+
+
+func _replace_scene(scene_instance: Node) -> void:
+	var tree := get_tree()
+	var old_scene := tree.current_scene
+	tree.root.add_child(scene_instance)
+	tree.current_scene = scene_instance
+	if old_scene != null:
+		old_scene.queue_free()
 
 
 func _return_to_menu() -> void:

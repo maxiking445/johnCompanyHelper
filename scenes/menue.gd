@@ -87,7 +87,9 @@ func _start_new_game() -> void:
 func _on_continue_button_pressed() -> void:
 	if not _save_manager().has_progress():
 		return
-	_continue_saved_game()
+	var setup_scene: GameStateSetup = SETUP_SCENE.instantiate()
+	setup_scene.continue_saved_game = true
+	_replace_scene(setup_scene)
 
 
 func _continue_saved_game() -> void:
