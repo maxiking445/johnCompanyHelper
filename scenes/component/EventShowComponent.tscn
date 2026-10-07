@@ -6,20 +6,15 @@
 
 [node name="EventShowComponent" type="Control" unique_id=1761235851]
 layout_mode = 3
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_m2s0u")
 
 [node name="TopDeckCard" type="Control" parent="." unique_id=825448648]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -341.0
-offset_right = -341.0
-grow_horizontal = 2
+layout_mode = 0
 
 [node name="Label" type="Label" parent="TopDeckCard" unique_id=1104599707]
 layout_mode = 0
@@ -44,36 +39,17 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -27.0
-offset_top = 473.0
-offset_right = -27.0
-offset_bottom = 473.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Marker2D" type="Marker2D" parent="CurrentDeckCard" unique_id=1014496513]
-position = Vector2(74, -340)
-
 [node name="Label" type="Label" parent="CurrentDeckCard" unique_id=1949443877]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = 17.0
-offset_top = -467.0
-offset_right = 125.0
-offset_bottom = -444.0
-grow_horizontal = 2
+layout_mode = 0
 text = "Current Event"
 label_settings = ExtResource("2_x6q8h")
 
 [node name="CurrentEventCard" parent="CurrentDeckCard" unique_id=79784915 instance=ExtResource("2_sfgxw")]
-layout_mode = 1
-offset_left = -260.0
-offset_top = -244.0
-offset_right = 252.0
-offset_bottom = 268.0
+layout_mode = 0
+position = Vector2(-256, -256)
 mouse_filter = 0
 
-[connection signal="flip_finished" from="CurrentDeckCard/CurrentEventCard" to="." method="_on_current_event_card_flip_finished"]
 [connection signal="gui_input" from="CurrentDeckCard/CurrentEventCard" to="." method="_on_current_event_card_gui_input"]

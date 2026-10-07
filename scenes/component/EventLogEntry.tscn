@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://dip7l32e5vjb0"]
+[gd_scene load_steps=7 format=3 uid="uid://dip7l32e5vjb0"]
 
 [ext_resource type="Script" uid="uid://b0x03bc7aak8o" path="res://scenes/component/event_log_entry.gd" id="1_script"]
 [ext_resource type="FontFile" path="res://font/LibreBaskerville-Bold.ttf" id="2_bold"]
 [ext_resource type="FontFile" path="res://font/IMFellEnglish-Regular.ttf" id="3_body"]
-[ext_resource type="Theme" uid="uid://cymebvqn8yi8t" path="res://scenes/component/button/menueButton.tres" id="4_button"]
 
 [sub_resource type="StyleBoxFlat" id="CardStyle"]
 bg_color = Color(0.925, 0.875, 0.745, 0.94)
@@ -31,13 +30,15 @@ corner_radius_bottom_left = 1
 bg_color = Color(0.31, 0.16, 0.09, 0.42)
 
 [node name="EventLogEntry" type="PanelContainer"]
-custom_minimum_size = Vector2(650, 112)
+custom_minimum_size = Vector2(0, 130)
 size_flags_horizontal = 4
+mouse_filter = 1
 theme_override_styles/panel = SubResource("CardStyle")
 script = ExtResource("1_script")
 
 [node name="Row" type="HBoxContainer" parent="."]
 layout_mode = 2
+mouse_filter = 1
 theme_override_constants/separation = 0
 
 [node name="Accent" type="Panel" parent="Row"]
@@ -50,22 +51,26 @@ theme_override_styles/panel = SubResource("AccentStyle")
 [node name="Margin" type="MarginContainer" parent="Row"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 28
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 28
-theme_override_constants/margin_bottom = 16
+mouse_filter = 1
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 18
 
 [node name="Content" type="VBoxContainer" parent="Row/Margin"]
 layout_mode = 2
+mouse_filter = 1
 theme_override_constants/separation = 7
 
 [node name="Header" type="HBoxContainer" parent="Row/Margin/Content"]
 layout_mode = 2
+mouse_filter = 1
 alignment = 1
 theme_override_constants/separation = 10
 
 [node name="LeftOrnament" type="Label" parent="Row/Margin/Content/Header"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.43, 0.055, 0.075, 1)
 theme_override_font_sizes/font_size = 12
 text = "◆"
@@ -73,14 +78,16 @@ text = "◆"
 [node name="Title" type="Label" parent="Row/Margin/Content/Header"]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.18, 0.09, 0.045, 1)
 theme_override_fonts/font = ExtResource("2_bold")
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 28
 text = "EVENT"
 horizontal_alignment = 1
 
 [node name="RightOrnament" type="Label" parent="Row/Margin/Content/Header"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.43, 0.055, 0.075, 1)
 theme_override_font_sizes/font_size = 12
 text = "◆"
@@ -95,20 +102,11 @@ theme_override_styles/panel = SubResource("RuleStyle")
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.13, 0.075, 0.04, 1)
 theme_override_fonts/font = ExtResource("3_body")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 32
 text = "Change unrest in {state} from {old_value} to {new_value}."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
-
-[node name="DoneButton" type="Button" parent="Row/Margin/Content"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("4_button")
-theme_override_font_sizes/font_size = 21
-text = "DONE"
-
-[connection signal="pressed" from="Row/Margin/Content/DoneButton" to="." method="_on_done_button_pressed"]

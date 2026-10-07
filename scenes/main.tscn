@@ -28,16 +28,17 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Navigation" type="HBoxContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -410.0
-offset_top = -94.0
-offset_right = -74.0
-offset_bottom = -42.0
+offset_left = -530.0
+offset_top = -108.0
+offset_right = -24.0
+offset_bottom = -24.0
 grow_horizontal = 0
 grow_vertical = 0
 alignment = 2
@@ -47,17 +48,20 @@ theme_override_constants/separation = 14
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("4_button")
-theme_override_font_sizes/font_size = 24
+custom_minimum_size = Vector2(240, 84)
+theme_override_font_sizes/font_size = 34
 text = "NEXT"
 
 [node name="FinishButton" type="Button" parent="Navigation"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("4_button")
-theme_override_font_sizes/font_size = 24
+custom_minimum_size = Vector2(240, 84)
+theme_override_font_sizes/font_size = 34
 disabled = true
 text = "FINISH ROUND"
 
 [connection signal="lastEventShown" from="EventSummary" to="." method="_on_event_summary_last_event_shown"]
+[connection signal="presentation_changed" from="EventSummary" to="." method="_on_event_summary_presentation_changed"]
 [connection signal="pressed" from="Navigation/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="pressed" from="Navigation/FinishButton" to="." method="_on_finish_button_pressed"]

@@ -19,7 +19,9 @@ reasoning_effort="medium"
 config/name="JohnCompanyHelper"
 run/main_scene="uid://ddci5qppxv6cq"
 config/features=PackedStringArray("4.7", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://assets/app_icon.png"
+boot_splash/bg_color=Color(0.917647, 0.831373, 0.678431, 1)
+boot_splash/image="res://assets/godot_boot_splash.png"
 
 [autoload]
 
@@ -34,9 +36,13 @@ _mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
 [display]
 
-window/size/viewport_width=1600
-window/size/viewport_height=900
-window/stretch/mode="viewport"
+window/size/viewport_width=900
+window/size/viewport_height=1600
+window/size/window_width_override=1600
+window/size/window_height_override=900
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=1
 
 [editor_plugins]
 
