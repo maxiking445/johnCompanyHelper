@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://by5fkl0efnbdk" path="res://scenes/main.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://gpfei4wa2jkf" path="res://scenes/EventSummary.tscn" id="2_summary"]
 [ext_resource type="PackedScene" uid="uid://cnnglhyxqwp4b" path="res://scenes/component/background/background.tscn" id="3_background"]
-[ext_resource type="Theme" uid="uid://cymebvqn8yi8t" path="res://scenes/component/button/menueButton.tres" id="4_button"]
+[ext_resource type="Theme" path="res://scenes/component/button/actionButton.tres" id="4_button"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
