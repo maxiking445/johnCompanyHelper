@@ -2,6 +2,7 @@ extends Control
 
 const MAIN_SCENE := preload("res://scenes/main.tscn")
 const SETUP_SCENE := preload("res://UI/GameStateSetup/GameStateSetup.tscn")
+const CONFIRMATION_DIALOG_SCENE := preload("res://scenes/component/dialog/confirmation_dialog.tscn")
 
 @onready var continue_button: Button = %ContinueButton
 @onready var menu_buttons: VBoxContainer = $Layout/Content/ChoicesRow/VBoxContainer
@@ -9,9 +10,12 @@ const SETUP_SCENE := preload("res://UI/GameStateSetup/GameStateSetup.tscn")
 @onready var title: Label = $Layout/Content/TitleGroup/TitleRow/Title
 @onready var choices_row: HBoxContainer = $Layout/Content/ChoicesRow
 
+var new_game_dialog: Node
+
 
 func _ready() -> void:
 	continue_button.disabled = not _save_manager().has_progress()
+	_create_new_game_dialog()
 	_configure_start_orientation()
 	get_viewport().size_changed.connect(_update_responsive_layout)
 	_update_responsive_layout()
@@ -51,11 +55,36 @@ func _update_responsive_layout() -> void:
 			button.add_theme_font_size_override("font_size", button_font_size)
 
 
+func _create_new_game_dialog() -> void:
+	new_game_dialog = CONFIRMATION_DIALOG_SCENE.instantiate()
+	add_child(new_game_dialog)
+	new_game_dialog.connect("confirmed", _start_new_game)
+	new_game_dialog.connect("canceled", _continue_saved_game)
+
+
 func _on_start_button_pressed() -> void:
+	if _save_manager().has_progress():
+		new_game_dialog.call("show_confirmation",
+			"Saved game found",
+			"A game is already in progress. Start a new game and replace it, or continue your saved game?",
+			"New Game",
+			"Continue"
+		)
+		return
+	_start_new_game()
+
+
+func _start_new_game() -> void:
 	_open_game(_save_manager().reset_to_default(), 0)
 
 
 func _on_continue_button_pressed() -> void:
+	if not _save_manager().has_progress():
+		return
+	_continue_saved_game()
+
+
+func _continue_saved_game() -> void:
 	if not _save_manager().has_progress():
 		return
 	_open_game(_save_manager().load_current(), 1)

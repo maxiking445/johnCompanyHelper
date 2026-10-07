@@ -106,7 +106,7 @@ theme_override_constants/separation = 12
 
 [node name="StartButton" parent="Layout/Content/ChoicesRow/VBoxContainer" unique_id=347931871 instance=ExtResource("7_psqmx")]
 layout_mode = 2
-text = "START"
+text = "NEW GAME"
 
 [node name="ContinueButton" parent="Layout/Content/ChoicesRow/VBoxContainer" instance=ExtResource("7_psqmx")]
 unique_name_in_owner = true
