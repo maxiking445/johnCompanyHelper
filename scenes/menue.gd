@@ -14,7 +14,13 @@ var new_game_dialog: Node
 
 
 func _ready() -> void:
-	continue_button.disabled = not _save_manager().has_progress()
+	var save_manager := _save_manager()
+	var has_progress: bool = save_manager.has_progress()
+	continue_button.disabled = not has_progress
+	continue_button.text = "CONTINUE"
+	if has_progress:
+		var saved_state: GameState = save_manager.load_current()
+		continue_button.text = "CONTINUE · ROUND %d" % (saved_state.completedRounds + 1)
 	_create_new_game_dialog()
 	_configure_start_orientation()
 	get_viewport().size_changed.connect(_update_responsive_layout)

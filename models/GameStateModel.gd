@@ -20,6 +20,7 @@ class_name GameState
 @export var sucessFullInvasionCapital: StateType.StateType
 
 @export var eventsToDraw: int
+@export var completedRounds: int = 0
 var states: Array[StateModel] = []
 
 func getStates() -> Array[StateModel]:

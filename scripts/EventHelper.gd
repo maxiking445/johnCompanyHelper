@@ -6,7 +6,7 @@ const IndiaEventsDatabase: IndiaEvents = preload("res://resources/events/IndiaEv
 var draw_pile: Array[IndiaEvent] = []
 var discard_pile: Array[IndiaEvent] = []
 var activeEvent: IndiaEvent
-var playedEvents: Dictionary[int, PlayedEvent] = {}
+var playedEvents: Array[PlayedEvent] = []
 
 func initEventDeck(shuffle_deck: bool = true) -> void:
 	draw_pile = IndiaEventsDatabase.events.duplicate()
@@ -37,18 +37,16 @@ func addPlayedEvent():
 	playedEvent.topdeckEvent = getTopDeckEvent()
 	playedEvent.currentEvent = activeEvent
 	playedEvent.remainingDeck.assign(draw_pile)
-	playedEvents[activeEvent.eventId] = playedEvent
+	playedEvents.append(playedEvent)
 
-func getPlayedEvents() -> Dictionary[int, PlayedEvent]: 
+func getPlayedEvents() -> Array[PlayedEvent]:
 	return playedEvents
 
 func getPlayedEventAt(index: int)-> PlayedEvent:
-	var event = EventHelper.getPlayedEvents().keys()[index]
-	var value: PlayedEvent = EventHelper.getPlayedEvents()[event]
-	return value
+	return playedEvents[index]
 
 func resetPlayedEvents():
-	playedEvents = {}
+	playedEvents.clear()
 
 func eventHandled():
 	activeEvent = null

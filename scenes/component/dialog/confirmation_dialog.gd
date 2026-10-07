@@ -22,6 +22,17 @@ func show_confirmation(dialog_title: String, message: String, confirm_text: Stri
 	message_label.text = message
 	confirm_button.text = confirm_text
 	cancel_button.text = cancel_text
+	cancel_button.show()
+	_update_responsive_layout()
+	visible = true
+	confirm_button.grab_focus()
+
+
+func show_info(dialog_title: String, message: String) -> void:
+	title_label.text = dialog_title
+	message_label.text = message
+	confirm_button.text = "OK"
+	cancel_button.hide()
 	_update_responsive_layout()
 	visible = true
 	confirm_button.grab_focus()
