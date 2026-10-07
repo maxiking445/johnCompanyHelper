@@ -150,7 +150,7 @@ func _initialize_ui() -> void:
 	var first_event_value: PlayedEvent = EventHelper.getPlayedEventAt(0)
 	var current_event: IndiaEvent = first_event_value.currentEvent
 	var top_deck_event: IndiaEvent = first_event_value.topdeckEvent
-	%EventSummary.initialize(0, top_deck_event, current_event)
+	%EventSummary.initialize(0, top_deck_event, current_event, gameState.completedRounds + 1)
 	%EventSummary.show()
 
 
@@ -163,8 +163,10 @@ func _on_next_button_pressed() -> void:
 func _on_finish_button_pressed() -> void:
 	if %EventSummary.is_card_animating():
 		return
+	gameState.completedRounds += 1
 	var save_error: Error = get_node("/root/SaveGameManager").save_current(gameState)
 	if save_error != OK:
+		gameState.completedRounds -= 1
 		push_error("The current GameState could not be saved.")
 		return
 	get_tree().change_scene_to_file(MENU_SCENE)
