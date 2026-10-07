@@ -56,7 +56,8 @@ func _update_card_layout() -> void:
 
 	current_event_card.pivot_offset = card_size * 0.5
 	top_deck_event_card.pivot_offset = card_size * 0.5
-	top_deck_event_card.scale = target_card_scale * (0.85 if portrait else 0.65)
+	# Match the event card in portrait; keep the compact top deck on desktop.
+	top_deck_event_card.scale = target_card_scale if portrait else target_card_scale * 0.65
 	$TopDeckCard.position = top_deck_center - card_size * 0.5
 	$TopDeckCard.size = card_size
 	top_deck_event_card.position = Vector2.ZERO
