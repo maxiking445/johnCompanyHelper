@@ -1,14 +1,12 @@
 extends PanelContainer
 
-const TYPE_COLORS := {
-	EnumTypes.ActionType.BOARD_CHANGE: Color("9f2430"),
-	EnumTypes.ActionType.ACTION: Color("285c8f"),
-	EnumTypes.ActionType.INFO: Color("b07a22"),
-	EnumTypes.ActionType.ERROR: Color("c4512d"),
-}
-
 @export var action: Action
 @export var animation_duration: float = 0.35
+@export var board_change_style: StyleBoxFlat
+@export var action_style: StyleBoxFlat
+@export var info_style: StyleBoxFlat
+@export var error_style: StyleBoxFlat
+@export var default_style: StyleBoxFlat
 
 var spawn_tween: Tween
 var swipe_tween: Tween
@@ -39,12 +37,18 @@ func _render_event() -> void:
 
 
 func _apply_type_color() -> void:
-	var color: Color = TYPE_COLORS.get(
-		action.type, Color("71131f")
-	)
-	var style := accent.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
-	style.bg_color = color
-	accent.add_theme_stylebox_override("panel", style)
+	var style: StyleBoxFlat = default_style
+	match action.type:
+		EnumTypes.ActionType.BOARD_CHANGE:
+			style = board_change_style
+		EnumTypes.ActionType.ACTION:
+			style = action_style
+		EnumTypes.ActionType.INFO:
+			style = info_style
+		EnumTypes.ActionType.ERROR:
+			style = error_style
+	if style != null:
+		accent.add_theme_stylebox_override("panel", style)
 
 
 func _type_title() -> String:

@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://UI/GameStateSetup/components/NumberStepper.gd" id="1_script"]
+[ext_resource type="Theme" path="res://scenes/component/button/actionButton.tres" id="2_button_theme"]
+
+[node name="NumberStepper" type="HBoxContainer"]
+theme_override_constants/separation = 10
+script = ExtResource("1_script")
+
+[node name="MinusButton" type="Button" parent="."]
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+theme = ExtResource("2_button_theme")
+theme_override_font_sizes/font_size = 34
+text = "−"
+
+[node name="SpinBox" type="SpinBox" parent="."]
+custom_minimum_size = Vector2(160, 88)
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -9999.0
+max_value = 9999.0
+
+[node name="PlusButton" type="Button" parent="."]
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+theme = ExtResource("2_button_theme")
+theme_override_font_sizes/font_size = 34
+text = "+"
+
+[connection signal="value_changed" from="SpinBox" to="." method="_on_spin_box_value_changed"]
+[connection signal="pressed" from="MinusButton" to="." method="_on_minus_button_pressed"]
+[connection signal="pressed" from="PlusButton" to="." method="_on_plus_button_pressed"]

@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://UI/GameStateSetup/components/BooleanField.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://UI/GameStateSetup/checkbox_on.svg" id="2_checked"]
+[ext_resource type="Texture2D" path="res://UI/GameStateSetup/checkbox_off.svg" id="3_unchecked"]
+
+[node name="BooleanField" type="HBoxContainer"]
+theme_override_constants/separation = 8
+script = ExtResource("1_script")
+
+[node name="CheckBox" type="CheckBox" parent="."]
+custom_minimum_size = Vector2(64, 88)
+layout_mode = 2
+size_flags_horizontal = 1
+theme_override_colors/font_color = Color(0.168627, 0.098039, 0.058824, 1)
+theme_override_colors/font_hover_color = Color(0.443137, 0.07451, 0.121569, 1)
+theme_override_colors/font_pressed_color = Color(0.443137, 0.07451, 0.121569, 1)
+theme_override_font_sizes/font_size = 35
+theme_override_icons/checked = ExtResource("2_checked")
+theme_override_icons/unchecked = ExtResource("3_unchecked")
+theme_override_icons/checked_disabled = ExtResource("2_checked")
+theme_override_icons/unchecked_disabled = ExtResource("3_unchecked")
+
+[node name="ValueLabel" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.168627, 0.098039, 0.058824, 1)
+theme_override_font_sizes/font_size = 35
+vertical_alignment = 1
+
+[connection signal="toggled" from="CheckBox" to="." method="_on_checkbox_toggled"]

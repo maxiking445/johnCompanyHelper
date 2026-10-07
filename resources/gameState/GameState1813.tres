@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="GameState" format=3]
+[gd_resource type="Resource" script_class="GameState" format=3 uid="uid://cv76nep0ug0vl"]
 
 [ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="1_game_state"]
 [ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_state"]
@@ -25,12 +25,10 @@ metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="State_BENGAL"]
 script = ExtResource("2_state")
-isCompanyControlled = true
 location = 4
 orders = Array[ExtResource("3_order")]([SubResource("Order_BEN_1"), SubResource("Order_BEN_2")])
 is_connected_to = Array[int]([5])
-isSovereign = false
-towerLevel = 0
+isCompanyControlled = true
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
 [sub_resource type="Resource" id="Order_BOM_1"]
@@ -53,11 +51,9 @@ metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="State_BOMBAY"]
 script = ExtResource("2_state")
-towerLevel = 0
-isCompanyControlled = true
 orders = Array[ExtResource("3_order")]([SubResource("Order_BOM_1"), SubResource("Order_BOM_2"), SubResource("Order_BOM_3")])
 is_connected_to = Array[int]([7, 5, 3, 6])
-isSovereign = false
+isCompanyControlled = true
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
 [sub_resource type="Resource" id="Order_DEL_1"]
@@ -85,13 +81,10 @@ metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="State_DELHI"]
 script = ExtResource("2_state")
-isDominated = false
 location = 6
 orders = Array[ExtResource("3_order")]([SubResource("Order_DEL_1"), SubResource("Order_DEL_2"), SubResource("Order_DEL_3")])
 is_connected_to = Array[int]([0, 5])
 isSovereign = true
-partOfEmpire = 3
-isEmpireCapital = false
 towerLevel = 1
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
@@ -112,9 +105,6 @@ metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="State_HYDERABAD"]
 script = ExtResource("2_state")
-isDominated = false
-isEmpireCapital = false
-partOfEmpire = 3
 location = 2
 orders = Array[ExtResource("3_order")]([SubResource("Order_HYP_1")])
 is_connected_to = Array[int]([1, 7, 5])
@@ -138,12 +128,10 @@ metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="State_MADRAS"]
 script = ExtResource("2_state")
-isCompanyControlled = true
 location = 1
 orders = Array[ExtResource("3_order")]([SubResource("Order_MAD_1"), SubResource("Order_MAD_2")])
 is_connected_to = Array[int]([7, 2])
-isSovereign = false
-towerLevel = 0
+isCompanyControlled = true
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
 [sub_resource type="Resource" id="Order_MAR_1"]
@@ -170,13 +158,10 @@ metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="State_MARATHA"]
 script = ExtResource("2_state")
-isEmpireCapital = false
-isSovereign = true
 location = 5
 orders = Array[ExtResource("3_order")]([SubResource("Order_MAR_1"), SubResource("Order_MAR_2"), SubResource("Order_MAR_3")])
 is_connected_to = Array[int]([0, 6, 4])
-partOfEmpire = 3
-isDominated = false
+isSovereign = true
 towerLevel = 2
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
@@ -197,9 +182,6 @@ metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="State_MYSORE"]
 script = ExtResource("2_state")
-isDominated = false
-isEmpireCapital = false
-partOfEmpire = 3
 location = 7
 orders = Array[ExtResource("3_order")]([SubResource("Order_MYS_1"), SubResource("Order_MYS_2")])
 is_connected_to = Array[int]([0, 2, 1])
@@ -217,13 +199,10 @@ metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="State_PUNJAB"]
 script = ExtResource("2_state")
-isEmpireCapital = false
-isSovereign = true
 location = 3
 orders = Array[ExtResource("3_order")]([SubResource("Order_PUN_1")])
 is_connected_to = Array[int]([0, 6])
-partOfEmpire = 3
-isDominated = false
+isSovereign = true
 towerLevel = 2
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
@@ -272,4 +251,3 @@ seaWest = SubResource("Sea_West")
 seaEast = SubResource("Sea_East")
 seaSouth = SubResource("Sea_South")
 metadata/_custom_type_script = "uid://cvcexcttx1ehx"
-

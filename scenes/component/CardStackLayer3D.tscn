@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://dn0spit12tpke"]
+
+[sub_resource type="CylinderMesh" id="CardMesh"]
+height = 0.018
+
+[sub_resource type="StandardMaterial3D" id="CardMaterial"]
+shading_mode = 0
+albedo_color = Color(0.62, 0.51, 0.38, 1)
+
+[node name="CardStackLayer3D" type="MeshInstance3D" unique_id=950197821]
+mesh = SubResource("CardMesh")
+surface_material_override/0 = SubResource("CardMaterial")

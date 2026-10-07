@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dip7l32e5vjb0"]
+[gd_scene load_steps=11 format=3 uid="uid://dip7l32e5vjb0"]
 
 [ext_resource type="Script" uid="uid://b0x03bc7aak8o" path="res://scenes/component/event_log_entry.gd" id="1_script"]
 [ext_resource type="FontFile" path="res://font/LibreBaskerville-Bold.ttf" id="2_bold"]
@@ -26,6 +26,34 @@ corner_radius_top_right = 1
 corner_radius_bottom_right = 1
 corner_radius_bottom_left = 1
 
+[sub_resource type="StyleBoxFlat" id="BoardChangeAccentStyle"]
+bg_color = Color(0.623529, 0.141176, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="ActionAccentStyle"]
+bg_color = Color(0.156863, 0.360784, 0.560784, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="InfoAccentStyle"]
+bg_color = Color(0.690196, 0.478431, 0.133333, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="ErrorAccentStyle"]
+bg_color = Color(0.768627, 0.317647, 0.176471, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
 [sub_resource type="StyleBoxFlat" id="RuleStyle"]
 bg_color = Color(0.31, 0.16, 0.09, 0.42)
 
@@ -35,6 +63,11 @@ size_flags_horizontal = 4
 mouse_filter = 1
 theme_override_styles/panel = SubResource("CardStyle")
 script = ExtResource("1_script")
+board_change_style = SubResource("BoardChangeAccentStyle")
+action_style = SubResource("ActionAccentStyle")
+info_style = SubResource("InfoAccentStyle")
+error_style = SubResource("ErrorAccentStyle")
+default_style = SubResource("AccentStyle")
 
 [node name="Row" type="HBoxContainer" parent="."]
 layout_mode = 2

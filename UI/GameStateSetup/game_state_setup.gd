@@ -4,12 +4,14 @@ class_name GameStateSetup
 signal game_state_ready(game_state: GameState)
 
 const MENU_SCENE := "res://scenes/menue.tscn"
-const ACTION_BUTTON_THEME := preload("res://scenes/component/button/actionButton.tres")
-const CHECKED_ICON := preload("res://UI/GameStateSetup/checkbox_on.svg")
-const UNCHECKED_ICON := preload("res://UI/GameStateSetup/checkbox_off.svg")
-const DEFAULT_PICKER_SCENE := preload(
-	"res://UI/GameStateSetup/DefaultGameStatePicker.tscn"
-)
+const FIELD_PANEL_SCENE := preload("res://UI/GameStateSetup/components/PropertyFieldPanel.tscn")
+const BOOLEAN_FIELD_SCENE := preload("res://UI/GameStateSetup/components/BooleanField.tscn")
+const NUMBER_STEPPER_SCENE := preload("res://UI/GameStateSetup/components/NumberStepper.tscn")
+const TEXT_FIELD_SCENE := preload("res://UI/GameStateSetup/components/TextField.tscn")
+const DROPDOWN_FIELD_SCENE := preload("res://UI/GameStateSetup/components/DropdownField.tscn")
+const RESOURCE_CARD_SCENE := preload("res://UI/GameStateSetup/components/ResourceCard.tscn")
+const SHIP_SECTION_SCENE := preload("res://UI/GameStateSetup/components/ShipSeaSection.tscn")
+const FORM_NOTICE_SCENE := preload("res://UI/GameStateSetup/components/FormNotice.tscn")
 const STATE_KEYS := [
 	"bombay", "madras", "hyderabad", "punjab",
 	"bengal", "maratha", "delhi", "mysore",
@@ -43,7 +45,7 @@ const SCROLL_WHEEL_STEP := 100
 var game_state: GameState
 var current_step := 0
 var steps: Array[Dictionary] = []
-var default_picker: DefaultGameStatePicker
+@onready var default_picker: DefaultGameStatePicker = $DefaultGameStatePicker
 var compact_layout := false
 var scroll_pointer_type := 0
 var scroll_touch_index := -1
@@ -59,9 +61,7 @@ func _ready() -> void:
 	next_button.pressed.connect(_next_step)
 	save_button.pressed.connect(_save_game_state)
 	reset_button.pressed.connect(_show_default_picker)
-	default_picker = DEFAULT_PICKER_SCENE.instantiate()
 	default_picker.game_state_selected.connect(_on_default_game_state_selected)
-	add_child(default_picker)
 	%BackButton.pressed.connect(_return_to_menu)
 	%DownloadJsonButton.pressed.connect(_download_json)
 	%UploadJsonButton.pressed.connect(_upload_json)
@@ -244,65 +244,28 @@ func _add_ship_sections() -> void:
 		{"title": "South Sea", "key": "seaSouth"},
 	]:
 		var sea: SeaModel = game_state.get(sea_data.key)
-		var header := HBoxContainer.new()
-		header.add_theme_constant_override("separation", 12)
-		form.add_child(header)
-		var heading := Label.new()
-		heading.text = sea_data.title
-		heading.add_theme_font_size_override("font_size", 36)
-		heading.add_theme_color_override("font_color", Color("71131f"))
-		heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		header.add_child(heading)
-		var add_button := Button.new()
-		add_button.text = "Add Ship"
-		add_button.theme = ACTION_BUTTON_THEME
-		add_button.custom_minimum_size = Vector2(170, 76)
-		add_button.add_theme_font_size_override("font_size", 27)
-		add_button.pressed.connect(_add_ship.bind(sea))
-		header.add_child(add_button)
-		var rule := HSeparator.new()
-		rule.modulate = Color(0.43, 0.055, 0.075, 0.45)
-		form.add_child(rule)
+		var section := SHIP_SECTION_SCENE.instantiate()
+		form.add_child(section)
+		section.configure(sea_data.title)
+		section.add_button.pressed.connect(_add_ship.bind(sea))
 		_add_ship_list(sea)
 
 
 func _add_ship_list(sea: SeaModel) -> void:
 	if sea.ships.is_empty():
-		var empty := Label.new()
-		empty.text = "No ships in this sea"
-		empty.modulate = Color(0.18, 0.12, 0.08, 0.62)
-		empty.add_theme_font_size_override("font_size", 31)
-		form.add_child(empty)
+		form.add_child(_make_notice("No ships in this sea", 31, 0.62))
 		return
 	for index in sea.ships.size():
 		var ship := sea.ships[index]
-		var panel := PanelContainer.new()
-		panel.add_theme_stylebox_override("panel", _panel_style(Color("e1d2ae")))
-		var content := VBoxContainer.new()
-		content.add_theme_constant_override("separation", 14)
-		panel.add_child(content)
-
-		var header := HBoxContainer.new()
-		content.add_child(header)
-		var title := Label.new()
-		title.text = "Ship %d" % (index + 1)
-		title.add_theme_font_size_override("font_size", 35)
-		title.add_theme_color_override("font_color", Color("71131f"))
-		title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		header.add_child(title)
-		var remove_button := Button.new()
-		remove_button.text = "Remove"
-		remove_button.theme = ACTION_BUTTON_THEME
-		remove_button.custom_minimum_size = Vector2(160, 76)
-		remove_button.add_theme_font_size_override("font_size", 27)
-		remove_button.pressed.connect(_remove_ship.bind(sea, index))
-		header.add_child(remove_button)
+		var card := RESOURCE_CARD_SCENE.instantiate()
+		form.add_child(card)
+		card.configure("Ship %d" % (index + 1), true)
+		card.remove_button.pressed.connect(_remove_ship.bind(sea, index))
 
 		var previous_form := form
-		form = content
+		form = card.content
 		_add_resource_editor(ship, true)
 		form = previous_form
-		form.add_child(panel)
 
 
 func _add_ship(sea: SeaModel) -> void:
@@ -344,121 +307,59 @@ func _add_property_editor(
 		return
 	var property_name: StringName = StringName(property.name)
 	var value: Variant = target.get(property_name)
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", _panel_style(Color("eadbb9")))
+	var panel: PanelContainer = FIELD_PANEL_SCENE.instantiate()
+	var is_array: bool = value is Array
+	var has_label: bool = property.type != TYPE_BOOL
 	form.add_child(panel)
-	var row: BoxContainer = VBoxContainer.new() if compact_layout or value is Array else HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10 if compact_layout else 20)
-	panel.add_child(row)
-
-	var label: Label
-	if property.type != TYPE_BOOL:
-		label = Label.new()
-		label.text = _display_name(String(property_name))
-		label.add_theme_color_override("font_color", Color("2b190f"))
-		label.add_theme_font_size_override("font_size", 35 if compact_layout else 36)
-		if not compact_layout and not value is Array:
-			label.custom_minimum_size.x = 290.0 if not nested else 250.0
-		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact_layout or value is Array else Control.SIZE_SHRINK_BEGIN
-		row.add_child(label)
+	panel.call("configure", compact_layout or is_array, compact_layout, is_array, has_label,
+		_display_name(String(property_name)), nested)
+	var slot: Control = panel.call("get_field_slot")
 
 	match property.type:
 		TYPE_BOOL:
-			var checkbox_row := HBoxContainer.new()
-			checkbox_row.add_theme_constant_override("separation", 8)
-			checkbox_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			row.add_child(checkbox_row)
-			var check := CheckBox.new()
-			check.custom_minimum_size = Vector2(64, 96 if compact_layout else 88)
-			check.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-			check.add_theme_font_size_override("font_size", 35)
-			check.add_theme_color_override("font_color", Color("2b190f"))
-			check.add_theme_color_override("font_hover_color", Color("71131f"))
-			check.add_theme_color_override("font_pressed_color", Color("71131f"))
-			check.add_theme_icon_override("checked", CHECKED_ICON)
-			check.add_theme_icon_override("unchecked", UNCHECKED_ICON)
-			check.add_theme_icon_override("checked_disabled", CHECKED_ICON)
-			check.add_theme_icon_override("unchecked_disabled", UNCHECKED_ICON)
-			check.button_pressed = value
-			check.toggled.connect(func(enabled: bool): target.set(property_name, enabled))
-			checkbox_row.add_child(check)
-			var check_label := Label.new()
-			check_label.text = _display_name(String(property_name))
-			check_label.add_theme_font_size_override("font_size", 35)
-			check_label.add_theme_color_override("font_color", Color("2b190f"))
-			check_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			check_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			checkbox_row.add_child(check_label)
+			var boolean_field: HBoxContainer = BOOLEAN_FIELD_SCENE.instantiate()
+			slot.add_child(boolean_field)
+			boolean_field.configure(value, compact_layout)
+			boolean_field.set_label(_display_name(String(property_name)))
+			boolean_field.value_changed.connect(
+				func(enabled: bool): target.set(property_name, enabled)
+			)
 		TYPE_INT, TYPE_FLOAT:
 			if property.hint == PROPERTY_HINT_ENUM:
-				_add_enum_editor(row, target, property_name, value, property.hint_string)
+				_add_enum_editor(slot, target, property_name, value, property.hint_string)
 			else:
-				var spin := SpinBox.new()
-				spin.min_value = -9999
-				spin.max_value = 9999
-				spin.step = 1 if property.type == TYPE_INT else 0.1
-				spin.value = value
-				spin.custom_minimum_size = Vector2(160, 96 if compact_layout else 88)
-				spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				spin.get_line_edit().add_theme_font_size_override("font_size", 35)
-				_style_input(spin.get_line_edit())
-				spin.get_line_edit().virtual_keyboard_type = LineEdit.KEYBOARD_TYPE_NUMBER
-				spin.value_changed.connect(
+				var number_field: HBoxContainer = NUMBER_STEPPER_SCENE.instantiate()
+				slot.add_child(number_field)
+				number_field.configure(value, property.type == TYPE_INT, compact_layout)
+				number_field.value_changed.connect(
 					func(new_value: float):
 						target.set(
 							property_name,
 							int(new_value) if property.type == TYPE_INT else new_value
 						)
 				)
-				var number_controls := HBoxContainer.new()
-				number_controls.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				number_controls.add_theme_constant_override("separation", 10)
-				row.add_child(number_controls)
-				var minus := Button.new()
-				minus.text = "−"
-				minus.theme = ACTION_BUTTON_THEME
-				minus.custom_minimum_size = Vector2(96, 96) if compact_layout else Vector2(88, 88)
-				minus.add_theme_font_size_override("font_size", 34)
-				minus.pressed.connect(func(): spin.value -= spin.step)
-				number_controls.add_child(minus)
-				number_controls.add_child(spin)
-				var plus := Button.new()
-				plus.text = "+"
-				plus.theme = ACTION_BUTTON_THEME
-				plus.custom_minimum_size = Vector2(96, 96) if compact_layout else Vector2(88, 88)
-				plus.add_theme_font_size_override("font_size", 34)
-				plus.pressed.connect(func(): spin.value += spin.step)
-				number_controls.add_child(plus)
 		TYPE_STRING, TYPE_STRING_NAME:
-			var line_edit := LineEdit.new()
-			line_edit.text = str(value)
-			line_edit.custom_minimum_size = Vector2(160, 96 if compact_layout else 88)
-			line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			line_edit.add_theme_font_size_override("font_size", 35)
-			_style_input(line_edit)
-			line_edit.text_changed.connect(
+			var text_field: LineEdit = TEXT_FIELD_SCENE.instantiate()
+			slot.add_child(text_field)
+			text_field.configure(str(value), compact_layout)
+			text_field.text_changed.connect(
 				func(text: String):
 					target.set(
 						property_name,
 						StringName(text) if property.type == TYPE_STRING_NAME else text
 					)
 			)
-			row.add_child(line_edit)
 		TYPE_ARRAY:
-			_add_array_editor(row, target, property, value)
+			_add_array_editor(panel.get_node("VerticalColumn"), target, property, value)
 		TYPE_OBJECT:
 			if value is Resource:
-				label.add_theme_color_override("font_color", Color("71131f"))
-				label.add_theme_font_size_override("font_size", 31)
+				panel.call("style_label", 31, Color("71131f"))
 				_add_resource_editor(value, true)
 			else:
 				_add_notice("No value assigned.")
 		_:
-			var unsupported := Label.new()
-			unsupported.text = str(value)
-			unsupported.modulate = Color(0.18, 0.12, 0.08, 0.65)
-			unsupported.add_theme_font_size_override("font_size", 32)
-			row.add_child(unsupported)
+			var unsupported := _make_notice(str(value), 32, 0.65)
+			slot.add_child(unsupported)
 
 
 func _add_enum_editor(
@@ -468,8 +369,9 @@ func _add_enum_editor(
 	value: int,
 	hint_string: String
 ) -> void:
-	var options := OptionButton.new()
-	_style_option_button(options)
+	var options: OptionButton = DROPDOWN_FIELD_SCENE.instantiate()
+	row.add_child(options)
+	options.configure(compact_layout)
 	for item in hint_string.split(","):
 		var parts := item.split(":")
 		options.add_item(_display_name(parts[0]))
@@ -479,7 +381,6 @@ func _add_enum_editor(
 	options.item_selected.connect(
 		func(index: int): target.set(property_name, options.get_item_id(index))
 	)
-	row.add_child(options)
 
 
 func _add_array_editor(
@@ -489,39 +390,23 @@ func _add_array_editor(
 	values: Array
 ) -> void:
 	if values.is_empty():
-		var empty := Label.new()
-		empty.text = "No entries in default state"
-		empty.modulate = Color(0.18, 0.12, 0.08, 0.62)
-		empty.add_theme_font_size_override("font_size", 31)
-		row.add_child(empty)
+		row.add_child(_make_notice("No entries in default state", 31, 0.62))
 		return
 	for index in values.size():
 		var value: Variant = values[index]
 		if value is Resource:
-			var panel := PanelContainer.new()
-			panel.add_theme_stylebox_override("panel", _panel_style(Color("e1d2ae")))
-			var content := VBoxContainer.new()
-			content.add_theme_constant_override("separation", 14)
-			panel.add_child(content)
-			var heading := Label.new()
-			heading.text = "%s %d" % [_singular(_display_name(property.name)), index + 1]
-			heading.add_theme_font_size_override("font_size", 35)
-			heading.add_theme_color_override("font_color", Color("71131f"))
-			content.add_child(heading)
+			var card: PanelContainer = RESOURCE_CARD_SCENE.instantiate()
+			var title := "%s %d" % [_singular(_display_name(property.name)), index + 1]
+			row.add_child(card)
+			card.configure(title, false)
 			var previous_form := form
-			form = content
+			form = card.content
 			_add_resource_editor(value, true)
 			form = previous_form
-			row.add_child(panel)
 		else:
-			var edit := LineEdit.new()
-			edit.text = str(value)
-			edit.placeholder_text = "Entry %d" % (index + 1)
-			edit.custom_minimum_size.y = 96 if compact_layout else 88
-			edit.add_theme_font_size_override("font_size", 35)
-			if value is int:
-				edit.virtual_keyboard_type = LineEdit.KEYBOARD_TYPE_NUMBER
-			_style_input(edit)
+			var edit: LineEdit = TEXT_FIELD_SCENE.instantiate()
+			row.add_child(edit)
+			edit.configure(str(value), compact_layout, "Entry %d" % (index + 1), value is int)
 			edit.text_changed.connect(
 				func(text: String):
 					if value is int and not text.is_valid_int():
@@ -530,25 +415,16 @@ func _add_array_editor(
 					updated[index] = int(text) if value is int else text
 					target.set(property.name, updated)
 			)
-			row.add_child(edit)
 
 
 func _add_state_reference_editor(target: Object, property: Dictionary) -> void:
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", _panel_style(Color("eadbb9")))
+	var panel: PanelContainer = FIELD_PANEL_SCENE.instantiate()
 	form.add_child(panel)
-	var row: BoxContainer = VBoxContainer.new() if compact_layout else HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10 if compact_layout else 20)
-	panel.add_child(row)
-	var label := Label.new()
-	label.text = _display_name(property.name)
-	label.add_theme_color_override("font_color", Color("2b190f"))
-	label.add_theme_font_size_override("font_size", 35 if compact_layout else 36)
-	if not compact_layout:
-		label.custom_minimum_size.x = 290
-	row.add_child(label)
-	var options := OptionButton.new()
-	_style_option_button(options)
+	panel.call("configure", compact_layout, compact_layout, false, true,
+		_display_name(property.name))
+	var options: OptionButton = DROPDOWN_FIELD_SCENE.instantiate()
+	(panel.call("get_field_slot") as Control).add_child(options)
+	options.configure(compact_layout)
 	options.add_item("None", -1)
 	var selected := 0
 	for index in STATE_KEYS.size():
@@ -563,47 +439,16 @@ func _add_state_reference_editor(target: Object, property: Dictionary) -> void:
 				null if index == 0 else game_state.get(STATE_KEYS[index - 1])
 			)
 	)
-	row.add_child(options)
-
-
-func _style_option_button(options: OptionButton) -> void:
-	options.custom_minimum_size = Vector2(160, 96 if compact_layout else 88)
-	options.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	options.add_theme_font_size_override("font_size", 35)
-	options.add_theme_color_override("font_color", Color("2b190f"))
-	options.add_theme_color_override("font_hover_color", Color("71131f"))
-	options.add_theme_stylebox_override("normal", _field_style())
-	options.add_theme_stylebox_override("hover", _field_style())
-	options.add_theme_stylebox_override("pressed", _field_style())
-	options.get_popup().add_theme_font_size_override("font_size", 35)
-	options.get_popup().add_theme_constant_override("v_separation", 16)
-
-
-func _style_input(input: LineEdit) -> void:
-	input.add_theme_color_override("font_color", Color("2b190f"))
-	input.add_theme_stylebox_override("normal", _field_style())
-	input.add_theme_stylebox_override("focus", _field_style())
-
-
-func _field_style() -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("f8ecd3")
-	style.border_color = Color("725640")
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(7)
-	style.content_margin_left = 16
-	style.content_margin_right = 16
-	style.content_margin_top = 10
-	style.content_margin_bottom = 10
-	return style
 
 
 func _add_notice(text: String) -> void:
-	var label := Label.new()
-	label.text = text
-	label.modulate = Color(0.18, 0.12, 0.08, 0.65)
-	label.add_theme_font_size_override("font_size", 32)
-	form.add_child(label)
+	form.add_child(_make_notice(text, 32, 0.65))
+
+
+func _make_notice(text: String, font_size: int, opacity: float) -> Label:
+	var notice: Label = FORM_NOTICE_SCENE.instantiate()
+	notice.configure(text, font_size, opacity)
+	return notice
 
 
 func _previous_step() -> void:
@@ -686,17 +531,3 @@ func _display_name(raw_name: String) -> String:
 
 func _singular(word: String) -> String:
 	return word.left(-1) if word.ends_with("s") else word
-
-
-func _panel_style(color: Color) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = color
-	style.corner_radius_top_left = 10
-	style.corner_radius_top_right = 10
-	style.corner_radius_bottom_left = 10
-	style.corner_radius_bottom_right = 10
-	style.content_margin_left = 18
-	style.content_margin_right = 18
-	style.content_margin_top = 14
-	style.content_margin_bottom = 14
-	return style

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="GameState" format=3]
+[gd_resource type="Resource" script_class="GameState" format=3 uid="uid://deousmy61yeqa"]
 
 [ext_resource type="Script" uid="uid://cvcexcttx1ehx" path="res://models/GameStateModel.gd" id="1_game_state"]
 [ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_state"]
@@ -23,13 +23,11 @@ metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="State_BENGAL"]
 script = ExtResource("2_state")
-isCompanyControlled = true
-hasGovernor = true
 location = 4
+hasGovernor = true
 orders = Array[ExtResource("3_order")]([SubResource("Order_BEN_1"), SubResource("Order_BEN_2")])
 is_connected_to = Array[int]([5])
-isSovereign = false
-towerLevel = 0
+isCompanyControlled = true
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
 [sub_resource type="Resource" id="Order_BOM_1"]
@@ -53,10 +51,10 @@ metadata/_custom_type_script = "uid://crcm1hwm5d582"
 
 [sub_resource type="Resource" id="State_BOMBAY"]
 script = ExtResource("2_state")
-towerLevel = 2
 orders = Array[ExtResource("3_order")]([SubResource("Order_BOM_1"), SubResource("Order_BOM_2"), SubResource("Order_BOM_3")])
 is_connected_to = Array[int]([7, 5, 3, 6])
 isSovereign = true
+towerLevel = 2
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
 [sub_resource type="Resource" id="Order_DEL_1"]

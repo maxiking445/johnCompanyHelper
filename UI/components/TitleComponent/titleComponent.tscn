@@ -16,6 +16,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_epj23")
 script = ExtResource("1_epj23")
 title = "TEST"
 color = Color(0.5647059, 0, 0, 1)
+panel_style = SubResource("StyleBoxFlat_epj23")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=658623297]
 layout_mode = 2

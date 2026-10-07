@@ -124,7 +124,6 @@ func _update_stack_layers() -> void:
 		card_layer.texture = remaining_deck_snapshot[deck_index].back_sprite
 		card_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		stack_layers.add_child(card_layer)
-
 func reset() -> void:
 	if move_tween != null and move_tween.is_valid():
 		move_tween.kill()

@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://UI/GameStateSetup/game_state_json_transfer.gd" id="7_json"]
 [ext_resource type="Texture2D" path="res://UI/GameStateSetup/download.svg" id="8_download"]
 [ext_resource type="Texture2D" path="res://UI/GameStateSetup/upload.svg" id="9_upload"]
+[ext_resource type="PackedScene" path="res://UI/GameStateSetup/DefaultGameStatePicker.tscn" id="10_default_picker"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v2ds7"]
 
@@ -33,6 +34,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
+
+[node name="DefaultGameStatePicker" parent="." instance=ExtResource("10_default_picker")]
 
 [node name="Background" parent="." unique_id=439513785 instance=ExtResource("2_background")]
 layout_mode = 1

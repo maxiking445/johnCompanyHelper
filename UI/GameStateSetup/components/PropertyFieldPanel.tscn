@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://UI/GameStateSetup/components/property_field_panel.gd" id="1_script"]
+[ext_resource type="StyleBox" path="res://UI/GameStateSetup/components/field_panel_style.tres" id="2_panel"]
+
+[node name="PropertyFieldPanel" type="PanelContainer"]
+theme_override_styles/panel = ExtResource("2_panel")
+script = ExtResource("1_script")
+
+[node name="HorizontalRow" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="FieldLabel" type="Label" parent="HorizontalRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.168627, 0.098039, 0.058824, 1)
+theme_override_font_sizes/font_size = 36
+text = "Field"
+
+[node name="FieldSlot" type="VBoxContainer" parent="HorizontalRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="VerticalColumn" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="FieldLabel" type="Label" parent="VerticalColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.168627, 0.098039, 0.058824, 1)
+theme_override_font_sizes/font_size = 35
+text = "Field"
+
+[node name="FieldSlot" type="VBoxContainer" parent="VerticalColumn"]
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
