@@ -106,6 +106,8 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
+scroll_deadzone = 14
+scroll_vertical_custom_step = 90.0
 
 [node name="Form" type="VBoxContainer" parent="Margin/Card/Layout/Scroll" unique_id=1713052206]
 unique_name_in_owner = true

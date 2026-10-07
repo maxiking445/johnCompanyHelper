@@ -18,6 +18,9 @@ const STATE_TITLES := [
 	"Bombay", "Madras", "Hyderabad", "Punjab",
 	"Bengal", "Maratha", "Delhi", "Mysore",
 ]
+const SCROLL_GESTURE_DEADZONE := 14.0
+const SCROLL_GESTURE_DIRECTION_RATIO := 1.15
+const SCROLL_WHEEL_STEP := 100
 
 @onready var step_label: Label = %StepLabel
 @onready var title_label: Label = %TitleLabel
@@ -42,6 +45,11 @@ var current_step := 0
 var steps: Array[Dictionary] = []
 var default_picker: DefaultGameStatePicker
 var compact_layout := false
+var scroll_pointer_type := 0
+var scroll_touch_index := -1
+var scroll_touch_start := Vector2.ZERO
+var scroll_touch_last := Vector2.ZERO
+var scroll_gesture_axis := 0
 
 
 func _ready() -> void:
@@ -93,6 +101,73 @@ func _update_responsive_layout() -> void:
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact_layout else Control.SIZE_SHRINK_CENTER
 	if compact_layout != was_compact and game_state != null:
 		_show_step()
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch:
+		var touch := event as InputEventScreenTouch
+		if touch.pressed:
+			if scroll_pointer_type == 0:
+				_start_scroll_gesture(touch.position, 1, touch.index)
+		elif scroll_pointer_type == 1 and touch.index == scroll_touch_index:
+			_finish_scroll_gesture(touch.position)
+	elif event is InputEventScreenDrag:
+		var drag := event as InputEventScreenDrag
+		if scroll_pointer_type == 1 and drag.index == scroll_touch_index:
+			_update_scroll_gesture(drag.position)
+	elif event is InputEventMouseButton:
+		var mouse := event as InputEventMouseButton
+		if mouse.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+			if scroll.visible and scroll.get_global_rect().has_point(mouse.position):
+				var direction := -1 if mouse.button_index == MOUSE_BUTTON_WHEEL_UP else 1
+				scroll.scroll_vertical += direction * SCROLL_WHEEL_STEP
+				get_viewport().set_input_as_handled()
+			elif mouse.button_index == MOUSE_BUTTON_LEFT:
+				if mouse.pressed and scroll_pointer_type == 0:
+					_start_scroll_gesture(mouse.position, 2)
+				elif not mouse.pressed and scroll_pointer_type == 2:
+					_finish_scroll_gesture(mouse.position)
+	elif event is InputEventMouseMotion and scroll_pointer_type == 2:
+		var motion := event as InputEventMouseMotion
+		if motion.button_mask & MOUSE_BUTTON_MASK_LEFT:
+			_update_scroll_gesture(motion.position)
+
+
+func _start_scroll_gesture(point: Vector2, pointer_type: int, touch_index: int = -1) -> void:
+	if not scroll.visible or not scroll.get_global_rect().has_point(point):
+		return
+	if is_instance_valid(default_picker) and default_picker.visible:
+		return
+	var scrollbar := scroll.get_v_scroll_bar()
+	if scrollbar.visible and scrollbar.get_global_rect().has_point(point):
+		return
+	scroll_pointer_type = pointer_type
+	scroll_touch_index = touch_index
+	scroll_touch_start = point
+	scroll_touch_last = point
+	scroll_gesture_axis = 0
+
+
+func _update_scroll_gesture(point: Vector2) -> void:
+	var movement := point - scroll_touch_start
+	if scroll_gesture_axis == 0 and movement.length() >= SCROLL_GESTURE_DEADZONE:
+		if absf(movement.y) > absf(movement.x) * SCROLL_GESTURE_DIRECTION_RATIO:
+			scroll_gesture_axis = 1
+		elif absf(movement.x) > absf(movement.y) * SCROLL_GESTURE_DIRECTION_RATIO:
+			scroll_gesture_axis = 2
+	if scroll_gesture_axis == 1:
+		scroll.scroll_vertical -= roundi(point.y - scroll_touch_last.y)
+		get_viewport().set_input_as_handled()
+	scroll_touch_last = point
+
+
+func _finish_scroll_gesture(point: Vector2) -> void:
+	_update_scroll_gesture(point)
+	if scroll_gesture_axis == 1:
+		get_viewport().set_input_as_handled()
+	scroll_pointer_type = 0
+	scroll_touch_index = -1
+	scroll_gesture_axis = 0
 
 
 func _build_steps() -> void:
@@ -289,10 +364,13 @@ func _add_property_editor(
 
 	match property.type:
 		TYPE_BOOL:
+			var checkbox_row := HBoxContainer.new()
+			checkbox_row.add_theme_constant_override("separation", 8)
+			checkbox_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			row.add_child(checkbox_row)
 			var check := CheckBox.new()
-			check.text = _display_name(String(property_name))
-			check.custom_minimum_size.y = 96 if compact_layout else 88
-			check.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			check.custom_minimum_size = Vector2(64, 96 if compact_layout else 88)
+			check.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 			check.add_theme_font_size_override("font_size", 35)
 			check.add_theme_color_override("font_color", Color("2b190f"))
 			check.add_theme_color_override("font_hover_color", Color("71131f"))
@@ -303,7 +381,14 @@ func _add_property_editor(
 			check.add_theme_icon_override("unchecked_disabled", UNCHECKED_ICON)
 			check.button_pressed = value
 			check.toggled.connect(func(enabled: bool): target.set(property_name, enabled))
-			row.add_child(check)
+			checkbox_row.add_child(check)
+			var check_label := Label.new()
+			check_label.text = _display_name(String(property_name))
+			check_label.add_theme_font_size_override("font_size", 35)
+			check_label.add_theme_color_override("font_color", Color("2b190f"))
+			check_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			check_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			checkbox_row.add_child(check_label)
 		TYPE_INT, TYPE_FLOAT:
 			if property.hint == PROPERTY_HINT_ENUM:
 				_add_enum_editor(row, target, property_name, value, property.hint_string)
