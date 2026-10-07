@@ -8,6 +8,7 @@ signal canceled
 @onready var message_label: Label = %Message
 @onready var confirm_button: Button = %ConfirmButton
 @onready var cancel_button: Button = %CancelButton
+var showing_information: bool = false
 
 
 func _ready() -> void:
@@ -18,6 +19,7 @@ func _ready() -> void:
 
 
 func show_confirmation(dialog_title: String, message: String, confirm_text: String, cancel_text: String) -> void:
+	showing_information = false
 	title_label.text = dialog_title
 	message_label.text = message
 	confirm_button.text = confirm_text
@@ -29,6 +31,7 @@ func show_confirmation(dialog_title: String, message: String, confirm_text: Stri
 
 
 func show_info(dialog_title: String, message: String) -> void:
+	showing_information = true
 	title_label.text = dialog_title
 	message_label.text = message
 	confirm_button.text = "OK"
@@ -41,13 +44,21 @@ func show_info(dialog_title: String, message: String) -> void:
 func _update_responsive_layout() -> void:
 	var viewport_size := get_viewport_rect().size
 	var compact := viewport_size.x < 620.0
-	dialog_panel.custom_minimum_size.x = maxf(0.0, minf(viewport_size.x - 32.0, 560.0))
+	var max_width := 860.0 if showing_information else 560.0
+	dialog_panel.custom_minimum_size.x = maxf(0.0, minf(viewport_size.x - 32.0, max_width))
 	confirm_button.custom_minimum_size = Vector2(136.0 if compact else 190.0, 60.0 if compact else 68.0)
 	cancel_button.custom_minimum_size = confirm_button.custom_minimum_size
-	confirm_button.add_theme_font_size_override("font_size", 22 if compact else 28)
-	cancel_button.add_theme_font_size_override("font_size", 22 if compact else 28)
-	message_label.add_theme_font_size_override("font_size", 17 if compact else 19)
-	title_label.add_theme_font_size_override("font_size", 21 if compact else 25)
+	var button_font_size := 22 if compact else 28
+	var message_font_size := 17 if compact else 19
+	var title_font_size := 21 if compact else 25
+	if showing_information:
+		button_font_size = 24 if compact else 32
+		message_font_size = 21 if compact else 30
+		title_font_size = 24 if compact else 32
+	confirm_button.add_theme_font_size_override("font_size", button_font_size)
+	cancel_button.add_theme_font_size_override("font_size", button_font_size)
+	message_label.add_theme_font_size_override("font_size", message_font_size)
+	title_label.add_theme_font_size_override("font_size", title_font_size)
 
 
 func _on_confirm_pressed() -> void:

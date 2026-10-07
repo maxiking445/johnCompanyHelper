@@ -20,7 +20,7 @@ var remaining_card_count: int = 0
 @onready var event_list_margin: MarginContainer = $ScrollContainer/ListMargin
 @onready var event_show_component = $EventShowComponent
 @onready var info_button: Button = %InfoButton
-@onready var info_dialog: Node = $InfoDialog
+@onready var info_dialog: Control = $InfoLayer/InfoDialog
 
 var log_generation: int = 0
 var displayed_log_index: int = -1
@@ -54,6 +54,10 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	# Let the modal dialog receive input before the card hit-test below.
+	if info_dialog.visible:
+		return
+
 	if event is InputEventScreenTouch:
 		var touch := event as InputEventScreenTouch
 		if touch.pressed:
@@ -198,12 +202,11 @@ func _update_responsive_layout() -> void:
 	info_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	info_button.position = Vector2(24.0, 24.0)
 	info_button.size = Vector2(info_size, info_size)
-	event_counter.position = Vector2(viewport_size.x - 150.0, 32.0)
-	event_counter.size = Vector2(126.0, 56.0)
+	event_counter.position = Vector2(viewport_size.x - 224.0, 32.0)
+	event_counter.size = Vector2(200.0, 56.0)
 	event_counter.label_settings.font_size = 34 if portrait else 38
 	info_button.z_index = 3
 	event_counter.z_index = 3
-	info_dialog.z_index = 10
 
 
 func initialize(
@@ -317,7 +320,7 @@ func _on_info_button_pressed() -> void:
 			StateType.name(topDeckEvent.eventLocation),
 			topDeckEvent.eventId
 		]
-	var message := "ROUND: %d\nEVENT: %d OF %d\nCARDS IN DECK: %d\n\nCURRENT EVENT: %s — %s\nEVENT CARD ID: %s\nTOP DECK CARD: %s" % [
+	var message := "ROUND: %d\nEVENT: %d OF %d\nCARDS IN DECK: %d\n\nCURRENT EVENT: %s — %s\nCURRENT EVENT CARD ID: %s\nTOP DECK CARD: %s" % [
 		round_number,
 		index + 1,
 		event_count,
