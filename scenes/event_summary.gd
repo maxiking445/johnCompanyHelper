@@ -18,6 +18,8 @@ const GESTURE_DIRECTION_RATIO := 1.1
 @onready var event_show_component = $EventShowComponent
 
 var log_generation: int = 0
+var displayed_log_index: int = -1
+var pending_last_event: bool = false
 var active_pointer_type: int = 0
 var active_touch_index: int = -1
 var touch_start: Vector2 = Vector2.ZERO
@@ -50,6 +52,9 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		var touch := event as InputEventScreenTouch
 		if touch.pressed:
+			if event_show_component.try_flip_at_screen_position(touch.position):
+				get_viewport().set_input_as_handled()
+				return
 			if active_pointer_type == 0:
 				_start_gesture(touch.position, 1, touch.index)
 		elif active_pointer_type == 1 and touch.index == active_touch_index:
@@ -61,6 +66,9 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton:
 		var mouse := event as InputEventMouseButton
 		if mouse.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if mouse.pressed and event_show_component.try_flip_at_screen_position(mouse.position):
+			get_viewport().set_input_as_handled()
 			return
 		if mouse.pressed and active_pointer_type == 0 and Time.get_ticks_msec() - last_touch_end_msec > 250:
 			_start_gesture(mouse.position, 2)
@@ -200,10 +208,13 @@ func initialize(
 	topDeckEvent = new_top_deck_event
 	currentEvent = new_current_event
 	removeLog()
-	_hide_details()
-	actionList = ActionManager.get_actions_by_event_id(currentEvent.eventId)
-	event_show_component.initialize_events(topDeckEvent, currentEvent)
+	actionList.clear()
+	var played_event := EventHelper.getPlayedEventAt(index)
+	event_show_component.initialize_events(topDeckEvent, currentEvent, played_event.remainingDeck)
 	_update_event_counter()
+	_hide_initial_details()
+	displayed_log_index = -1
+	presentation_changed.emit(false)
 	if index + 1 == EventHelper.getPlayedEvents().size():
 		lastEventShown.emit()
 
@@ -224,24 +235,29 @@ func populate_event_log() -> void:
 
 
 func _on_event_show_component_flip_finished() -> void:
+	# Keep the next event's actions out of the UI model until its card is revealed.
+	actionList = ActionManager.get_actions_by_event_id(currentEvent.eventId)
 	_show_details()
-	populate_event_log()
-
-
-func _hide_details() -> void:
-	_cancel_touch_gesture()
-	event_counter.hide()
-	actions_heading.hide()
-	event_scroll.hide()
-	presentation_changed.emit(false)
+	if displayed_log_index != index:
+		populate_event_log()
+		displayed_log_index = index
+	if pending_last_event:
+		pending_last_event = false
+		lastEventShown.emit()
 
 
 func _show_details() -> void:
 	for control in [event_counter, actions_heading, event_scroll]:
-		control.modulate.a = 0.0
+		control.modulate.a = 1.0
 		control.show()
-		create_tween().tween_property(control, "modulate:a", 1.0, 0.35)
+	event_scroll.mouse_filter = Control.MOUSE_FILTER_STOP
 	presentation_changed.emit(true)
+
+
+func _hide_initial_details() -> void:
+	for control in [event_counter, actions_heading, event_scroll]:
+		control.hide()
+	event_scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 func next() -> void:
@@ -253,18 +269,22 @@ func next() -> void:
 	var played_event: PlayedEvent = EventHelper.getPlayedEventAt(next_index)
 	topDeckEvent = played_event.topdeckEvent
 	currentEvent = played_event.currentEvent
-	actionList = ActionManager.get_actions_by_event_id(currentEvent.eventId)
+	actionList.clear()
+	_cancel_touch_gesture()
+	event_scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	removeLog()
-	_hide_details()
+	displayed_log_index = -1
+	for control in [event_counter, actions_heading, event_scroll]:
+		control.hide()
 	index = next_index
+	pending_last_event = index + 1 == event_count
 	_update_event_counter()
-	event_show_component.initialize_events(topDeckEvent, currentEvent)
-	if index + 1 == event_count:
-		lastEventShown.emit()
+	presentation_changed.emit(false)
+	event_show_component.present_next_event(topDeckEvent, currentEvent, played_event.remainingDeck)
 
 
 func is_card_animating() -> bool:
-	return event_show_component.is_animating_current_card
+	return event_show_component.is_animating_current_card or event_show_component.awaiting_flip
 
 
 func _update_event_counter() -> void:

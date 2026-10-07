@@ -7,6 +7,9 @@ var storm_rule := StormRule.new()
 var gameState: GameState
 var launch_mode: int = -1
 @onready var navigation: HBoxContainer = $Navigation
+@onready var transition_dimmer: ColorRect = $EventSummary/TransitionDimmer
+var transition_tween: Tween
+var is_last_event_shown: bool = false
 
 
 func _ready() -> void:
@@ -168,14 +171,20 @@ func _on_finish_button_pressed() -> void:
 
 
 func _on_event_summary_last_event_shown() -> void:
+	is_last_event_shown = true
 	%FinishButton.disabled = false
 	%NextButton.disabled = true
 
 
 func _on_event_summary_presentation_changed(revealed: bool) -> void:
-	if not revealed:
-		navigation.hide()
-		return
-	navigation.modulate.a = 0.0
-	navigation.show()
-	create_tween().tween_property(navigation, "modulate:a", 1.0, 0.35)
+	if transition_tween != null and transition_tween.is_valid():
+		transition_tween.kill()
+	transition_tween = create_tween()
+	if revealed:
+		navigation.show()
+		%NextButton.disabled = is_last_event_shown
+		transition_tween.tween_property(transition_dimmer, "modulate:a", 0.0, 0.35)
+	else:
+		%NextButton.disabled = true
+		transition_dimmer.show()
+		transition_tween.tween_property(transition_dimmer, "modulate:a", 0.72, 0.4)
