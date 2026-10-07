@@ -35,6 +35,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+z_index = 2
 
 [node name="ActionsHeading" type="Label" parent="."]
 visible = false
@@ -61,6 +62,18 @@ mouse_filter = 0
 horizontal_scroll_mode = 0
 scroll_deadzone = 12
 vertical_scroll_mode = 1
+
+[node name="TransitionDimmer" type="ColorRect" parent="." unique_id=1741206681]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+z_index = 1
+color = Color(0, 0, 0, 0.48)
+mouse_filter = 2
+modulate = Color(1, 1, 1, 0)
 
 [node name="ListMargin" type="MarginContainer" parent="ScrollContainer" unique_id=1495274260]
 custom_minimum_size = Vector2(800, 0)

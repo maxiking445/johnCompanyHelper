@@ -11,8 +11,11 @@ var move_tween: Tween
 @onready var top_deck_event_card = $TopDeckCard/TopDeckEventCard
 @onready var current_deck_label: Label = $CurrentDeckCard/Label
 @onready var top_deck_label: Label = $TopDeckCard/Label
+@onready var stack_layers: Control = %StackLayers
 
 var hasFlipped: bool = false
+var awaiting_flip: bool = false
+var remaining_deck_snapshot: Array[IndiaEvent] = []
 var initial_card_scale: Vector2 = Vector2.ONE
 var target_card_scale: Vector2 = Vector2.ONE
 var current_card_target_position: Vector2 = Vector2.ZERO
@@ -57,6 +60,12 @@ func _update_card_layout() -> void:
 	$TopDeckCard.position = top_deck_center - card_size * 0.5
 	$TopDeckCard.size = card_size
 	top_deck_event_card.position = Vector2.ZERO
+	stack_layers.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	stack_layers.position = Vector2.ZERO
+	stack_layers.size = card_size
+	stack_layers.pivot_offset = card_size * 0.5
+	stack_layers.scale = top_deck_event_card.scale
+	_update_stack_layers()
 	current_card_target_position = current_center - card_size * 0.5
 	if not is_animating_current_card:
 		current_event_card.position = current_card_target_position if hasFlipped else viewport_size * 0.5 - card_size * 0.5
@@ -67,11 +76,13 @@ func _update_card_layout() -> void:
 
 func initialize_events(
 	new_top_deck_event: IndiaEvent,
-	new_current_deck_event: IndiaEvent
+	new_current_deck_event: IndiaEvent,
+	remaining_deck: Array[IndiaEvent] = []
 ) -> void:
 	reset()
 	topDeckEvent = new_top_deck_event
 	currentDeckEvent = new_current_deck_event
+	remaining_deck_snapshot = remaining_deck.duplicate()
 
 	if topDeckEvent != null:
 		top_deck_event_card.set_textures(
@@ -80,6 +91,7 @@ func initialize_events(
 		)
 	else:
 		top_deck_event_card.set_textures(null, null)
+	_update_stack_layers()
 
 	if currentDeckEvent != null:
 		current_event_card.set_textures(
@@ -89,12 +101,36 @@ func initialize_events(
 	else:
 		current_event_card.set_textures(null, null)
 
+
+func _update_stack_layers() -> void:
+	for child in stack_layers.get_children():
+		child.free()
+
+	# The visible TopDeckEventCard is the first card in this snapshot.
+	# Each backing plate represents one real card underneath it.
+	var hidden_card_count := maxi(remaining_deck_snapshot.size() - 1, 0)
+	var displayed_card_width: float = top_deck_event_card.size.x * top_deck_event_card.scale.x
+	var max_stack_offset: float = minf(34.0, displayed_card_width * 0.14)
+	var screen_pitch: float = minf(1.25, max_stack_offset / maxf(hidden_card_count, 1))
+	var local_pitch: float = screen_pitch / maxf(top_deck_event_card.scale.x, 0.01)
+	for deck_index in range(remaining_deck_snapshot.size() - 1, 0, -1):
+		var card_layer := TextureRect.new()
+		card_layer.name = "CardLayer_%02d" % deck_index
+		card_layer.position = Vector2(-deck_index * local_pitch, -deck_index * local_pitch)
+		card_layer.size = top_deck_event_card.size
+		card_layer.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		card_layer.stretch_mode = TextureRect.STRETCH_SCALE
+		card_layer.texture = remaining_deck_snapshot[deck_index].back_sprite
+		card_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		stack_layers.add_child(card_layer)
+
 func reset() -> void:
 	if move_tween != null and move_tween.is_valid():
 		move_tween.kill()
 	move_tween = null
 	is_animating_current_card = false
 	hasFlipped = false
+	awaiting_flip = false
 	_update_card_layout()
 
 	current_event_card.reset()
@@ -120,21 +156,78 @@ func _on_current_event_card_gui_input(event: InputEvent) -> void:
 	_flip_current_event_card()
 
 
+func try_flip_at_screen_position(screen_position: Vector2) -> bool:
+	if hasFlipped or is_animating_current_card or current_event_card.is_flipping:
+		return false
+	if not current_event_card.get_global_rect().has_point(screen_position):
+		return false
+	_flip_current_event_card()
+	return true
+
+
 func _flip_current_event_card() -> void:
 	if hasFlipped or is_animating_current_card or current_event_card.is_flipping:
 		return
 
 	hasFlipped = true
+	awaiting_flip = false
 	is_animating_current_card = true
+	await _flip_and_move_current_card(true)
+
+
+func present_next_event(
+	new_top_deck_event: IndiaEvent,
+	new_current_deck_event: IndiaEvent,
+	remaining_deck: Array[IndiaEvent]
+) -> void:
+	if is_animating_current_card:
+		return
+	is_animating_current_card = true
+	hasFlipped = false
+	awaiting_flip = false
+	topDeckEvent = new_top_deck_event
+	currentDeckEvent = new_current_deck_event
+	remaining_deck_snapshot = remaining_deck.duplicate()
+	current_event_card.reset()
+	top_deck_event_card.reset()
+	current_event_card.set_textures(currentDeckEvent.front_sprite, currentDeckEvent.back_sprite)
+	top_deck_event_card.set_textures(topDeckEvent.front_sprite, topDeckEvent.back_sprite)
+	_update_stack_layers()
+
+	# Promote the old top card visually while revealing the next card on the stack.
+	$TopDeckCard.show()
+	$TopDeckCard.modulate.a = 1.0
+	top_deck_label.show()
+	current_deck_label.hide()
+	current_event_card.pivot_offset = current_event_card.size * 0.5
+	current_event_card.position = $TopDeckCard.position
+	current_event_card.scale = top_deck_event_card.scale
+	current_event_card.modulate.a = 1.0
+	var center_position: Vector2 = get_viewport_rect().size * 0.5 - current_event_card.size * 0.5
+	move_tween = create_tween().set_parallel(true)
+	move_tween.tween_property(current_event_card, "position", center_position, 0.42).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	move_tween.tween_property(current_event_card, "scale", initial_card_scale, 0.42).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	await move_tween.finished
+	move_tween = null
+	_update_card_layout()
+	is_animating_current_card = false
+	awaiting_flip = true
+
+
+func _flip_and_move_current_card(reveal_top_deck_after_flip: bool) -> void:
 	current_event_card.flip()
 	await current_event_card.flip_finished
 	if not is_inside_tree():
 		return
-	$TopDeckCard.show()
-	$TopDeckCard.modulate.a = 0.0
-	current_deck_label.show()
-	current_deck_label.modulate.a = 0.0
-	flipFinished.emit()
+	if reveal_top_deck_after_flip:
+		$TopDeckCard.show()
+		$TopDeckCard.modulate.a = 0.0
+		top_deck_label.show()
+		current_deck_label.show()
+		current_deck_label.modulate.a = 0.0
+	else:
+		current_deck_label.show()
+		current_deck_label.modulate.a = 0.0
 	move_tween = create_tween().set_parallel(true)
 	move_tween.tween_property(
 		current_event_card,
@@ -143,9 +236,11 @@ func _flip_current_event_card() -> void:
 		card_move_duration
 	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 	move_tween.tween_property(current_event_card, "scale", target_card_scale, card_move_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
-	move_tween.tween_property($TopDeckCard, "modulate:a", 1.0, 0.35)
+	if reveal_top_deck_after_flip:
+		move_tween.tween_property($TopDeckCard, "modulate:a", 1.0, 0.35)
 	move_tween.tween_property(current_deck_label, "modulate:a", 1.0, 0.35)
 	await move_tween.finished
 	move_tween = null
 	is_animating_current_card = false
 	_update_card_layout()
+	flipFinished.emit()

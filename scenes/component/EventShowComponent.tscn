@@ -16,6 +16,12 @@ script = ExtResource("1_m2s0u")
 [node name="TopDeckCard" type="Control" parent="." unique_id=825448648]
 layout_mode = 0
 
+[node name="StackLayers" type="Control" parent="TopDeckCard" unique_id=1185021001]
+unique_name_in_owner = true
+layout_mode = 0
+anchors_preset = 0
+mouse_filter = 2
+
 [node name="Label" type="Label" parent="TopDeckCard" unique_id=1104599707]
 layout_mode = 0
 offset_left = 72.0

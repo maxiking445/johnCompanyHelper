@@ -36,6 +36,7 @@ func addPlayedEvent():
 	var playedEvent = PlayedEvent.new()
 	playedEvent.topdeckEvent = getTopDeckEvent()
 	playedEvent.currentEvent = activeEvent
+	playedEvent.remainingDeck.assign(draw_pile)
 	playedEvents[activeEvent.eventId] = playedEvent
 
 func getPlayedEvents() -> Dictionary[int, PlayedEvent]: 
