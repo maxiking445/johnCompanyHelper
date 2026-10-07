@@ -9,6 +9,9 @@ const GESTURE_DIRECTION_RATIO := 1.1
 @export var topDeckEvent: IndiaEvent
 @export var currentEvent: IndiaEvent
 @export var index: int
+@export var round_number: int = 1
+
+var remaining_card_count: int = 0
 
 @onready var eventLogList: VBoxContainer = %EventLogList
 @onready var event_counter: Label = %EventCounter
@@ -16,6 +19,8 @@ const GESTURE_DIRECTION_RATIO := 1.1
 @onready var event_scroll: ScrollContainer = $ScrollContainer
 @onready var event_list_margin: MarginContainer = $ScrollContainer/ListMargin
 @onready var event_show_component = $EventShowComponent
+@onready var info_button: Button = %InfoButton
+@onready var info_dialog: Control = $InfoLayer/InfoDialog
 
 var log_generation: int = 0
 var displayed_log_index: int = -1
@@ -41,7 +46,7 @@ func _ready() -> void:
 	heading_settings.font_size = 36
 	heading_settings.outline_size = 0
 	actions_heading.label_settings = heading_settings
-	event_counter.hide()
+	event_counter.show()
 	actions_heading.hide()
 	event_scroll.hide()
 	get_viewport().size_changed.connect(_update_responsive_layout)
@@ -49,6 +54,10 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	# Let the modal dialog receive input before the card hit-test below.
+	if info_dialog.visible:
+		return
+
 	if event is InputEventScreenTouch:
 		var touch := event as InputEventScreenTouch
 		if touch.pressed:
@@ -189,27 +198,31 @@ func _update_responsive_layout() -> void:
 	actions_heading.position = Vector2(scroll_position.x, scroll_position.y - 48.0)
 	actions_heading.size = Vector2(scroll_size.x, 42.0)
 	event_counter.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	if portrait:
-		event_counter.position = Vector2(viewport_size.x - 270.0, 50.0)
-		event_counter.size = Vector2(250.0, 48.0)
-		event_counter.label_settings.font_size = 32
-	else:
-		event_counter.position = Vector2(viewport_size.x - 390.0, 86.0)
-		event_counter.size = Vector2(350.0, 48.0)
-		event_counter.label_settings.font_size = 36
+	var info_size := 80.0 if portrait else 72.0
+	info_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	info_button.position = Vector2(24.0, 24.0)
+	info_button.size = Vector2(info_size, info_size)
+	event_counter.position = Vector2(viewport_size.x - 224.0, 32.0)
+	event_counter.size = Vector2(200.0, 56.0)
+	event_counter.label_settings.font_size = 34 if portrait else 38
+	info_button.z_index = 3
+	event_counter.z_index = 3
 
 
 func initialize(
 	new_index: int,
 	new_top_deck_event: IndiaEvent,
-	new_current_event: IndiaEvent
+	new_current_event: IndiaEvent,
+	new_round_number: int = 1
 ) -> void:
 	index = new_index
+	round_number = new_round_number
 	topDeckEvent = new_top_deck_event
 	currentEvent = new_current_event
 	removeLog()
 	actionList.clear()
 	var played_event := EventHelper.getPlayedEventAt(index)
+	remaining_card_count = played_event.remainingDeck.size()
 	event_show_component.initialize_events(topDeckEvent, currentEvent, played_event.remainingDeck)
 	_update_event_counter()
 	_hide_initial_details()
@@ -247,7 +260,8 @@ func _on_event_show_component_flip_finished() -> void:
 
 
 func _show_details() -> void:
-	for control in [event_counter, actions_heading, event_scroll]:
+	event_counter.show()
+	for control in [actions_heading, event_scroll]:
 		control.modulate.a = 1.0
 		control.show()
 	event_scroll.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -255,7 +269,8 @@ func _show_details() -> void:
 
 
 func _hide_initial_details() -> void:
-	for control in [event_counter, actions_heading, event_scroll]:
+	event_counter.show()
+	for control in [actions_heading, event_scroll]:
 		control.hide()
 	event_scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
@@ -269,12 +284,13 @@ func next() -> void:
 	var played_event: PlayedEvent = EventHelper.getPlayedEventAt(next_index)
 	topDeckEvent = played_event.topdeckEvent
 	currentEvent = played_event.currentEvent
+	remaining_card_count = played_event.remainingDeck.size()
 	actionList.clear()
 	_cancel_touch_gesture()
 	event_scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	removeLog()
 	displayed_log_index = -1
-	for control in [event_counter, actions_heading, event_scroll]:
+	for control in [actions_heading, event_scroll]:
 		control.hide()
 	index = next_index
 	pending_last_event = index + 1 == event_count
@@ -289,7 +305,32 @@ func is_card_animating() -> bool:
 
 func _update_event_counter() -> void:
 	var event_count := EventHelper.getPlayedEvents().size()
-	event_counter.text = "EVENT %d / %d" % [index + 1, event_count]
+	event_counter.text = "%d/%d" % [index + 1, event_count]
+
+
+func _on_info_button_pressed() -> void:
+	var event_count := EventHelper.getPlayedEvents().size()
+	var current_event_name := "Unknown" if currentEvent == null else currentEvent.eventName
+	var current_location := "Unknown" if currentEvent == null else StateType.name(currentEvent.eventLocation)
+	var current_event_id := "N/A" if currentEvent == null else str(currentEvent.eventId)
+	var next_card_info := "No next card"
+	if topDeckEvent != null:
+		next_card_info = "%s — %s (ID %d)" % [
+			topDeckEvent.eventName,
+			StateType.name(topDeckEvent.eventLocation),
+			topDeckEvent.eventId
+		]
+	var message := "ROUND: %d\nEVENT: %d OF %d\nCARDS IN DECK: %d\n\nCURRENT EVENT: %s — %s\nCURRENT EVENT CARD ID: %s\nTOP DECK CARD: %s" % [
+		round_number,
+		index + 1,
+		event_count,
+		remaining_card_count,
+		current_event_name,
+		current_location,
+		current_event_id,
+		next_card_info
+	]
+	info_dialog.call("show_info", "GAME INFO", message)
 
 
 func removeLog() -> void:

@@ -1,8 +1,46 @@
-[gd_scene format=3 uid="uid://gpfei4wa2jkf"]
+[gd_scene load_steps=9 format=3 uid="uid://gpfei4wa2jkf"]
 
 [ext_resource type="Script" uid="uid://byauixe5cx7ng" path="res://scenes/event_summary.gd" id="1_7wnqb"]
 [ext_resource type="PackedScene" uid="uid://c8ni8qxid5sny" path="res://scenes/component/EventShowComponent.tscn" id="2_2of6r"]
 [ext_resource type="LabelSettings" uid="uid://rli1xj7qgpnm" path="res://font/english_label.tres" id="3_counter"]
+[ext_resource type="PackedScene" path="res://scenes/component/dialog/confirmation_dialog.tscn" id="4_info_dialog"]
+[ext_resource type="FontFile" path="res://font/LibreBaskerville-Bold.ttf" id="5_info_font"]
+
+[sub_resource type="StyleBoxFlat" id="InfoButtonNormal"]
+bg_color = Color(1, 1, 1, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.08, 0.06, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="InfoButtonHover"]
+bg_color = Color(0.92, 0.83, 0.66, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.08, 0.06, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="InfoButtonPressed"]
+bg_color = Color(0.78, 0.67, 0.49, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.08, 0.06, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
 
 [node name="EventSummary" type="Control" unique_id=736882236]
 layout_mode = 3
@@ -15,7 +53,7 @@ script = ExtResource("1_7wnqb")
 
 [node name="EventCounter" type="Label" parent="." unique_id=265580085]
 unique_name_in_owner = true
-visible = false
+visible = true
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -36,6 +74,30 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 z_index = 2
+
+[node name="InfoButton" type="Button" parent="." unique_id=712683994]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 0
+offset_right = 72.0
+offset_bottom = 72.0
+theme_override_colors/font_color = Color(0.08, 0.04, 0.03, 1)
+theme_override_colors/font_hover_color = Color(0.08, 0.04, 0.03, 1)
+theme_override_colors/font_pressed_color = Color(0.08, 0.04, 0.03, 1)
+theme_override_fonts/font = ExtResource("5_info_font")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("InfoButtonNormal")
+theme_override_styles/hover = SubResource("InfoButtonHover")
+theme_override_styles/pressed = SubResource("InfoButtonPressed")
+text = "i"
+tooltip_text = "Game information"
+z_index = 3
+
+[node name="InfoLayer" type="CanvasLayer" parent="." unique_id=864296110]
+layer = 10
+
+[node name="InfoDialog" parent="InfoLayer" instance=ExtResource("4_info_dialog")]
+visible = false
 
 [node name="ActionsHeading" type="Label" parent="."]
 visible = false
@@ -99,3 +161,4 @@ mouse_filter = 1
 theme_override_constants/separation = 15
 
 [connection signal="flipFinished" from="EventShowComponent" to="." method="_on_event_show_component_flip_finished"]
+[connection signal="pressed" from="InfoButton" to="." method="_on_info_button_pressed"]
