@@ -301,7 +301,7 @@ func _add_resource_editor(resource: Resource, nested: bool) -> void:
 			continue
 		if (
 			resource is StateModel
-			and property.name in [&"orders", &"is_connected_to"]
+			and property.name in [&"location", &"orders", &"is_connected_to"]
 		):
 			continue
 		if property.name == "isDominatedBy":
