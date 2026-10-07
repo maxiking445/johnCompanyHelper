@@ -29,6 +29,21 @@ order.
 The project is designed to reduce bookkeeping and errors while speeding up the India Phase at the table—not to
   replace the board game or its rulebook.
 
+## Screenshots
+
+Android Screens:
+
+<table align="center">
+  <tr>
+    <td><p align="center"><strong>Main menu</strong></p><p align="center"><img src="assets/example/main-menu.webp" alt="John Company Helper main menu on Android" width="280"></p></td>
+    <td><p align="center"><strong>Event card</strong></p><p align="center"><img src="assets/example/event-card.webp" alt="Event card in the Android event viewer" width="280"></p></td>
+  </tr>
+  <tr>
+    <td><p align="center"><strong>Event actions</strong></p><p align="center"><img src="assets/example/event-actions.webp" alt="Event actions in the Android event viewer" width="280"></p></td>
+    <td><p align="center"><strong>State editor</strong></p><p align="center"><img src="assets/example/state-editor.webp" alt="State editor on Android" width="280"></p></td>
+  </tr>
+</table>
+
 ## Project status and feedback
 
 John Company Helper is still in an early stage and has not yet been thoroughly
