@@ -11,7 +11,11 @@ const DEFAULT_GAME_STATES := {
 
 
 func open() -> void:
-	popup_centered(Vector2i(420, 292))
+	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
+	popup_centered(Vector2i(
+		mini(680, int(viewport_size.x) - 32),
+		mini(560, int(viewport_size.y) - 32)
+	))
 
 
 func _select_scenario(scenario: String) -> void:

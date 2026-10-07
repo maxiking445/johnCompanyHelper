@@ -4,7 +4,9 @@ class_name GameStateSetup
 signal game_state_ready(game_state: GameState)
 
 const MENU_SCENE := "res://scenes/menue.tscn"
-const MENU_BUTTON_THEME := preload("res://scenes/component/button/menueButton.tres")
+const ACTION_BUTTON_THEME := preload("res://scenes/component/button/actionButton.tres")
+const CHECKED_ICON := preload("res://UI/GameStateSetup/checkbox_on.svg")
+const UNCHECKED_ICON := preload("res://UI/GameStateSetup/checkbox_off.svg")
 const DEFAULT_PICKER_SCENE := preload(
 	"res://UI/GameStateSetup/DefaultGameStatePicker.tscn"
 )
@@ -28,11 +30,18 @@ const STATE_TITLES := [
 @onready var progress_bar: ProgressBar = %ProgressBar
 @onready var path_label: Label = %PathLabel
 @onready var json_transfer: Node = %GameStateJsonTransfer
+@onready var margin: MarginContainer = $Margin
+@onready var scroll: ScrollContainer = $Margin/Card/Layout/Scroll
+@onready var navigation_spacer: Control = %NavigationSpacer
+@onready var download_button: Button = %DownloadJsonButton
+@onready var upload_button: Button = %UploadJsonButton
+@onready var back_button: Button = %BackButton
 
 var game_state: GameState
 var current_step := 0
 var steps: Array[Dictionary] = []
 var default_picker: DefaultGameStatePicker
+var compact_layout := false
 
 
 func _ready() -> void:
@@ -51,6 +60,39 @@ func _ready() -> void:
 	json_transfer.import_completed.connect(_on_json_imported)
 	json_transfer.export_completed.connect(_on_json_exported)
 	json_transfer.transfer_failed.connect(_on_json_transfer_failed)
+	_update_responsive_layout()
+	get_viewport().size_changed.connect(_update_responsive_layout)
+
+
+func _update_responsive_layout() -> void:
+	var viewport_size := get_viewport_rect().size
+	var was_compact := compact_layout
+	compact_layout = viewport_size.x < 1050.0 or viewport_size.x < viewport_size.y
+	var side_margin := clampf(viewport_size.x * 0.035, 18.0, 56.0)
+	var vertical_margin := clampf(viewport_size.y * 0.035, 20.0, 42.0)
+	margin.offset_left = side_margin
+	margin.offset_right = -side_margin
+	margin.offset_top = vertical_margin
+	margin.offset_bottom = -vertical_margin
+	step_label.add_theme_font_size_override("font_size", 29 if compact_layout else 32)
+	title_label.add_theme_font_size_override("font_size", 48 if compact_layout else 60)
+	description_label.add_theme_font_size_override("font_size", 29 if compact_layout else 34)
+	path_label.add_theme_font_size_override("font_size", 25 if compact_layout else 29)
+	navigation_spacer.visible = not compact_layout
+	var button_height := 96.0 if compact_layout else 88.0
+	for button in [download_button, upload_button, reset_button, back_button,
+		previous_button, next_button, save_button]:
+		button.custom_minimum_size.y = button_height
+		button.add_theme_font_size_override("font_size", 30 if compact_layout else 35)
+	for button in [download_button, upload_button]:
+		button.custom_minimum_size.x = button_height
+		button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	reset_button.custom_minimum_size.x = 230.0 if compact_layout else 210.0
+	reset_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact_layout else Control.SIZE_SHRINK_CENTER
+	for button in [back_button, previous_button, next_button, save_button]:
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact_layout else Control.SIZE_SHRINK_CENTER
+	if compact_layout != was_compact and game_state != null:
+		_show_step()
 
 
 func _build_steps() -> void:
@@ -98,6 +140,7 @@ func _load_current() -> void:
 func _show_step() -> void:
 	for child in form.get_children():
 		child.queue_free()
+	scroll.scroll_vertical = 0
 
 	var step: Dictionary = steps[current_step]
 	step_label.text = "STEP %d OF %d" % [current_step + 1, steps.size()]
@@ -131,14 +174,15 @@ func _add_ship_sections() -> void:
 		form.add_child(header)
 		var heading := Label.new()
 		heading.text = sea_data.title
-		heading.add_theme_font_size_override("font_size", 21)
+		heading.add_theme_font_size_override("font_size", 36)
 		heading.add_theme_color_override("font_color", Color("71131f"))
 		heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		header.add_child(heading)
 		var add_button := Button.new()
 		add_button.text = "Add Ship"
-		add_button.theme = MENU_BUTTON_THEME
-		add_button.add_theme_font_size_override("font_size", 19)
+		add_button.theme = ACTION_BUTTON_THEME
+		add_button.custom_minimum_size = Vector2(170, 76)
+		add_button.add_theme_font_size_override("font_size", 27)
 		add_button.pressed.connect(_add_ship.bind(sea))
 		header.add_child(add_button)
 		var rule := HSeparator.new()
@@ -152,6 +196,7 @@ func _add_ship_list(sea: SeaModel) -> void:
 		var empty := Label.new()
 		empty.text = "No ships in this sea"
 		empty.modulate = Color(0.18, 0.12, 0.08, 0.62)
+		empty.add_theme_font_size_override("font_size", 31)
 		form.add_child(empty)
 		return
 	for index in sea.ships.size():
@@ -159,21 +204,22 @@ func _add_ship_list(sea: SeaModel) -> void:
 		var panel := PanelContainer.new()
 		panel.add_theme_stylebox_override("panel", _panel_style(Color("e1d2ae")))
 		var content := VBoxContainer.new()
-		content.add_theme_constant_override("separation", 8)
+		content.add_theme_constant_override("separation", 14)
 		panel.add_child(content)
 
 		var header := HBoxContainer.new()
 		content.add_child(header)
 		var title := Label.new()
 		title.text = "Ship %d" % (index + 1)
-		title.add_theme_font_size_override("font_size", 17)
+		title.add_theme_font_size_override("font_size", 35)
 		title.add_theme_color_override("font_color", Color("71131f"))
 		title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		header.add_child(title)
 		var remove_button := Button.new()
 		remove_button.text = "Remove"
-		remove_button.theme = MENU_BUTTON_THEME
-		remove_button.add_theme_font_size_override("font_size", 18)
+		remove_button.theme = ACTION_BUTTON_THEME
+		remove_button.custom_minimum_size = Vector2(160, 76)
+		remove_button.add_theme_font_size_override("font_size", 27)
 		remove_button.pressed.connect(_remove_ship.bind(sea, index))
 		header.add_child(remove_button)
 
@@ -223,20 +269,38 @@ func _add_property_editor(
 		return
 	var property_name: StringName = StringName(property.name)
 	var value: Variant = target.get(property_name)
-	var row: Control = VBoxContainer.new() if value is Array else HBoxContainer.new()
-	row.add_theme_constant_override("separation", 12)
-	form.add_child(row)
+	var panel := PanelContainer.new()
+	panel.add_theme_stylebox_override("panel", _panel_style(Color("eadbb9")))
+	form.add_child(panel)
+	var row: BoxContainer = VBoxContainer.new() if compact_layout or value is Array else HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10 if compact_layout else 20)
+	panel.add_child(row)
 
-	var label := Label.new()
-	label.text = _display_name(String(property_name))
-	label.add_theme_color_override("font_color", Color("2b190f"))
-	label.custom_minimum_size.x = 210.0 if not nested else 180.0
-	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(label)
+	var label: Label
+	if property.type != TYPE_BOOL:
+		label = Label.new()
+		label.text = _display_name(String(property_name))
+		label.add_theme_color_override("font_color", Color("2b190f"))
+		label.add_theme_font_size_override("font_size", 35 if compact_layout else 36)
+		if not compact_layout and not value is Array:
+			label.custom_minimum_size.x = 290.0 if not nested else 250.0
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact_layout or value is Array else Control.SIZE_SHRINK_BEGIN
+		row.add_child(label)
 
 	match property.type:
 		TYPE_BOOL:
 			var check := CheckBox.new()
+			check.text = _display_name(String(property_name))
+			check.custom_minimum_size.y = 96 if compact_layout else 88
+			check.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			check.add_theme_font_size_override("font_size", 35)
+			check.add_theme_color_override("font_color", Color("2b190f"))
+			check.add_theme_color_override("font_hover_color", Color("71131f"))
+			check.add_theme_color_override("font_pressed_color", Color("71131f"))
+			check.add_theme_icon_override("checked", CHECKED_ICON)
+			check.add_theme_icon_override("unchecked", UNCHECKED_ICON)
+			check.add_theme_icon_override("checked_disabled", CHECKED_ICON)
+			check.add_theme_icon_override("unchecked_disabled", UNCHECKED_ICON)
 			check.button_pressed = value
 			check.toggled.connect(func(enabled: bool): target.set(property_name, enabled))
 			row.add_child(check)
@@ -249,7 +313,11 @@ func _add_property_editor(
 				spin.max_value = 9999
 				spin.step = 1 if property.type == TYPE_INT else 0.1
 				spin.value = value
-				spin.custom_minimum_size.x = 180
+				spin.custom_minimum_size = Vector2(160, 96 if compact_layout else 88)
+				spin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				spin.get_line_edit().add_theme_font_size_override("font_size", 35)
+				_style_input(spin.get_line_edit())
+				spin.get_line_edit().virtual_keyboard_type = LineEdit.KEYBOARD_TYPE_NUMBER
 				spin.value_changed.connect(
 					func(new_value: float):
 						target.set(
@@ -257,12 +325,32 @@ func _add_property_editor(
 							int(new_value) if property.type == TYPE_INT else new_value
 						)
 				)
-				row.add_child(spin)
+				var number_controls := HBoxContainer.new()
+				number_controls.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				number_controls.add_theme_constant_override("separation", 10)
+				row.add_child(number_controls)
+				var minus := Button.new()
+				minus.text = "−"
+				minus.theme = ACTION_BUTTON_THEME
+				minus.custom_minimum_size = Vector2(96, 96) if compact_layout else Vector2(88, 88)
+				minus.add_theme_font_size_override("font_size", 34)
+				minus.pressed.connect(func(): spin.value -= spin.step)
+				number_controls.add_child(minus)
+				number_controls.add_child(spin)
+				var plus := Button.new()
+				plus.text = "+"
+				plus.theme = ACTION_BUTTON_THEME
+				plus.custom_minimum_size = Vector2(96, 96) if compact_layout else Vector2(88, 88)
+				plus.add_theme_font_size_override("font_size", 34)
+				plus.pressed.connect(func(): spin.value += spin.step)
+				number_controls.add_child(plus)
 		TYPE_STRING, TYPE_STRING_NAME:
 			var line_edit := LineEdit.new()
 			line_edit.text = str(value)
-			line_edit.custom_minimum_size.x = 260
+			line_edit.custom_minimum_size = Vector2(160, 96 if compact_layout else 88)
 			line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			line_edit.add_theme_font_size_override("font_size", 35)
+			_style_input(line_edit)
 			line_edit.text_changed.connect(
 				func(text: String):
 					target.set(
@@ -276,6 +364,7 @@ func _add_property_editor(
 		TYPE_OBJECT:
 			if value is Resource:
 				label.add_theme_color_override("font_color", Color("71131f"))
+				label.add_theme_font_size_override("font_size", 31)
 				_add_resource_editor(value, true)
 			else:
 				_add_notice("No value assigned.")
@@ -283,11 +372,8 @@ func _add_property_editor(
 			var unsupported := Label.new()
 			unsupported.text = str(value)
 			unsupported.modulate = Color(0.18, 0.12, 0.08, 0.65)
+			unsupported.add_theme_font_size_override("font_size", 32)
 			row.add_child(unsupported)
-
-	var separator := HSeparator.new()
-	separator.modulate = Color(0.28, 0.13, 0.07, 0.2)
-	form.add_child(separator)
 
 
 func _add_enum_editor(
@@ -298,7 +384,7 @@ func _add_enum_editor(
 	hint_string: String
 ) -> void:
 	var options := OptionButton.new()
-	options.custom_minimum_size.x = 260
+	_style_option_button(options)
 	for item in hint_string.split(","):
 		var parts := item.split(":")
 		options.add_item(_display_name(parts[0]))
@@ -321,6 +407,7 @@ func _add_array_editor(
 		var empty := Label.new()
 		empty.text = "No entries in default state"
 		empty.modulate = Color(0.18, 0.12, 0.08, 0.62)
+		empty.add_theme_font_size_override("font_size", 31)
 		row.add_child(empty)
 		return
 	for index in values.size():
@@ -329,11 +416,11 @@ func _add_array_editor(
 			var panel := PanelContainer.new()
 			panel.add_theme_stylebox_override("panel", _panel_style(Color("e1d2ae")))
 			var content := VBoxContainer.new()
-			content.add_theme_constant_override("separation", 8)
+			content.add_theme_constant_override("separation", 14)
 			panel.add_child(content)
 			var heading := Label.new()
 			heading.text = "%s %d" % [_singular(_display_name(property.name)), index + 1]
-			heading.add_theme_font_size_override("font_size", 17)
+			heading.add_theme_font_size_override("font_size", 35)
 			heading.add_theme_color_override("font_color", Color("71131f"))
 			content.add_child(heading)
 			var previous_form := form
@@ -345,8 +432,15 @@ func _add_array_editor(
 			var edit := LineEdit.new()
 			edit.text = str(value)
 			edit.placeholder_text = "Entry %d" % (index + 1)
+			edit.custom_minimum_size.y = 96 if compact_layout else 88
+			edit.add_theme_font_size_override("font_size", 35)
+			if value is int:
+				edit.virtual_keyboard_type = LineEdit.KEYBOARD_TYPE_NUMBER
+			_style_input(edit)
 			edit.text_changed.connect(
 				func(text: String):
+					if value is int and not text.is_valid_int():
+						return
 					var updated: Array = target.get(property.name)
 					updated[index] = int(text) if value is int else text
 					target.set(property.name, updated)
@@ -355,16 +449,21 @@ func _add_array_editor(
 
 
 func _add_state_reference_editor(target: Object, property: Dictionary) -> void:
-	var row := HBoxContainer.new()
-	form.add_child(row)
+	var panel := PanelContainer.new()
+	panel.add_theme_stylebox_override("panel", _panel_style(Color("eadbb9")))
+	form.add_child(panel)
+	var row: BoxContainer = VBoxContainer.new() if compact_layout else HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10 if compact_layout else 20)
+	panel.add_child(row)
 	var label := Label.new()
 	label.text = _display_name(property.name)
 	label.add_theme_color_override("font_color", Color("2b190f"))
-	label.custom_minimum_size.x = 210
-	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.add_theme_font_size_override("font_size", 35 if compact_layout else 36)
+	if not compact_layout:
+		label.custom_minimum_size.x = 290
 	row.add_child(label)
 	var options := OptionButton.new()
-	options.custom_minimum_size.x = 260
+	_style_option_button(options)
 	options.add_item("None", -1)
 	var selected := 0
 	for index in STATE_KEYS.size():
@@ -380,13 +479,45 @@ func _add_state_reference_editor(target: Object, property: Dictionary) -> void:
 			)
 	)
 	row.add_child(options)
-	form.add_child(HSeparator.new())
+
+
+func _style_option_button(options: OptionButton) -> void:
+	options.custom_minimum_size = Vector2(160, 96 if compact_layout else 88)
+	options.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	options.add_theme_font_size_override("font_size", 35)
+	options.add_theme_color_override("font_color", Color("2b190f"))
+	options.add_theme_color_override("font_hover_color", Color("71131f"))
+	options.add_theme_stylebox_override("normal", _field_style())
+	options.add_theme_stylebox_override("hover", _field_style())
+	options.add_theme_stylebox_override("pressed", _field_style())
+	options.get_popup().add_theme_font_size_override("font_size", 35)
+	options.get_popup().add_theme_constant_override("v_separation", 16)
+
+
+func _style_input(input: LineEdit) -> void:
+	input.add_theme_color_override("font_color", Color("2b190f"))
+	input.add_theme_stylebox_override("normal", _field_style())
+	input.add_theme_stylebox_override("focus", _field_style())
+
+
+func _field_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("f8ecd3")
+	style.border_color = Color("725640")
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(7)
+	style.content_margin_left = 16
+	style.content_margin_right = 16
+	style.content_margin_top = 10
+	style.content_margin_bottom = 10
+	return style
 
 
 func _add_notice(text: String) -> void:
 	var label := Label.new()
 	label.text = text
 	label.modulate = Color(0.18, 0.12, 0.08, 0.65)
+	label.add_theme_font_size_override("font_size", 32)
 	form.add_child(label)
 
 

@@ -22,13 +22,15 @@ func _ready() -> void:
 func _update_navigation_layout() -> void:
 	var viewport_size := get_viewport_rect().size
 	var portrait := viewport_size.y >= viewport_size.x
-	var button_width := clampf(viewport_size.x * (0.33 if portrait else 0.12), 220.0, 290.0)
+	var next_width := clampf(viewport_size.x * (0.14 if portrait else 0.12), 240.0, 320.0)
+	var finish_width := clampf(viewport_size.x * (0.28 if portrait else 0.2), 360.0, 460.0)
 	var button_height := 96.0 if portrait else 88.0
+	%NextButton.custom_minimum_size = Vector2(next_width, button_height)
+	%FinishButton.custom_minimum_size = Vector2(finish_width, button_height)
 	for button in navigation.get_children():
 		if button is Button:
-			button.custom_minimum_size = Vector2(button_width, button_height)
 			button.add_theme_font_size_override("font_size", 36)
-	var navigation_width := button_width * 2.0 + 14.0
+	var navigation_width := next_width + finish_width + 14.0
 	navigation.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	navigation.size = Vector2(navigation_width, button_height)
 	navigation.position = Vector2((viewport_size.x - navigation_width) * 0.5 if portrait else viewport_size.x - navigation_width - 28.0, viewport_size.y - button_height - 24.0)
