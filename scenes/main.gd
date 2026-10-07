@@ -6,13 +6,32 @@ const MENU_SCENE := "res://scenes/menue.tscn"
 var storm_rule := StormRule.new()
 var gameState: GameState
 var launch_mode: int = -1
+@onready var navigation: HBoxContainer = $Navigation
 
 
 func _ready() -> void:
+	navigation.hide()
+	get_viewport().size_changed.connect(_update_navigation_layout)
+	_update_navigation_layout()
 	if launch_mode == 0:
 		call_deferred("start_normal_game")
 	elif launch_mode == 1:
 		call_deferred("continue_game")
+
+
+func _update_navigation_layout() -> void:
+	var viewport_size := get_viewport_rect().size
+	var portrait := viewport_size.y >= viewport_size.x
+	var button_width := clampf(viewport_size.x * (0.33 if portrait else 0.12), 220.0, 290.0)
+	var button_height := 96.0 if portrait else 88.0
+	for button in navigation.get_children():
+		if button is Button:
+			button.custom_minimum_size = Vector2(button_width, button_height)
+			button.add_theme_font_size_override("font_size", 36)
+	var navigation_width := button_width * 2.0 + 14.0
+	navigation.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	navigation.size = Vector2(navigation_width, button_height)
+	navigation.position = Vector2((viewport_size.x - navigation_width) * 0.5 if portrait else viewport_size.x - navigation_width - 28.0, viewport_size.y - button_height - 24.0)
 
 
 func start_normal_game() -> GameState:
@@ -131,10 +150,14 @@ func _initialize_ui() -> void:
 
 
 func _on_next_button_pressed() -> void:
+	if %EventSummary.is_card_animating():
+		return
 	%EventSummary.next()
 
 
 func _on_finish_button_pressed() -> void:
+	if %EventSummary.is_card_animating():
+		return
 	var save_error: Error = get_node("/root/SaveGameManager").save_current(gameState)
 	if save_error != OK:
 		push_error("The current GameState could not be saved.")
@@ -145,3 +168,12 @@ func _on_finish_button_pressed() -> void:
 func _on_event_summary_last_event_shown() -> void:
 	%FinishButton.disabled = false
 	%NextButton.disabled = true
+
+
+func _on_event_summary_presentation_changed(revealed: bool) -> void:
+	if not revealed:
+		navigation.hide()
+		return
+	navigation.modulate.a = 0.0
+	navigation.show()
+	create_tween().tween_property(navigation, "modulate:a", 1.0, 0.35)
