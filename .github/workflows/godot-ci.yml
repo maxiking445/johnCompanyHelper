@@ -34,9 +34,15 @@ jobs:
 
       - name: Run all GUT tests recursively
         run: |
+          set -o pipefail
           HOME=/tmp XDG_DATA_HOME=/tmp XDG_CONFIG_HOME=/tmp \
             godot --headless --path . \
               -s addons/gut/gut_cmdln.gd \
               -gdir=res://test \
               -ginclude_subdirs \
-              -gexit
+              -gexit 2>&1 | tee /tmp/john-company-gut.log
+          if grep -E 'SCRIPT ERROR:|Failed to load script|GUT WARNING' /tmp/john-company-gut.log; then
+            echo "::error::Godot could not load all test scripts."
+            exit 1
+          fi
+          grep -q 'All tests passed!' /tmp/john-company-gut.log
