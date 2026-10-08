@@ -76,3 +76,33 @@ func _create_event(location: StateType.StateType) -> IndiaEvent:
 	var event := IndiaEvent.new()
 	event.eventLocation = location
 	return event
+
+
+func test_peace_opens_only_orders_connected_across_elephant_border() -> void:
+	var bombay := _create_state(StateType.StateType.BOMBAY)
+	bombay.orders = [
+		_create_named_order(&"BOM_3", bombay.location),
+		_create_named_order(&"BOM_1", bombay.location),
+	]
+	var mysore := _create_state(StateType.StateType.MYSORE)
+	mysore.orders = [
+		_create_named_order(&"MYS_1", mysore.location),
+		_create_named_order(&"MYS_2", mysore.location),
+	]
+	_game_state.states = [bombay, mysore]
+	_elephant.placeOnBorderOf(bombay.location, mysore.location)
+
+	# BOM_3 and MYS_1 are linked across this border in OrderGraph.tres.
+	_rule._open_orders_across_border(_game_state, _elephant.getTouchingLocations())
+
+	assert_true(bombay.orders[0].isOpen())
+	assert_true(mysore.orders[0].isOpen())
+	assert_true(bombay.orders[1].isClosed())
+	assert_true(mysore.orders[1].isClosed())
+
+
+func _create_named_order(order_id: StringName, location: StateType.StateType) -> OrderModel:
+	var order := _create_order(EnumTypes.OrderState.CLOSED)
+	order.id = order_id
+	order.state = location
+	return order
