@@ -29,7 +29,7 @@ var states: Array[StateModel] = []
 func get_presidency(state: StateModel) -> PresidencyModel:
 	if state == null:
 		return null
-	match _presidency_id(state):
+	match get_presidency_type(state):
 		EnumTypes.Presidency.BOMBAY:
 			return bombay_presidency
 		EnumTypes.Presidency.MADRAS:
@@ -39,7 +39,7 @@ func get_presidency(state: StateModel) -> PresidencyModel:
 	return null
 
 func get_presidency_name(state: StateModel) -> String:
-	match _presidency_id(state):
+	match get_presidency_type(state):
 		EnumTypes.Presidency.BOMBAY:
 			return "Bombay Presidency"
 		EnumTypes.Presidency.MADRAS:
@@ -49,7 +49,7 @@ func get_presidency_name(state: StateModel) -> String:
 	return "Unknown Presidency"
 
 
-func _presidency_id(state: StateModel) -> EnumTypes.Presidency:
+func get_presidency_type(state: StateModel) -> EnumTypes.Presidency:
 	if state == null:
 		return EnumTypes.Presidency.NONE
 	if state.presidency != EnumTypes.Presidency.NONE:

@@ -63,6 +63,20 @@ func test_officer_rout_uses_associated_presidency_army() -> void:
 	RollHelper.clearQueuedResults()
 
 
+func test_region_loss_vacates_associated_commander_and_clears_control_token() -> void:
+	var state := _create_state(StateType.StateType.PUNJAB)
+	state.presidency = EnumTypes.Presidency.BENGAL
+	state.isCompanyControlled = true
+	_game_state.states = [state]
+	_game_state.bengal_presidency.has_commander = true
+
+	_rule.execute_for_state(_game_state, state)
+
+	assert_false(_game_state.bengal_presidency.has_commander)
+	assert_eq(state.presidency, EnumTypes.Presidency.NONE)
+	assert_false(state.isCompanyControlled)
+
+
 func _create_state(location: StateType.StateType) -> StateModel:
 	var state := StateModel.new()
 	state.location = location

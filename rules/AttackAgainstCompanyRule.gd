@@ -100,9 +100,11 @@ func execute_for_state(
 	var states_with_unrest := game_state.findAllStatesWithUnrest()
 	states_with_unrest.sort_custom(
 		func(left: StateModel, right: StateModel) -> bool:
-			if left.presidency == right.presidency:
+			var left_presidency := game_state.get_presidency_type(left)
+			var right_presidency := game_state.get_presidency_type(right)
+			if left_presidency == right_presidency:
 				return left.location < right.location
-			return left.presidency < right.presidency
+			return left_presidency < right_presidency
 	)
 	for state in states_with_unrest:
 		if state != primary_state and state.isCompanyControlled:
@@ -152,9 +154,10 @@ func resolve_attack(
 		return true
 	else:
 		state.resetUnrest()
-		ActionManager.add_action(
-			ActionFactory.add_trophy_action(StateType.name(state.location))
-		)
+		if presidency.has_commander:
+			ActionManager.add_action(
+				ActionFactory.add_trophy_action(StateType.name(state.location))
+			)
 		return false
 
 

@@ -50,6 +50,7 @@ func performTarnishCommandersName(game_state: GameState, state: StateModel):
 	var presidency := game_state.get_presidency(state)
 	if presidency != null and presidency.has_commander:
 		print("Tarnish the Commander's Name. Returns half (rounding up) of the trophies their family owns to the supply ")
+		presidency.has_commander = false
 		
 func performOfficerRoute(game_state: GameState, state: StateModel):
 	var presidency := game_state.get_presidency(state)
