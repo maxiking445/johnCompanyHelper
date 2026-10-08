@@ -45,10 +45,7 @@ func update_ui() -> void:
 	state_label.text = state_name if not state_name.is_empty() else StateType.name(stateModel.location)
 	details.data_entries = {
 		"Unrest:": str(stateModel.unrest_size),
-		"Commander:": _yes_no(stateModel.hasCommander),
-		"Officers:": str(stateModel.officers),
-		"Troops:": str(stateModel.troops),
-		"Exhausted troops:": str(stateModel.exhaustedTroops),
+		"Presidency:": ["None", "Bombay", "Madras", "Bengal"][stateModel.presidency],
 		"Governor:": _yes_no(stateModel.hasGovernor),
 		"Orders:": str(stateModel.orders.size()),
 		"Sovereign:": _yes_no(stateModel.isSovereign),

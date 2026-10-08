@@ -4,6 +4,9 @@
 [ext_resource type="Script" uid="uid://d1exlj4eirnis" path="res://models/StateModel.gd" id="2_state"]
 [ext_resource type="Script" uid="uid://crcm1hwm5d582" path="res://models/OrderModel.gd" id="3_order"]
 
+[ext_resource type="Script" path="res://models/ArmyModel.gd" id="army_model"]
+[ext_resource type="Script" path="res://models/PresidencyModel.gd" id="presidency_model"]
+
 [sub_resource type="Resource" id="Order_bombay_1"]
 script = ExtResource("3_order")
 orderState = 1
@@ -16,11 +19,20 @@ value = 4
 
 [sub_resource type="Resource" id="State_bombay"]
 script = ExtResource("2_state")
-troops = 2
 orders = Array[ExtResource("3_order")]([SubResource("Order_bombay_1"), SubResource("Order_bombay_2")])
+presidency = 1
 isCompanyControlled = true
+
+[sub_resource type="Resource" id="Army_bombay"]
+script = ExtResource("army_model")
+regiments = 2
+
+[sub_resource type="Resource" id="Presidency_bombay"]
+script = ExtResource("presidency_model")
+army = SubResource("Army_bombay")
 
 [resource]
 script = ExtResource("1_game_state")
+bombay_presidency = SubResource("Presidency_bombay")
 bombay = SubResource("State_bombay")
 eventsToDraw = 2

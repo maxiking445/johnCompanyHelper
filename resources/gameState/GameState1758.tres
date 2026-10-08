@@ -27,6 +27,7 @@ location = 4
 hasGovernor = true
 orders = Array[ExtResource("3_order")]([SubResource("Order_BEN_1"), SubResource("Order_BEN_2")])
 is_connected_to = Array[int]([5])
+presidency = 3
 isCompanyControlled = true
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 

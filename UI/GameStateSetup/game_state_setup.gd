@@ -187,9 +187,20 @@ func _build_steps() -> void:
 	for index in STATE_KEYS.size():
 		steps.append({
 			"title": STATE_TITLES[index],
-			"description": "Edit the region's forces, government and status.",
+			"description": "Edit the region's government, status and Presidency.",
 			"kind": "state",
 			"key": STATE_KEYS[index],
+		})
+	for presidency_data in [
+		{"title": "Bombay Presidency", "key": "bombay_presidency"},
+		{"title": "Madras Presidency", "key": "madras_presidency"},
+		{"title": "Bengal Presidency", "key": "bengal_presidency"},
+	]:
+		steps.append({
+			"title": presidency_data.title,
+			"description": "Edit the Commander and shared Army.",
+			"kind": "presidency",
+			"key": presidency_data.key,
 		})
 	steps.append({
 		"title": "Elephant",
@@ -243,6 +254,12 @@ func _show_step() -> void:
 		"state":
 			var state: StateModel = game_state.get(step.key)
 			_add_resource_editor(state, false)
+		"presidency":
+			var presidency: PresidencyModel = game_state.get(step.key)
+			_add_resource_editor(presidency, false)
+			if presidency != null and presidency.army != null:
+				_add_resource_editor(presidency.army, false)
+				_add_alliance_section(presidency.army)
 		"resource":
 			_add_resource_editor(game_state.get(step.key), false)
 		"ships":
@@ -261,6 +278,39 @@ func _add_ship_sections() -> void:
 		section.configure(sea_data.title)
 		section.add_button.pressed.connect(_add_ship.bind(sea))
 		_add_ship_list(sea)
+
+
+func _add_alliance_section(army: ArmyModel) -> void:
+	var section := SHIP_SECTION_SCENE.instantiate()
+	form.add_child(section)
+	section.configure("Local Alliances")
+	section.add_button.text = "Add Alliance"
+	section.add_button.custom_minimum_size.x = 240
+	section.add_button.pressed.connect(_add_alliance.bind(army))
+	if army.local_alliances.is_empty():
+		_add_notice("No local alliances in this Army")
+	for index in army.local_alliances.size():
+		var alliance := army.local_alliances[index]
+		var card := RESOURCE_CARD_SCENE.instantiate()
+		form.add_child(card)
+		card.configure("Alliance %d" % (index + 1), true)
+		card.remove_button.pressed.connect(_remove_alliance.bind(army, index))
+		var previous_form := form
+		form = card.content
+		_add_resource_editor(alliance, true)
+		form = previous_form
+
+
+func _add_alliance(army: ArmyModel) -> void:
+	army.local_alliances.append(LocalAllianceModel.new())
+	_show_step()
+
+
+func _remove_alliance(army: ArmyModel, index: int) -> void:
+	if index < 0 or index >= army.local_alliances.size():
+		return
+	army.local_alliances.remove_at(index)
+	_show_step()
 
 
 func _add_ship_list(sea: SeaModel) -> void:
@@ -305,6 +355,10 @@ func _add_resource_editor(resource: Resource, nested: bool) -> void:
 			resource is StateModel
 			and property.name in [&"location", &"is_connected_to"]
 		):
+			continue
+		if resource is PresidencyModel and property.name == &"army":
+			continue
+		if resource is ArmyModel and property.name == &"local_alliances":
 			continue
 		if property.name == "isDominatedBy":
 			_add_state_reference_editor(resource, property)

@@ -98,8 +98,14 @@ func execute_for_state(
 			invasion_attacker.removeTowerLevel()
 
 	var states_with_unrest := game_state.findAllStatesWithUnrest()
+	states_with_unrest.sort_custom(
+		func(left: StateModel, right: StateModel) -> bool:
+			if left.presidency == right.presidency:
+				return left.location < right.location
+			return left.presidency < right.presidency
+	)
 	for state in states_with_unrest:
-		if state != primary_state:
+		if state != primary_state and state.isCompanyControlled:
 			resolve_attack(game_state, state, 0, "Local unrest")
 	return primary_attack_succeeded
 
@@ -116,19 +122,22 @@ func resolve_attack(
 	attacker_name: String = "Crisis"
 ) -> bool:
 	var attack_strength := maxi(0, base_strength + state.unrest_size)
-	var available_troops := maxi(0, state.troops - state.exhaustedTroops)
+	var presidency := game_state.get_presidency(state)
+	if presidency == null or presidency.army == null:
+		push_error("Company-controlled region %s needs an associated Presidency and Army." % StateType.name(state.location))
+		return false
+	var available_strength := presidency.army.available_strength()
 	var defender_name := "Company in %s" % StateType.name(state.location)
 	ActionManager.add_action(
 		ActionFactory.battle_started_action(
-			attacker_name, defender_name, attack_strength, available_troops
+			attacker_name, defender_name, attack_strength, available_strength
 		)
 	)
-	var troops_to_exhaust := mini(attack_strength, available_troops)
-	state.exhaustTroops(troops_to_exhaust)
-
-	var winner := battle_resolver.determine_winner(
-		attack_strength, available_troops
+	var exhausted_strength := presidency.army.exhaust_for_defense(
+		attack_strength, game_state.get_presidency_name(state)
 	)
+
+	var winner := battle_resolver.determine_winner(attack_strength, exhausted_strength)
 	ActionManager.add_action(
 		ActionFactory.battle_result_action(
 			attacker_name,

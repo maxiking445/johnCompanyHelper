@@ -19,6 +19,7 @@ script = ExtResource("2")
 location = 1
 unrest_size = 2
 orders = Array[ExtResource("3")]([SubResource("Order")])
+presidency = 2
 isCompanyControlled = true
 
 [resource]

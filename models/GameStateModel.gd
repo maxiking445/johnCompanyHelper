@@ -9,6 +9,9 @@ class_name GameState
 @export var maratha: StateModel
 @export var delhi: StateModel
 @export var mysore: StateModel
+@export var bombay_presidency: PresidencyModel = PresidencyModel.new()
+@export var madras_presidency: PresidencyModel = PresidencyModel.new()
+@export var bengal_presidency: PresidencyModel = PresidencyModel.new()
 @export var elephant: ElephantModel
 
 @export var seaWest: SeaModel
@@ -22,6 +25,44 @@ class_name GameState
 @export var eventsToDraw: int
 @export var completedRounds: int = 0
 var states: Array[StateModel] = []
+
+func get_presidency(state: StateModel) -> PresidencyModel:
+	if state == null:
+		return null
+	match _presidency_id(state):
+		1:
+			return bombay_presidency
+		2:
+			return madras_presidency
+		3:
+			return bengal_presidency
+	return null
+
+func get_presidency_name(state: StateModel) -> String:
+	match _presidency_id(state):
+		1:
+			return "Bombay Presidency"
+		2:
+			return "Madras Presidency"
+		3:
+			return "Bengal Presidency"
+	return "Unknown Presidency"
+
+
+func _presidency_id(state: StateModel) -> int:
+	if state == null:
+		return 0
+	if state.presidency != 0:
+		return state.presidency
+	if state.isCompanyControlled:
+		match state.location:
+			StateType.StateType.BOMBAY:
+				return 1
+			StateType.StateType.MADRAS:
+				return 2
+			StateType.StateType.BENGAL:
+				return 3
+	return 0
 
 func getStates() -> Array[StateModel]:
 	if not states.is_empty():

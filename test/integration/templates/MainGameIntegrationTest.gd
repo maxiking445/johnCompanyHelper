@@ -68,6 +68,14 @@ func _assert_game_states_equal(
 	_assert_seas_equal(actual.seaWest, expected.seaWest, "%s: West sea" % scenario_name)
 	_assert_seas_equal(actual.seaEast, expected.seaEast, "%s: East sea" % scenario_name)
 	_assert_seas_equal(actual.seaSouth, expected.seaSouth, "%s: South sea" % scenario_name)
+	for presidency_key in ["bombay_presidency", "madras_presidency", "bengal_presidency"]:
+		var actual_presidency: PresidencyModel = actual.get(presidency_key)
+		var expected_presidency: PresidencyModel = expected.get(presidency_key)
+		assert_eq(actual_presidency.has_commander, expected_presidency.has_commander,
+			"%s: %s commander" % [scenario_name, presidency_key])
+		for field in ["officers", "exhausted_officers", "regiments", "exhausted_regiments"]:
+			assert_eq(actual_presidency.army.get(field), expected_presidency.army.get(field),
+				"%s: %s %s" % [scenario_name, presidency_key, field])
 
 	var actual_states := actual.getStates().filter(func(state): return state != null)
 	var expected_states := expected.getStates().filter(func(state): return state != null)
@@ -84,8 +92,7 @@ func _assert_states_equal(
 	scenario_name: String
 ) -> void:
 	var fields := [
-		"location", "unrest_size", "hasCommander", "officers",
-		"troops", "exhaustedTroops", "hasGovernor",
+		"location", "unrest_size", "presidency", "hasGovernor",
 		"is_connected_to", "isSovereign", "partOfEmpire", "isEmpireCapital",
 		"isDominated", "isCompanyControlled", "towerLevel",
 		"hasRebelled",

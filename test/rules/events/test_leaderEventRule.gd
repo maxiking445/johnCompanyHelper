@@ -31,7 +31,7 @@ func test_execute_adds_tower_level_when_event_location_is_sovereign() -> void:
 
 	assert_eq(state.towerLevel, 3)
 	assert_eq(state.unrest_size, 2)
-	assert_eq(state.exhaustedTroops, 0)
+	assert_eq(_game_state.bombay_presidency.army.exhausted_regiments, 0)
 
 
 func test_execute_resolves_rebellion_when_event_location_is_not_sovereign() -> void:
@@ -39,14 +39,15 @@ func test_execute_resolves_rebellion_when_event_location_is_not_sovereign() -> v
 	state.isSovereign = false
 	state.isCompanyControlled = true
 	state.unrest_size = 2
-	state.troops = 5
-	state.exhaustedTroops = 1
+	state.presidency = 1
+	_game_state.bombay_presidency.army.regiments = 5
+	_game_state.bombay_presidency.army.exhausted_regiments = 1
 	_game_state.states = [state]
 	_set_leader_event(StateType.StateType.PUNJAB, 1)
 
 	_rule.execute(_game_state)
 
-	assert_eq(state.exhaustedTroops, 4)
+	assert_eq(_game_state.bombay_presidency.army.exhausted_regiments, 4)
 	assert_eq(state.unrest_size, 0)
 
 
@@ -79,8 +80,6 @@ func _create_state(location: StateType.StateType) -> StateModel:
 	var state := StateModel.new()
 	state.location = location
 	state.unrest_size = 2
-	state.troops = 5
-	state.exhaustedTroops = 0
 	state.towerLevel = 1
 	state.isSovereign = false
 	return state

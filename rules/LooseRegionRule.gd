@@ -47,14 +47,19 @@ func execute_for_state(game_state: GameState, state: StateModel) -> void:
 
 
 func performTarnishCommandersName(game_state: GameState, state: StateModel):
-	if state.hasCommander:
+	var presidency := game_state.get_presidency(state)
+	if presidency != null and presidency.has_commander:
 		print("Tarnish the Commander's Name. Returns half (rounding up) of the trophies their family owns to the supply ")
 		
 func performOfficerRoute(game_state: GameState, state: StateModel):
-	for officer_index in state.officers:
+	var presidency := game_state.get_presidency(state)
+	if presidency == null or presidency.army == null:
+		return
+	var army := presidency.army
+	for officer_index in army.officers:
 		if RollHelper.rollD6() == 6:
 			print("Remove Officer (from left to right) Number: ", officer_index )
-			state.removeOfficer()
+			army.remove_officer(game_state.get_presidency_name(state))
 
 func performGovernerElimination(game_state: GameState, state: StateModel):
 	if state.hasGovernor:

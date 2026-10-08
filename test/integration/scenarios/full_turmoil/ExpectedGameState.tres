@@ -7,6 +7,9 @@
 [ext_resource type="Script" uid="uid://cooqoytdy5ufp" path="res://models/ShipModel.gd" id="5_ship"]
 [ext_resource type="Script" uid="uid://db2idjntwxbuh" path="res://models/ElephantModel.gd" id="6_elephant"]
 
+[ext_resource type="Script" path="res://models/ArmyModel.gd" id="army_model"]
+[ext_resource type="Script" path="res://models/PresidencyModel.gd" id="presidency_model"]
+
 [sub_resource type="Resource" id="Order_BEN_1"]
 script = ExtResource("3_order")
 value = 2
@@ -20,8 +23,6 @@ state = 4
 [sub_resource type="Resource" id="State_BEN"]
 script = ExtResource("2_state")
 location = 4
-troops = 2
-exhaustedTroops = 1
 orders = Array[ExtResource("3_order")]([SubResource("Order_BEN_1"), SubResource("Order_BEN_2")])
 is_connected_to = Array[int]([5])
 
@@ -41,9 +42,9 @@ value = 1
 [sub_resource type="Resource" id="State_BOM"]
 script = ExtResource("2_state")
 unrest_size = 1
-troops = 2
 orders = Array[ExtResource("3_order")]([SubResource("Order_BOM_1"), SubResource("Order_BOM_2"), SubResource("Order_BOM_3")])
 is_connected_to = Array[int]([7, 5, 3, 6])
+presidency = 1
 isCompanyControlled = true
 towerLevel = 1
 
@@ -97,9 +98,6 @@ state = 1
 [sub_resource type="Resource" id="State_MAD"]
 script = ExtResource("2_state")
 location = 1
-hasCommander = true
-officers = 2
-troops = 3
 orders = Array[ExtResource("3_order")]([SubResource("Order_MAD_1"), SubResource("Order_MAD_2")])
 is_connected_to = Array[int]([7, 2])
 
@@ -121,8 +119,6 @@ state = 5
 [sub_resource type="Resource" id="State_MAR"]
 script = ExtResource("2_state")
 location = 5
-officers = 1
-troops = 4
 orders = Array[ExtResource("3_order")]([SubResource("Order_MAR_1"), SubResource("Order_MAR_2"), SubResource("Order_MAR_3")])
 is_connected_to = Array[int]([0, 6, 4])
 isSovereign = true
@@ -186,8 +182,38 @@ script = ExtResource("5_ship")
 script = ExtResource("4_sea")
 ships = Array[ExtResource("5_ship")]([SubResource("Ship_West")])
 
+[sub_resource type="Resource" id="Army_bombay"]
+script = ExtResource("army_model")
+regiments = 2
+
+[sub_resource type="Resource" id="Presidency_bombay"]
+script = ExtResource("presidency_model")
+army = SubResource("Army_bombay")
+
+[sub_resource type="Resource" id="Army_madras"]
+script = ExtResource("army_model")
+officers = 2
+regiments = 3
+
+[sub_resource type="Resource" id="Presidency_madras"]
+script = ExtResource("presidency_model")
+has_commander = true
+army = SubResource("Army_madras")
+
+[sub_resource type="Resource" id="Army_bengal"]
+script = ExtResource("army_model")
+regiments = 2
+exhausted_regiments = 1
+
+[sub_resource type="Resource" id="Presidency_bengal"]
+script = ExtResource("presidency_model")
+army = SubResource("Army_bengal")
+
 [resource]
 script = ExtResource("1_game")
+bombay_presidency = SubResource("Presidency_bombay")
+madras_presidency = SubResource("Presidency_madras")
+bengal_presidency = SubResource("Presidency_bengal")
 bombay = SubResource("State_BOM")
 madras = SubResource("State_MAD")
 hyderabad = SubResource("State_HYP")

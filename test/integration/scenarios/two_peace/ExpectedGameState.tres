@@ -17,6 +17,7 @@ state = 1
 script = ExtResource("2")
 location = 1
 orders = Array[ExtResource("3")]([SubResource("Order")])
+presidency = 2
 isCompanyControlled = true
 
 [resource]

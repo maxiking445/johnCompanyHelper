@@ -28,6 +28,7 @@ script = ExtResource("2_state")
 location = 4
 orders = Array[ExtResource("3_order")]([SubResource("Order_BEN_1"), SubResource("Order_BEN_2")])
 is_connected_to = Array[int]([5])
+presidency = 3
 isCompanyControlled = true
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
@@ -53,6 +54,7 @@ metadata/_custom_type_script = "uid://crcm1hwm5d582"
 script = ExtResource("2_state")
 orders = Array[ExtResource("3_order")]([SubResource("Order_BOM_1"), SubResource("Order_BOM_2"), SubResource("Order_BOM_3")])
 is_connected_to = Array[int]([7, 5, 3, 6])
+presidency = 1
 isCompanyControlled = true
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 
@@ -131,6 +133,7 @@ script = ExtResource("2_state")
 location = 1
 orders = Array[ExtResource("3_order")]([SubResource("Order_MAD_1"), SubResource("Order_MAD_2")])
 is_connected_to = Array[int]([7, 2])
+presidency = 2
 isCompanyControlled = true
 metadata/_custom_type_script = "uid://d1exlj4eirnis"
 

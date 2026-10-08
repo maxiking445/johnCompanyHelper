@@ -3,6 +3,7 @@ extends GutTest
 const GAME_STATE_1710 := preload("res://resources/gameState/GameState1710.tres")
 const GAME_STATE_1758 := preload("res://resources/gameState/GameState1758.tres")
 const GAME_STATE_1813 := preload("res://resources/gameState/GameState1813.tres")
+const SINGLE_CRISIS := preload("res://test/integration/scenarios/single_crisis/StartGameState.tres")
 
 
 func test_all_default_game_states_are_complete() -> void:
@@ -35,3 +36,52 @@ func test_1813_matches_post_monopoly_india_setup() -> void:
 	for sea in [GAME_STATE_1813.seaWest, GAME_STATE_1813.seaEast, GAME_STATE_1813.seaSouth]:
 		assert_eq(sea.ships.size(), 1)
 		assert_true(sea.ships[0].isCompanyShip())
+
+
+func test_army_resource_survives_serialization() -> void:
+	assert_eq(SINGLE_CRISIS.bombay.presidency, 1)
+	assert_eq(SINGLE_CRISIS.bombay_presidency.army.regiments, 2)
+
+
+func test_army_and_alliance_survive_json_round_trip() -> void:
+	var source := GameState.new()
+	source.bombay = StateModel.new()
+	source.bombay.isCompanyControlled = true
+	source.bombay.presidency = 1
+	source.bombay_presidency.army.regiments = 3
+	var alliance := LocalAllianceModel.new()
+	alliance.name = "Local ally"
+	alliance.strength = 2
+	alliance.purchased = true
+	source.bombay_presidency.army.local_alliances.append(alliance)
+	var result := JSONConverter.parse(JSONConverter.stringify(source), GameState) as GameState
+	assert_not_null(result)
+	assert_eq(result.bombay_presidency.army.regiments, 3)
+	assert_eq(result.bombay_presidency.army.local_alliances.size(), 1)
+	assert_eq(result.bombay_presidency.army.local_alliances[0].strength, 2)
+	assert_true(result.bombay_presidency.army.local_alliances[0].purchased)
+
+
+func test_game_states_have_separate_armies() -> void:
+	var first := GameState.new()
+	var second := GameState.new()
+	first.bombay_presidency.army.regiments = 4
+	assert_eq(second.bombay_presidency.army.regiments, 0)
+
+
+func test_army_survives_save_game_resource_round_trip() -> void:
+	var source := GameState.new()
+	source.madras_presidency.army.officers = 2
+	source.madras_presidency.army.exhausted_officers = 1
+	var alliance := LocalAllianceModel.new()
+	alliance.strength = 3
+	alliance.purchased = true
+	source.madras_presidency.army.local_alliances.append(alliance)
+	var path := "user://army_model_round_trip_test.tres"
+	assert_eq(ResourceSaver.save(source, path), OK)
+	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as GameState
+	assert_not_null(loaded)
+	assert_eq(loaded.madras_presidency.army.officers, 2)
+	assert_eq(loaded.madras_presidency.army.exhausted_officers, 1)
+	assert_eq(loaded.madras_presidency.army.local_alliances[0].strength, 3)
+	assert_true(loaded.madras_presidency.army.local_alliances[0].purchased)

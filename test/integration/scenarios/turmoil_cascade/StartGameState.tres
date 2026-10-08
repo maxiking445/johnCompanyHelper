@@ -7,6 +7,9 @@
 [ext_resource type="Script" uid="uid://cooqoytdy5ufp" path="res://models/ShipModel.gd" id="7_ship"]
 [ext_resource type="Script" uid="uid://db2idjntwxbuh" path="res://models/ElephantModel.gd" id="8_elephant"]
 
+[ext_resource type="Script" path="res://models/ArmyModel.gd" id="army_model"]
+[ext_resource type="Script" path="res://models/PresidencyModel.gd" id="presidency_model"]
+
 [sub_resource type="Resource" id="BEN_1"]
 script = ExtResource("3_order")
 id = &"BEN_1"
@@ -22,8 +25,6 @@ state = 4
 [sub_resource type="Resource" id="State_BEN"]
 script = ExtResource("2_state")
 location = 4
-troops = 2
-exhaustedTroops = 1
 orders = Array[ExtResource("3_order")]([SubResource("BEN_1"), SubResource("BEN_2")])
 is_connected_to = Array[int]([5])
 
@@ -106,9 +107,6 @@ state = 1
 [sub_resource type="Resource" id="State_MAD"]
 script = ExtResource("2_state")
 location = 1
-hasCommander = true
-officers = 2
-troops = 3
 orders = Array[ExtResource("3_order")]([SubResource("MAD_1"), SubResource("MAD_2")])
 is_connected_to = Array[int]([7, 2])
 
@@ -194,8 +192,29 @@ script = ExtResource("7_ship")
 script = ExtResource("6_sea")
 ships = Array[ExtResource("7_ship")]([SubResource("Ship_West")])
 
+[sub_resource type="Resource" id="Army_madras"]
+script = ExtResource("army_model")
+officers = 2
+regiments = 3
+
+[sub_resource type="Resource" id="Presidency_madras"]
+script = ExtResource("presidency_model")
+has_commander = true
+army = SubResource("Army_madras")
+
+[sub_resource type="Resource" id="Army_bengal"]
+script = ExtResource("army_model")
+regiments = 2
+exhausted_regiments = 1
+
+[sub_resource type="Resource" id="Presidency_bengal"]
+script = ExtResource("presidency_model")
+army = SubResource("Army_bengal")
+
 [resource]
 script = ExtResource("1_game")
+madras_presidency = SubResource("Presidency_madras")
+bengal_presidency = SubResource("Presidency_bengal")
 bombay = SubResource("State_BOM")
 madras = SubResource("State_MAD")
 hyderabad = SubResource("State_HYP")

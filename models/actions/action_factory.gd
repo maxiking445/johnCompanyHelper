@@ -93,8 +93,8 @@ static func change_unrest_action(
 	})
 
 
-static func exhaust_troops_action(state: String, amount: int) -> Action:
-	return _create(EXHAUST_TROOPS, {"state": state, "amount": amount})
+static func exhaust_army_action(presidency: String, amount: int) -> Action:
+	return _create(EXHAUST_TROOPS, {"state": presidency, "amount": amount})
 
 
 static func remove_officer_action(state: String) -> Action:

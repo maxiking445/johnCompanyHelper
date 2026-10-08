@@ -7,6 +7,7 @@
 
 [sub_resource type="Resource" id="Bombay"]
 script = ExtResource("2")
+presidency = 1
 isCompanyControlled = true
 
 [sub_resource type="Resource" id="Elephant"]

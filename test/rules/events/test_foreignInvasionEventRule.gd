@@ -74,7 +74,8 @@ func test_successful_company_invasion_uses_unrest_and_army_defense() -> void:
 	var madras := _create_state(StateType.StateType.MADRAS, 0)
 	madras.isCompanyControlled = true
 	madras.unrest_size = 1
-	madras.troops = 3
+	madras.presidency = 2
+	_game_state.madras_presidency.army.regiments = 3
 	_game_state.states = [madras]
 	_queue_rolls(StormDice.Face.SOUTH_3, [3])
 
@@ -82,7 +83,7 @@ func test_successful_company_invasion_uses_unrest_and_army_defense() -> void:
 
 	assert_true(madras.hasRebelled)
 	assert_false(madras.isCompanyControlled)
-	assert_eq(madras.exhaustedTroops, 3)
+	assert_eq(_game_state.madras_presidency.army.exhausted_regiments, 3)
 	assert_eq(madras.towerLevel, 1)
 
 
@@ -90,7 +91,8 @@ func test_failed_company_invasion_awards_trophy_and_removes_unrest() -> void:
 	var madras := _create_state(StateType.StateType.MADRAS, 0)
 	madras.isCompanyControlled = true
 	madras.unrest_size = 1
-	madras.troops = 4
+	madras.presidency = 2
+	_game_state.madras_presidency.army.regiments = 4
 	_game_state.states = [madras]
 	_queue_rolls(StormDice.Face.SOUTH_3, [3])
 
@@ -98,7 +100,7 @@ func test_failed_company_invasion_awards_trophy_and_removes_unrest() -> void:
 
 	assert_true(madras.isCompanyControlled)
 	assert_eq(madras.unrest_size, 0)
-	assert_eq(madras.exhaustedTroops, 4)
+	assert_eq(_game_state.madras_presidency.army.exhausted_regiments, 4)
 
 
 func _queue_rolls(storm: StormDice.Face, d6_results: Array[int]) -> void:

@@ -4,10 +4,8 @@ class_name StateModel
 @export var location: StateType.StateType
 
 @export var unrest_size: int
-@export var hasCommander: bool
-@export var officers: int
-@export var troops: int
-@export var exhaustedTroops: int
+## The control token above a President's box assigns this region to that Presidency.
+@export_enum("None", "Bombay", "Madras", "Bengal") var presidency: int = 0
 @export var hasGovernor: bool
 @export var orders: Array[OrderModel]
 @export var is_connected_to: Array[StateType.StateType]
@@ -53,17 +51,6 @@ func change_unrest(amount: int) -> void:
 		)
 
 
-func exhaustTroops(number: int):
-	exhaustedTroops = exhaustedTroops + number
-	if number > 0:
-		ActionManager.add_action(
-			ActionFactory.exhaust_troops_action(_display_name(), number)
-		)
-	
-func removeOfficer():
-	officers = officers -1	
-	ActionManager.add_action(ActionFactory.remove_officer_action(_display_name()))
-
 func stateHasRebelled():
 	hasRebelled = true
 	
@@ -106,6 +93,7 @@ func become_dominated_by(state: StateModel) -> void:
 
 func restore_local_authority() -> void:
 	resetUnrest()
+	presidency = 0
 	towerLevel = 1
 	isCompanyControlled = false
 	isSovereign = true

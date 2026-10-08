@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1")
-text = "Exhaust {amount} troops in {state}."
-title = "Exhaust Troops"
+text = "Exhaust Army pieces with strength {amount} in the {state}."
+title = "Exhaust Army"
 type = 0
 minimum_parameter_count = 2
 maximum_parameter_count = 2
