@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1")
-text = "Pay £{amount} to each player with a Writer in {state}."
+text = "Check {target_region} and all adjacent regions yourself. Each player takes £1 from the bank for each Writer they have on an order in those regions."
 title = "Pay Writers"
 type = 1
-minimum_parameter_count = 2
-maximum_parameter_count = 2
+minimum_parameter_count = 1
+maximum_parameter_count = 1

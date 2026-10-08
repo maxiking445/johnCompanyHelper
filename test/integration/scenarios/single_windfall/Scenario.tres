@@ -8,7 +8,7 @@
 
 [resource]
 script = ExtResource("1")
-scenario_name = "Single Windfall resolves Hyderabad writers"
+scenario_name = "Single Windfall prompts players to check Hyderabad writers"
 start_game_state = ExtResource("2")
 expected_game_state = ExtResource("3")
 event_deck = Array[ExtResource("1_kwhd5")]([ExtResource("4")])

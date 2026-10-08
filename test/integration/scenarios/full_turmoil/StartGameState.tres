@@ -28,7 +28,6 @@ is_connected_to = Array[int]([5])
 [sub_resource type="Resource" id="Order_BOM_1"]
 script = ExtResource("3_order")
 value = 3
-hasWriter = true
 
 [sub_resource type="Resource" id="Order_BOM_2"]
 script = ExtResource("3_order")

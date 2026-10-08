@@ -11,40 +11,25 @@ var _game_state: GameState
 func before_each() -> void:
 	_rule = WINDFALL_EVENT_RULE.new()
 	_game_state = GAME_STATE.duplicate(true)
+	ActionManager.clear()
 	EventHelper.draw_pile = [WINDFALL_HYDERABAD]
 	EventHelper.discard_pile.clear()
 	EventHelper.activeEvent = null
 
 
 func after_each() -> void:
+	ActionManager.clear()
 	EventHelper.draw_pile.clear()
 	EventHelper.discard_pile.clear()
 	EventHelper.activeEvent = null
 
 
-func test_execute_resolves_writers_on_orders() -> void:
-	_set_writers_on_all_orders(_game_state.hyderabad)
-	_set_writers_on_all_orders(_game_state.madras)
-	_set_writers_on_all_orders(_game_state.mysore)
-	_set_writers_on_all_orders(_game_state.maratha)
-	_set_writers_on_all_orders(_game_state.bombay)
-	var writer_counts_before := _writer_counts()
-
+func test_execute_always_prompts_players_to_check_writers() -> void:
 	_rule.execute(_game_state)
 
-	assert_eq(_writer_counts(), writer_counts_before)
-
-
-func _set_writers_on_all_orders(state: StateModel) -> void:
-	for order in state.orders:
-		order.hasWriter = true
-
-
-func _writer_counts() -> Array[int]:
-	return [
-		_game_state.hyderabad.getWritersAmountInState(),
-		_game_state.madras.getWritersAmountInState(),
-		_game_state.mysore.getWritersAmountInState(),
-		_game_state.maratha.getWritersAmountInState(),
-		_game_state.bombay.getWritersAmountInState(),
-	]
+	assert_eq(ActionManager.get_action_count(), 1)
+	var action := ActionManager.get_action(0)
+	assert_eq(action.title, "Pay Writers")
+	assert_true(action.text.contains("Check HYDERABAD"))
+	assert_true(action.text.contains("Each player takes £1 from the bank"))
+	assert_true(action.text.contains("all adjacent regions"))

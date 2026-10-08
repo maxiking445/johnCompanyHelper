@@ -16,7 +16,6 @@ const OPEN_ORDERS: Action = preload("res://resources/actions/OpenOrders.tres")
 const REMOVE_EMPIRE_FLAG: Action = preload("res://resources/actions/RemoveEmpireFlag.tres")
 const REMOVE_OFFICER: Action = preload("res://resources/actions/RemoveOfficer.tres")
 const REMOVE_SOLDIERS: Action = preload("res://resources/actions/RemoveSoldiers.tres")
-const REMOVE_WRITER: Action = preload("res://resources/actions/RemoveWriter.tres")
 const ADD_TROPHY: Action = preload("res://resources/actions/AddTrophy.tres")
 const CHANGE_COMPANY_STANDING: Action = preload("res://resources/actions/ChangeCompanyStanding.tres")
 const RESTORE_LOCAL_AUTHORITY: Action = preload("res://resources/actions/RestoreLocalAuthority.tres")
@@ -24,7 +23,6 @@ const DOMINATE_STATE: Action = preload("res://resources/actions/DominateState.tr
 const RESTORE_SOVEREIGNTY: Action = preload("res://resources/actions/RestoreSovereignty.tres")
 const UPDATE_SHIP_STATUS: Action = preload("res://resources/actions/UpdateShipStatus.tres")
 const WINDFALL_PAY_WRITERS: Action = preload("res://resources/actions/WindfallPayWriters.tres")
-const WINDFALL_NO_WRITERS: Action = preload("res://resources/actions/WindfallNoWriters.tres")
 const STATE_STATUS: Action = preload("res://resources/actions/StateStatus.tres")
 const BATTLE_STARTED: Action = preload("res://resources/actions/BattleStarted.tres")
 const BATTLE_RESULT: Action = preload("res://resources/actions/BattleResult.tres")
@@ -109,10 +107,6 @@ static func add_trophy_action(state: String) -> Action:
 
 static func lower_company_standing_action(amount: int) -> Action:
 	return _create(CHANGE_COMPANY_STANDING, {"amount": amount})
-
-
-static func remove_writer_action(state: String, order: String) -> Action:
-	return _create(REMOVE_WRITER, {"state": state, "order": order})
 
 
 static func restore_local_authority_action(
@@ -202,19 +196,12 @@ static func move_elephant_action(
 	})
 
 
-static func windfall_pay_writers_action(state: String, amount: int) -> Action:
-	return _create(WINDFALL_PAY_WRITERS, {
-		"state": state,
-		"amount": amount,
-	})
-
-
-static func windfall_no_writers_action() -> Action:
-	return _create(WINDFALL_NO_WRITERS, {})
-
-
 static func information_action(message: String) -> Action:
 	return _create(INFORMATION, {"message": message})
+
+
+static func windfall_pay_writers_action(target_region: String) -> Action:
+	return _create(WINDFALL_PAY_WRITERS, {"target_region": target_region})
 
 
 static func error_action(message: String) -> Action:

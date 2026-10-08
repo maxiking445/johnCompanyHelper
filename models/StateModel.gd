@@ -162,9 +162,3 @@ func isDominatedByState(state: StateModel):
 	if isDominated && isDominatedBy == state:
 		return true
 	return false		
-func getWritersAmountInState()-> int:
-	var writers: int = 0
-	for order in orders:
-		if order.hasWriterOnOrder():
-			writers = writers + 1
-	return writers			

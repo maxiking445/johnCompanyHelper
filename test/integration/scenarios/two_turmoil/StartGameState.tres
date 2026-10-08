@@ -7,12 +7,10 @@
 [sub_resource type="Resource" id="Order_bombay_1"]
 script = ExtResource("3_order")
 value = 3
-hasWriter = true
 
 [sub_resource type="Resource" id="Order_bombay_2"]
 script = ExtResource("3_order")
 value = 4
-hasWriter = true
 
 [sub_resource type="Resource" id="State_bombay"]
 script = ExtResource("2_state")

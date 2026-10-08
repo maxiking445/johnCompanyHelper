@@ -35,7 +35,7 @@ func updateUI() -> void:
 		return
 
 	var status := orderModel.orderState if orderModel != null else tradeOrderStatus
-	var writer := orderModel.hasWriter if orderModel != null else hasWriter
+	var writer := hasWriter
 	$ClosedSprite.visible = status == EnumTypes.OrderState.CLOSED
 	$WriterSprite.visible = writer
 	$Label.hide()

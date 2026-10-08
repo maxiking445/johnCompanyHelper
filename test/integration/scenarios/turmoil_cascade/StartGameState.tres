@@ -67,7 +67,6 @@ script = ExtResource("3_order")
 id = &"DEL_3"
 value = 1
 state = 6
-hasWriter = true
 
 [sub_resource type="Resource" id="State_DEL"]
 script = ExtResource("2_state")
@@ -124,7 +123,6 @@ script = ExtResource("3_order")
 id = &"MAR_2"
 value = 2
 state = 5
-hasWriter = true
 
 [sub_resource type="Resource" id="MAR_3"]
 script = ExtResource("3_order")
@@ -143,7 +141,6 @@ script = ExtResource("3_order")
 id = &"MYS_1"
 value = 2
 state = 7
-hasWriter = true
 
 [sub_resource type="Resource" id="MYS_2"]
 script = ExtResource("3_order")
@@ -162,7 +159,6 @@ script = ExtResource("3_order")
 id = &"PUN_1"
 value = 2
 state = 3
-hasWriter = true
 
 [sub_resource type="Resource" id="State_PUN"]
 script = ExtResource("2_state")

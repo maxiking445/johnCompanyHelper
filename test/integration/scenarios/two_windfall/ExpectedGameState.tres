@@ -6,11 +6,9 @@
 
 [sub_resource type="Resource" id="Order1"]
 script = ExtResource("3")
-hasWriter = true
 
 [sub_resource type="Resource" id="Order2"]
 script = ExtResource("3")
-hasWriter = true
 
 [sub_resource type="Resource" id="Hyderabad"]
 script = ExtResource("2")

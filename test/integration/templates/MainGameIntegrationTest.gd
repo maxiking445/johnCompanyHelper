@@ -106,7 +106,6 @@ func _assert_states_equal(
 		assert_eq(actual.orders[index].orderState, expected.orders[index].orderState, "%s state" % order_label)
 		assert_eq(actual.orders[index].value, expected.orders[index].value, "%s value" % order_label)
 		assert_eq(actual.orders[index].state, expected.orders[index].state, "%s location" % order_label)
-		assert_eq(actual.orders[index].hasWriter, expected.orders[index].hasWriter, "%s writer" % order_label)
 
 
 func _assert_elephants_equal(

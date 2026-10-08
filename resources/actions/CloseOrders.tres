@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1")
-text = "Close {order_count} orders in {state}."
+text = "Close {order_count} orders in {state}. Return any Writer on a closed order to its player's supply."
 title = "Close Orders"
 type = 0
 minimum_parameter_count = 2
