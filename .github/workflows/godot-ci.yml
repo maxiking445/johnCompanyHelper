@@ -33,6 +33,7 @@ jobs:
             godot --headless --path . --import --quit
 
       - name: Run all GUT tests recursively
+        shell: bash
         run: |
           set -o pipefail
           HOME=/tmp XDG_DATA_HOME=/tmp XDG_CONFIG_HOME=/tmp \
