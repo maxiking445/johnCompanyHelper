@@ -30,39 +30,39 @@ func get_presidency(state: StateModel) -> PresidencyModel:
 	if state == null:
 		return null
 	match _presidency_id(state):
-		1:
+		EnumTypes.Presidency.BOMBAY:
 			return bombay_presidency
-		2:
+		EnumTypes.Presidency.MADRAS:
 			return madras_presidency
-		3:
+		EnumTypes.Presidency.BENGAL:
 			return bengal_presidency
 	return null
 
 func get_presidency_name(state: StateModel) -> String:
 	match _presidency_id(state):
-		1:
+		EnumTypes.Presidency.BOMBAY:
 			return "Bombay Presidency"
-		2:
+		EnumTypes.Presidency.MADRAS:
 			return "Madras Presidency"
-		3:
+		EnumTypes.Presidency.BENGAL:
 			return "Bengal Presidency"
 	return "Unknown Presidency"
 
 
-func _presidency_id(state: StateModel) -> int:
+func _presidency_id(state: StateModel) -> EnumTypes.Presidency:
 	if state == null:
-		return 0
-	if state.presidency != 0:
+		return EnumTypes.Presidency.NONE
+	if state.presidency != EnumTypes.Presidency.NONE:
 		return state.presidency
 	if state.isCompanyControlled:
 		match state.location:
 			StateType.StateType.BOMBAY:
-				return 1
+				return EnumTypes.Presidency.BOMBAY
 			StateType.StateType.MADRAS:
-				return 2
+				return EnumTypes.Presidency.MADRAS
 			StateType.StateType.BENGAL:
-				return 3
-	return 0
+				return EnumTypes.Presidency.BENGAL
+	return EnumTypes.Presidency.NONE
 
 func getStates() -> Array[StateModel]:
 	if not states.is_empty():

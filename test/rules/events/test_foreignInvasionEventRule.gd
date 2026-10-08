@@ -74,7 +74,7 @@ func test_successful_company_invasion_uses_unrest_and_army_defense() -> void:
 	var madras := _create_state(StateType.StateType.MADRAS, 0)
 	madras.isCompanyControlled = true
 	madras.unrest_size = 1
-	madras.presidency = 2
+	madras.presidency = EnumTypes.Presidency.MADRAS
 	_game_state.madras_presidency.army.regiments = 3
 	_game_state.states = [madras]
 	_queue_rolls(StormDice.Face.SOUTH_3, [3])
@@ -91,7 +91,7 @@ func test_failed_company_invasion_awards_trophy_and_removes_unrest() -> void:
 	var madras := _create_state(StateType.StateType.MADRAS, 0)
 	madras.isCompanyControlled = true
 	madras.unrest_size = 1
-	madras.presidency = 2
+	madras.presidency = EnumTypes.Presidency.MADRAS
 	_game_state.madras_presidency.army.regiments = 4
 	_game_state.states = [madras]
 	_queue_rolls(StormDice.Face.SOUTH_3, [3])

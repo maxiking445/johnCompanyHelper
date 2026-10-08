@@ -39,7 +39,7 @@ func test_execute_resolves_rebellion_when_event_location_is_not_sovereign() -> v
 	state.isSovereign = false
 	state.isCompanyControlled = true
 	state.unrest_size = 2
-	state.presidency = 1
+	state.presidency = EnumTypes.Presidency.BOMBAY
 	_game_state.bombay_presidency.army.regiments = 5
 	_game_state.bombay_presidency.army.exhausted_regiments = 1
 	_game_state.states = [state]

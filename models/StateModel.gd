@@ -5,7 +5,7 @@ class_name StateModel
 
 @export var unrest_size: int
 ## The control token above a President's box assigns this region to that Presidency.
-@export_enum("None", "Bombay", "Madras", "Bengal") var presidency: int = 0
+@export var presidency: EnumTypes.Presidency = EnumTypes.Presidency.NONE
 @export var hasGovernor: bool
 @export var orders: Array[OrderModel]
 @export var is_connected_to: Array[StateType.StateType]
@@ -93,7 +93,7 @@ func become_dominated_by(state: StateModel) -> void:
 
 func restore_local_authority() -> void:
 	resetUnrest()
-	presidency = 0
+	presidency = EnumTypes.Presidency.NONE
 	towerLevel = 1
 	isCompanyControlled = false
 	isSovereign = true

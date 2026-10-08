@@ -8,6 +8,13 @@ enum OrderState {
 	CLOSED
 }
 
+enum Presidency {
+	NONE,
+	BOMBAY,
+	MADRAS,
+	BENGAL
+}
+
 enum ElephantPlacement {
   	IN_STATE,
   	ON_BORDER,

@@ -39,7 +39,7 @@ func test_1813_matches_post_monopoly_india_setup() -> void:
 
 
 func test_army_resource_survives_serialization() -> void:
-	assert_eq(SINGLE_CRISIS.bombay.presidency, 1)
+	assert_eq(SINGLE_CRISIS.bombay.presidency, EnumTypes.Presidency.BOMBAY)
 	assert_eq(SINGLE_CRISIS.bombay_presidency.army.regiments, 2)
 
 
@@ -47,7 +47,7 @@ func test_army_and_alliance_survive_json_round_trip() -> void:
 	var source := GameState.new()
 	source.bombay = StateModel.new()
 	source.bombay.isCompanyControlled = true
-	source.bombay.presidency = 1
+	source.bombay.presidency = EnumTypes.Presidency.BOMBAY
 	source.bombay_presidency.army.regiments = 3
 	var alliance := LocalAllianceModel.new()
 	alliance.name = "Local ally"

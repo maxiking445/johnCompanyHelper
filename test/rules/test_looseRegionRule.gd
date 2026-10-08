@@ -54,7 +54,7 @@ func test_reset_lost_regions_this_round_restarts_loss_count() -> void:
 
 func test_officer_rout_uses_associated_presidency_army() -> void:
 	var state := _create_state(StateType.StateType.PUNJAB)
-	state.presidency = 3
+	state.presidency = EnumTypes.Presidency.BENGAL
 	_game_state.states = [state]
 	_game_state.bengal_presidency.army.officers = 2
 	RollHelper.d6_results = [6, 1]
@@ -68,6 +68,10 @@ func _create_state(location: StateType.StateType) -> StateModel:
 	state.location = location
 	state.unrest_size = 1
 	state.towerLevel = 2
-	state.presidency = 1 if location == StateType.StateType.BOMBAY else 2
+	state.presidency = (
+		EnumTypes.Presidency.BOMBAY
+		if location == StateType.StateType.BOMBAY
+		else EnumTypes.Presidency.MADRAS
+	)
 	state.hasGovernor = false
 	return state
