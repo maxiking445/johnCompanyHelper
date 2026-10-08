@@ -4,7 +4,8 @@ class_name StateModel
 @export var location: StateType.StateType
 
 @export var unrest_size: int
-## The control token above a President's box assigns this region to that Presidency.
+## For acquired regions, the control token above a President's box assigns the Presidency.
+## Home regions are assigned by GameState.get_home_presidency().
 @export var presidency: EnumTypes.Presidency = EnumTypes.Presidency.NONE
 @export var hasGovernor: bool
 @export var orders: Array[OrderModel]

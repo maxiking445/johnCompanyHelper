@@ -356,6 +356,9 @@ func _add_resource_editor(resource: Resource, nested: bool) -> void:
 			and property.name in [&"location", &"is_connected_to", &"hasRebelled"]
 		):
 			continue
+		if resource is StateModel and property.name == &"presidency":
+			if game_state.get_home_presidency(resource.location) != EnumTypes.Presidency.NONE:
+				continue
 		if resource is PresidencyModel and property.name == &"army":
 			continue
 		if resource is ArmyModel and property.name == &"local_alliances":
@@ -388,7 +391,12 @@ func _add_property_editor(
 			boolean_field.configure(value, compact_layout)
 			boolean_field.set_label(_display_name(String(property_name)))
 			boolean_field.value_changed.connect(
-				func(enabled: bool): target.set(property_name, enabled)
+				func(enabled: bool):
+					target.set(property_name, enabled)
+					if target is StateModel and property_name == &"isCompanyControlled":
+						if not enabled and game_state.get_home_presidency(target.location) == EnumTypes.Presidency.NONE:
+							target.presidency = EnumTypes.Presidency.NONE
+						call_deferred("_show_step")
 			)
 		TYPE_INT, TYPE_FLOAT:
 			if property.hint == PROPERTY_HINT_ENUM:

@@ -58,16 +58,20 @@ func get_presidency_name(state: StateModel) -> String:
 func get_presidency_type(state: StateModel) -> EnumTypes.Presidency:
 	if state == null:
 		return EnumTypes.Presidency.NONE
-	if state.presidency != EnumTypes.Presidency.NONE:
-		return state.presidency
-	if state.isCompanyControlled:
-		match state.location:
-			StateType.StateType.BOMBAY:
-				return EnumTypes.Presidency.BOMBAY
-			StateType.StateType.MADRAS:
-				return EnumTypes.Presidency.MADRAS
-			StateType.StateType.BENGAL:
-				return EnumTypes.Presidency.BENGAL
+	var home_presidency := get_home_presidency(state.location)
+	if home_presidency != EnumTypes.Presidency.NONE:
+		return home_presidency
+	return state.presidency
+
+
+func get_home_presidency(location: StateType.StateType) -> EnumTypes.Presidency:
+	match location:
+		StateType.StateType.BOMBAY:
+			return EnumTypes.Presidency.BOMBAY
+		StateType.StateType.MADRAS:
+			return EnumTypes.Presidency.MADRAS
+		StateType.StateType.BENGAL:
+			return EnumTypes.Presidency.BENGAL
 	return EnumTypes.Presidency.NONE
 
 func getStates() -> Array[StateModel]:

@@ -43,6 +43,31 @@ func test_army_resource_survives_serialization() -> void:
 	assert_eq(SINGLE_CRISIS.bombay_presidency.army.regiments, 2)
 
 
+func test_home_regions_have_fixed_presidencies_even_without_stored_assignment() -> void:
+	var game_state := GameState.new()
+	for assignment in [
+		[StateType.StateType.BOMBAY, EnumTypes.Presidency.BOMBAY],
+		[StateType.StateType.MADRAS, EnumTypes.Presidency.MADRAS],
+		[StateType.StateType.BENGAL, EnumTypes.Presidency.BENGAL],
+	]:
+		var state := StateModel.new()
+		state.location = assignment[0]
+		assert_eq(game_state.get_presidency_type(state), assignment[1])
+		state.presidency = EnumTypes.Presidency.BOMBAY
+		assert_eq(game_state.get_presidency_type(state), assignment[1])
+
+
+func test_acquired_region_uses_the_presidency_that_acquired_it() -> void:
+	var game_state := GameState.new()
+	var state := StateModel.new()
+	state.location = StateType.StateType.MYSORE
+	state.isCompanyControlled = true
+	assert_eq(game_state.get_presidency_type(state), EnumTypes.Presidency.NONE)
+	state.presidency = EnumTypes.Presidency.MADRAS
+	assert_eq(game_state.get_presidency_type(state), EnumTypes.Presidency.MADRAS)
+	assert_same(game_state.get_presidency(state), game_state.madras_presidency)
+
+
 func test_army_and_alliance_survive_json_round_trip() -> void:
 	var source := GameState.new()
 	source.bombay = StateModel.new()
