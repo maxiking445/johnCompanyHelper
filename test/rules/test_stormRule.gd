@@ -103,3 +103,22 @@ func _create_ship(ship_type: ShipTypes.ShipType) -> ShipModel:
 	ship.shipType = ship_type
 	ship.isFlipped = false
 	return ship
+
+
+func test_sinking_does_not_skip_the_next_ship_and_records_each_roll() -> void:
+	var first := _create_ship(ShipTypes.ShipType.PLAYER)
+	var second := _create_ship(ShipTypes.ShipType.PLAYER)
+	var third := _create_ship(ShipTypes.ShipType.PLAYER)
+	_game_state.seaWest.ships = [first, second, third]
+	RollHelper.storm_dice_results = [StormDice.Face.WEST_2]
+	RollHelper.d6_results = [6, 3, 1]
+	_rule.execute(_game_state)
+	assert_eq(_rule.last_result, StormDice.Face.WEST_2)
+	assert_eq(_rule.ship_results.size(), 3)
+	assert_eq(_rule.ship_results[0].outcome, "sunk")
+	assert_eq(_rule.ship_results[1].outcome, "damaged")
+	assert_eq(_rule.ship_results[2].outcome, "escaped")
+	assert_false(_game_state.seaWest.ships.has(first))
+	assert_true(second.isDamaged())
+	assert_false(third.isDamaged())
+	assert_true(RollHelper.d6_results.is_empty())

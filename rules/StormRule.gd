@@ -10,8 +10,14 @@ ship. Company and extra ships are ignored. Ships can escape, become damaged,
 or sink; an already damaged ship sinks when it suffers further damage.
 """
 
+var last_result: StormDice.Face = StormDice.Face.FOUR_A
+var ship_results: Array[Dictionary] = []
+
+
 func execute(game_state: GameState) -> void:
 	var diceResult: StormDice.Face = RollHelper.rollStormDice()
+	last_result = diceResult
+	ship_results.clear()
 	
 	var zones_to_check: Array[SeaModel] = []
 	match diceResult:
@@ -38,11 +44,19 @@ func execute(game_state: GameState) -> void:
 
 
 func _check_zone(zone: SeaModel, game_state: GameState) -> void:
-	for ship: ShipModel in zone.ships:
+	# Sinking removes ships from the live array; iterate a snapshot.
+	var ships := zone.ships.duplicate()
+	for index in ships.size():
+		var ship: ShipModel = ships[index]
 		if ship.isCompanyShip() or ship.isExtraShip():
 			continue
 
 		var roll := RollHelper.rollD6()
+		var outcome := "escaped" if roll <= 2 else ("sunk" if roll >= 5 or ship.isDamaged() else "damaged")
+		ship_results.append({
+			"ship": index + 1, "zone": game_state.get_sea_name(zone),
+			"roll": roll, "outcome": outcome,
+		})
 
 		if roll <= 2:
 			print(ship.display_name(), " escaped the Storm")
