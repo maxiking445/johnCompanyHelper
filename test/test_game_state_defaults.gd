@@ -75,16 +75,14 @@ func test_army_and_alliance_survive_json_round_trip() -> void:
 	source.bombay.presidency = EnumTypes.Presidency.BOMBAY
 	source.bombay_presidency.army.regiments = 3
 	var alliance := LocalAllianceModel.new()
-	alliance.name = "Local ally"
 	alliance.strength = 2
-	alliance.purchased = true
 	source.bombay_presidency.army.local_alliances.append(alliance)
 	var result := JSONConverter.parse(JSONConverter.stringify(source), GameState) as GameState
 	assert_not_null(result)
 	assert_eq(result.bombay_presidency.army.regiments, 3)
 	assert_eq(result.bombay_presidency.army.local_alliances.size(), 1)
 	assert_eq(result.bombay_presidency.army.local_alliances[0].strength, 2)
-	assert_true(result.bombay_presidency.army.local_alliances[0].purchased)
+	assert_false(result.bombay_presidency.army.local_alliances[0].exhausted)
 
 
 func test_game_states_have_separate_armies() -> void:
@@ -100,7 +98,6 @@ func test_army_survives_save_game_resource_round_trip() -> void:
 	source.madras_presidency.army.exhausted_officers = 1
 	var alliance := LocalAllianceModel.new()
 	alliance.strength = 3
-	alliance.purchased = true
 	source.madras_presidency.army.local_alliances.append(alliance)
 	var path := "user://army_model_round_trip_test.tres"
 	assert_eq(ResourceSaver.save(source, path), OK)
@@ -109,4 +106,4 @@ func test_army_survives_save_game_resource_round_trip() -> void:
 	assert_eq(loaded.madras_presidency.army.officers, 2)
 	assert_eq(loaded.madras_presidency.army.exhausted_officers, 1)
 	assert_eq(loaded.madras_presidency.army.local_alliances[0].strength, 3)
-	assert_true(loaded.madras_presidency.army.local_alliances[0].purchased)
+	assert_false(loaded.madras_presidency.army.local_alliances[0].exhausted)

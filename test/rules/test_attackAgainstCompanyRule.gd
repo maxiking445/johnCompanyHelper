@@ -68,7 +68,6 @@ func test_local_alliance_strength_defends_region_and_is_exhausted() -> void:
 	state.presidency = EnumTypes.Presidency.BENGAL
 	var alliance := LocalAllianceModel.new()
 	alliance.strength = 2
-	alliance.purchased = true
 	_game_state.bengal_presidency.army.local_alliances.append(alliance)
 	_game_state.states = [state]
 	_rule.execute_for_state(_game_state, state, 2)
@@ -76,15 +75,16 @@ func test_local_alliance_strength_defends_region_and_is_exhausted() -> void:
 	assert_false(state.hasRebelled)
 
 
-func test_unpurchased_local_alliance_cannot_defend() -> void:
+func test_exhausted_local_alliance_cannot_defend() -> void:
 	var state := _create_state(StateType.StateType.BENGAL, 0)
 	state.presidency = EnumTypes.Presidency.BENGAL
 	var alliance := LocalAllianceModel.new()
 	alliance.strength = 3
+	alliance.exhausted = true
 	_game_state.bengal_presidency.army.local_alliances.append(alliance)
 	_game_state.states = [state]
 	_rule.execute_for_state(_game_state, state, 1)
-	assert_false(alliance.exhausted)
+	assert_true(alliance.exhausted)
 	assert_true(state.hasRebelled)
 
 
@@ -143,7 +143,6 @@ func test_alliance_strength_cannot_be_split_between_two_regions() -> void:
 	additional.presidency = EnumTypes.Presidency.BENGAL
 	_game_state.states = [primary, additional]
 	var alliance := LocalAllianceModel.new()
-	alliance.purchased = true
 	alliance.strength = 3
 	_game_state.bengal_presidency.army.local_alliances.append(alliance)
 
@@ -161,7 +160,6 @@ func test_region_loss_example_exhausts_whole_army_including_alliance() -> void:
 	army.officers = 2
 	army.regiments = 2
 	var alliance := LocalAllianceModel.new()
-	alliance.purchased = true
 	alliance.strength = 2
 	army.local_alliances.append(alliance)
 	RollHelper.d6_results = [1, 1]

@@ -284,33 +284,33 @@ func _add_alliance_section(army: ArmyModel) -> void:
 	var section := SHIP_SECTION_SCENE.instantiate()
 	form.add_child(section)
 	section.configure("Local Alliances")
-	section.add_button.text = "Add Alliance"
-	section.add_button.custom_minimum_size.x = 240
-	section.add_button.pressed.connect(_add_alliance.bind(army))
-	if army.local_alliances.is_empty():
-		_add_notice("No local alliances in this Army")
+	section.add_button.hide()
+	var count_field: HBoxContainer = NUMBER_STEPPER_SCENE.instantiate()
+	form.add_child(count_field)
+	count_field.minimum_value = 0
+	count_field.maximum_value = 7
+	count_field.configure(army.local_alliances.size(), true, compact_layout)
+	count_field.value_changed.connect(_set_alliance_count.bind(army))
 	for index in army.local_alliances.size():
 		var alliance := army.local_alliances[index]
 		var card := RESOURCE_CARD_SCENE.instantiate()
 		form.add_child(card)
-		card.configure("Alliance %d" % (index + 1), true)
-		card.remove_button.pressed.connect(_remove_alliance.bind(army, index))
+		card.configure("Alliance %d" % (index + 1), false)
 		var previous_form := form
 		form = card.content
 		_add_resource_editor(alliance, true)
 		form = previous_form
 
 
-func _add_alliance(army: ArmyModel) -> void:
-	army.local_alliances.append(LocalAllianceModel.new())
-	_show_step()
-
-
-func _remove_alliance(army: ArmyModel, index: int) -> void:
-	if index < 0 or index >= army.local_alliances.size():
+func _set_alliance_count(value: float, army: ArmyModel) -> void:
+	var desired_count := roundi(value)
+	if desired_count == army.local_alliances.size():
 		return
-	army.local_alliances.remove_at(index)
-	_show_step()
+	while army.local_alliances.size() < desired_count:
+		army.local_alliances.append(LocalAllianceModel.new())
+	while army.local_alliances.size() > desired_count:
+		army.local_alliances.remove_at(army.local_alliances.size() - 1)
+	call_deferred("_show_step")
 
 
 func _add_ship_list(sea: SeaModel) -> void:

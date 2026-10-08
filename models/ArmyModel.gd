@@ -12,7 +12,7 @@ func available_strength() -> int:
 	var strength := maxi(0, officers - exhausted_officers)
 	strength += maxi(0, regiments - exhausted_regiments)
 	for alliance in local_alliances:
-		if alliance != null and alliance.purchased and not alliance.exhausted:
+		if alliance != null and not alliance.exhausted:
 			strength += alliance.strength
 	return strength
 
@@ -33,7 +33,7 @@ func exhaust_for_defense(required_strength: int, presidency_name: String) -> int
 	for alliance in local_alliances:
 		if needed <= 0:
 			break
-		if alliance == null or not alliance.purchased or alliance.exhausted:
+		if alliance == null or alliance.exhausted:
 			continue
 		alliance.exhausted = true
 		exhausted_strength += alliance.strength
