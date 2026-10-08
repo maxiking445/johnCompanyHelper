@@ -8,8 +8,6 @@ const STATE := preload("res://resources/gameState/GameState1710.tres")
 func after_each() -> void:
 	RollHelper.clearQueuedResults()
 	ActionManager.clear()
-	for played_event in EventHelper.playedEvents:
-		played_event.free()
 	EventHelper.resetPlayedEvents()
 	EventHelper.activeEvent = null
 

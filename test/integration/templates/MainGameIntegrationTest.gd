@@ -54,6 +54,7 @@ func after_each() -> void:
 	EventHelper.draw_pile.clear()
 	EventHelper.discard_pile.clear()
 	EventHelper.activeEvent = null
+	EventHelper.resetPlayedEvents()
 	RollHelper.clearQueuedResults()
 
 
