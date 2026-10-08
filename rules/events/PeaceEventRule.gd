@@ -24,6 +24,7 @@ func execute(game_state: GameState) -> void:
 
 	elif elephant.is_on_border():
 		var locations: Array[StateType.StateType] = elephant.getTouchingLocations()
+		_open_orders_across_border(game_state, locations)
 		addTowerLevelToLocation(game_state, locations)
 	
 	elephantMarchRule.execute(game_state)
@@ -37,3 +38,21 @@ func addTowerLevelToLocation(game_state: GameState, locations: Array[StateType.S
 			pass
 		else:
 			state.addTowerLevel()
+
+
+# Only orders joined across the Elephant's current border are opened.
+# Other orders in the two touching regions must remain unchanged.
+func _open_orders_across_border(game_state: GameState, locations: Array[StateType.StateType]) -> void:
+	if locations.size() != 2:
+		return
+	var first_state := game_state.findStateByLocation(locations[0])
+	var second_state := game_state.findStateByLocation(locations[1])
+	if first_state == null or second_state == null:
+		return
+
+	for first_order in first_state.orders:
+		for connected_id in BoardMap.boardMap.findConnectedOrderIds(first_order.id):
+			for second_order in second_state.orders:
+				if second_order.id == connected_id:
+					first_order.open()
+					second_order.open()
