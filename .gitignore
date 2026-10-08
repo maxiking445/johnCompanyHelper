@@ -12,4 +12,3 @@ export.cfg
 .mono/
 data_*/
 mono_crash.*.json
-/addons/resource2JSON/*
