@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://oq8pmoo706eu"]
+[gd_scene load_steps=6 format=3 uid="uid://oq8pmoo706eu"]
 
 [ext_resource type="Script" uid="uid://by5fkl0efnbdk" path="res://scenes/main.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://gpfei4wa2jkf" path="res://scenes/EventSummary.tscn" id="2_summary"]
 [ext_resource type="PackedScene" uid="uid://cnnglhyxqwp4b" path="res://scenes/component/background/background.tscn" id="3_background"]
 [ext_resource type="Theme" path="res://scenes/component/button/actionButton.tres" id="4_button"]
+
+[ext_resource type="PackedScene" path="res://scenes/StormPhase.tscn" id="5_storm"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -61,7 +63,13 @@ theme_override_font_sizes/font_size = 34
 disabled = true
 text = "FINISH ROUND"
 
+[node name="StormPhase" parent="." instance=ExtResource("5_storm")]
+visible = false
+layout_mode = 1
+
 [connection signal="lastEventShown" from="EventSummary" to="." method="_on_event_summary_last_event_shown"]
 [connection signal="presentation_changed" from="EventSummary" to="." method="_on_event_summary_presentation_changed"]
 [connection signal="pressed" from="Navigation/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="pressed" from="Navigation/FinishButton" to="." method="_on_finish_button_pressed"]
+
+[connection signal="completed" from="StormPhase" to="." method="_on_storm_phase_completed"]

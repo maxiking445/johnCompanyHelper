@@ -54,6 +54,8 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if not is_visible_in_tree():
+		return
 	# Let the modal dialog receive input before the card hit-test below.
 	if info_dialog.visible:
 		return

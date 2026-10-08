@@ -6,10 +6,10 @@
 
 <p align="center">
   <a href="https://github.com/maxiking445/johnCompanyHelper/actions/workflows/godot-ci.yml">
-    <img src="https://github.com/maxiking445/johnCompanyHelper/actions/workflows/godot-ci.yml/badge.svg" alt="CI status">
+	<img src="https://github.com/maxiking445/johnCompanyHelper/actions/workflows/godot-ci.yml/badge.svg" alt="CI status">
   </a>
   <a href="https://github.com/maxiking445/johnCompanyHelper/actions/workflows/release.yml">
-    <img src="https://github.com/maxiking445/johnCompanyHelper/actions/workflows/release.yml/badge.svg" alt="Release status">
+	<img src="https://github.com/maxiking445/johnCompanyHelper/actions/workflows/release.yml/badge.svg" alt="Release status">
   </a>
   <br>
   <img src="https://img.shields.io/github/license/maxiking445/johnCompanyHelper" alt="License">
@@ -35,12 +35,12 @@ Android Screens:
 
 <table align="center">
   <tr>
-    <td><p align="center"><strong>Main menu</strong></p><p align="center"><img src="assets/example/main-menu.webp" alt="John Company Helper main menu on Android" width="280"></p></td>
-    <td><p align="center"><strong>Event card</strong></p><p align="center"><img src="assets/example/event-card.webp" alt="Event card in the Android event viewer" width="280"></p></td>
+	<td><p align="center"><strong>Main menu</strong></p><p align="center"><img src="assets/example/main-menu.webp" alt="John Company Helper main menu on Android" width="280"></p></td>
+	<td><p align="center"><strong>Event card</strong></p><p align="center"><img src="assets/example/event-card.webp" alt="Event card in the Android event viewer" width="280"></p></td>
   </tr>
   <tr>
-    <td><p align="center"><strong>Event actions</strong></p><p align="center"><img src="assets/example/event-actions.webp" alt="Event actions in the Android event viewer" width="280"></p></td>
-    <td><p align="center"><strong>State editor</strong></p><p align="center"><img src="assets/example/state-editor.webp" alt="State editor on Android" width="280"></p></td>
+	<td><p align="center"><strong>Event actions</strong></p><p align="center"><img src="assets/example/event-actions.webp" alt="Event actions in the Android event viewer" width="280"></p></td>
+	<td><p align="center"><strong>State editor</strong></p><p align="center"><img src="assets/example/state-editor.webp" alt="State editor on Android" width="280"></p></td>
   </tr>
 </table>
 

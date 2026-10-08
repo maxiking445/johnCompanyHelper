@@ -46,8 +46,7 @@ func start_normal_game() -> GameState:
 	)
 	EventHelper.initEventDeck(true)
 	EventHelper.resetPlayedEvents()
-	start_game_from_state(gameState)
-	_initialize_ui()
+	_prepare_storm_phase()
 	return gameState
 
 
@@ -55,9 +54,25 @@ func continue_game() -> GameState:
 	EventHelper.resetPlayedEvents()
 	if EventHelper.draw_pile.is_empty():
 		EventHelper.initEventDeck(true)
-	start_game_from_state(gameState)
-	_initialize_ui()
+	_prepare_storm_phase()
 	return gameState
+
+
+func _prepare_storm_phase() -> void:
+	ActionManager.clear()
+	EventHelper.activeEvent = null
+	RollHelper.clearQueuedResults()
+	%EventSummary.hide()
+	%EventSummary.set_process_input(false)
+	$StormPhase.initialize(gameState)
+	$StormPhase.show()
+
+
+func _on_storm_phase_completed() -> void:
+	$StormPhase.hide()
+	_resolve_events(gameState, gameState.eventsToDraw)
+	%EventSummary.set_process_input(true)
+	_initialize_ui()
 
 
 func start_game_from_state(start_game_state: GameState) -> GameState:
