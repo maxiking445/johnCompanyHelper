@@ -132,7 +132,7 @@ func execute_event(
 	ActionManager.add_action(
 		ActionFactory.draw_event_action(event.eventName, StateType.name(location))
 	)
-	event.rule.execute(gameState)
+	_execute_india_event(gameState, event)
 	EventHelper.eventHandled()
 	return gameState
 
@@ -143,6 +143,7 @@ func _set_game_state(new_game_state: GameState) -> void:
 
 func _resolve_events(target_game_state: GameState, event_count: int) -> void:
 	print("Event count: ", event_count)
+	target_game_state.clear_rebellion_markers()
 	for _event_index in range(event_count):
 		if EventHelper.draw_pile.is_empty():
 			push_error("The event deck is empty before all events were resolved.")
@@ -155,7 +156,15 @@ func _resolve_events(target_game_state: GameState, event_count: int) -> void:
 				StateType.name(EventHelper.getTopDeckEventLocation())
 			)
 		)
-		event.rule.execute(target_game_state)
+		_execute_india_event(target_game_state, event)
+
+
+func _execute_india_event(target_game_state: GameState, event: IndiaEvent) -> void:
+	# Region Loss uses this marker within the current event. It must not affect
+	# another event or survive in the state saved between rounds.
+	target_game_state.clear_rebellion_markers()
+	event.rule.execute(target_game_state)
+	target_game_state.clear_rebellion_markers()
 
 
 func _initialize_ui() -> void:

@@ -26,6 +26,12 @@ class_name GameState
 @export var completedRounds: int = 0
 var states: Array[StateModel] = []
 
+
+func clear_rebellion_markers() -> void:
+	for state in getStates():
+		if state != null:
+			state.clear_rebellion()
+
 func get_presidency(state: StateModel) -> PresidencyModel:
 	if state == null:
 		return null

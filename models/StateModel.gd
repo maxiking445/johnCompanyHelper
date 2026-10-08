@@ -17,7 +17,8 @@ class_name StateModel
 @export var isDominatedBy: StateModel
 @export var isCompanyControlled: bool
 @export var towerLevel: int
-@export var hasRebelled: bool = false
+## Used only while resolving an India event; never saved as board state.
+var hasRebelled: bool = false
 
 func addTowerLevel():
 	var old_value := towerLevel

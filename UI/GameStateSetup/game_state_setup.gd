@@ -353,7 +353,7 @@ func _add_resource_editor(resource: Resource, nested: bool) -> void:
 			continue
 		if (
 			resource is StateModel
-			and property.name in [&"location", &"is_connected_to"]
+			and property.name in [&"location", &"is_connected_to", &"hasRebelled"]
 		):
 			continue
 		if resource is PresidencyModel and property.name == &"army":
