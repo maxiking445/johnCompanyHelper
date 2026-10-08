@@ -11,6 +11,8 @@ const NUMBER_STEPPER_SCENE := preload("res://UI/GameStateSetup/components/Number
 const TEXT_FIELD_SCENE := preload("res://UI/GameStateSetup/components/TextField.tscn")
 const DROPDOWN_FIELD_SCENE := preload("res://UI/GameStateSetup/components/DropdownField.tscn")
 const RESOURCE_CARD_SCENE := preload("res://UI/GameStateSetup/components/ResourceCard.tscn")
+const ORDER_EDITOR_SCENE := preload("res://UI/GameStateSetup/components/OrderEditor.tscn")
+const ORDER_LIST_HINT_SCENE := preload("res://UI/GameStateSetup/components/OrderListHint.tscn")
 const SHIP_SECTION_SCENE := preload("res://UI/GameStateSetup/components/ShipSeaSection.tscn")
 const FORM_NOTICE_SCENE := preload("res://UI/GameStateSetup/components/FormNotice.tscn")
 const STATE_KEYS := [
@@ -301,7 +303,7 @@ func _add_resource_editor(resource: Resource, nested: bool) -> void:
 			continue
 		if (
 			resource is StateModel
-			and property.name in [&"location", &"orders", &"is_connected_to"]
+			and property.name in [&"location", &"is_connected_to"]
 		):
 			continue
 		if property.name == "isDominatedBy":
@@ -402,13 +404,21 @@ func _add_array_editor(
 	if values.is_empty():
 		row.add_child(_make_notice("No entries in default state", 31, 0.62))
 		return
+	if property.name == &"orders":
+		var order_hint: Label = ORDER_LIST_HINT_SCENE.instantiate()
+		order_hint.add_theme_font_size_override("font_size", 27 if compact_layout else 24)
+		row.add_child(order_hint)
 	for index in values.size():
 		var value: Variant = values[index]
 		if value is Resource:
+			if value is OrderModel:
+				var order_card: PanelContainer = ORDER_EDITOR_SCENE.instantiate()
+				row.add_child(order_card)
+				order_card.configure(value, compact_layout)
+				continue
 			var card: PanelContainer = RESOURCE_CARD_SCENE.instantiate()
-			var title := "%s %d" % [_singular(_display_name(property.name)), index + 1]
 			row.add_child(card)
-			card.configure(title, false)
+			card.configure("%s %d" % [_singular(_display_name(property.name)), index + 1], false)
 			var previous_form := form
 			form = card.content
 			_add_resource_editor(value, true)
@@ -425,8 +435,6 @@ func _add_array_editor(
 					updated[index] = int(text) if value is int else text
 					target.set(property.name, updated)
 			)
-
-
 func _add_state_reference_editor(target: Object, property: Dictionary) -> void:
 	var panel: PanelContainer = FIELD_PANEL_SCENE.instantiate()
 	form.add_child(panel)
