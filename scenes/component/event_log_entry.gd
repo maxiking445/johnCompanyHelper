@@ -14,7 +14,7 @@ var swipe_origin_x: float = 0.0
 var is_dismissing: bool = false
 
 @onready var title_label: Label = %Title
-@onready var action_text: Label = %ActionText
+@onready var action_text: RichTextLabel = %ActionText
 @onready var accent: Panel = %Accent
 
 
@@ -31,7 +31,11 @@ func initialize(new_event: Action) -> void:
 
 func _render_event() -> void:
 	title_label.text = action.title if not action.title.is_empty() else _type_title()
-	action_text.text = action.text
+	action_text.clear()
+	if action.display_text.is_empty():
+		action_text.add_text(action.text)
+	else:
+		action_text.parse_bbcode(action.display_text)
 	_apply_type_color()
 	_play_spawn_animation()
 

@@ -131,14 +131,18 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("RuleStyle")
 
-[node name="ActionText" type="Label" parent="Row/Margin/Content"]
+[node name="ActionText" type="RichTextLabel" parent="Row/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.13, 0.075, 0.04, 1)
-theme_override_fonts/font = ExtResource("3_body")
-theme_override_font_sizes/font_size = 32
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+selection_enabled = false
+theme_override_fonts/normal_font = ExtResource("3_body")
+theme_override_colors/default_color = Color(0.13, 0.075, 0.04, 1)
+theme_override_font_sizes/normal_font_size = 32
 text = "Change unrest in {state} from {old_value} to {new_value}."
 horizontal_alignment = 1
 vertical_alignment = 1

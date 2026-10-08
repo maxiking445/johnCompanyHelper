@@ -6,6 +6,7 @@ extends Resource
 @export var title: String
 @export var type: EnumTypes.ActionType
 var eventId: int = -1
+var display_text: String = ""
 
 @export_group("Parameter Validation")
 

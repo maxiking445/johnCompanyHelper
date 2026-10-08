@@ -31,5 +31,6 @@ func test_execute_always_prompts_players_to_check_writers() -> void:
 	var action := ActionManager.get_action(0)
 	assert_eq(action.title, "Pay Writers")
 	assert_true(action.text.contains("Check HYDERABAD"))
+	assert_true(action.display_text.contains("[color=#6E0E1F]HYDERABAD[/color]"))
 	assert_true(action.text.contains("Each player takes £1 from the bank"))
 	assert_true(action.text.contains("all adjacent regions"))
