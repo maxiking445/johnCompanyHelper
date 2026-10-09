@@ -94,6 +94,24 @@ The Linux build targets x86_64 desktop systems.
 
 The macOS build is universal and supports both Apple Silicon and Intel Macs.
 
+### Android
+
+1. Download `JohnCompanyHelper-vX.Y.Z.apk` from the
+   [latest GitHub Release](https://github.com/maxiking445/johnCompanyHelper/releases/latest).
+2. **Enable installation from unknown sources** (if not already enabled):
+   - Open **Settings** on your Android device.
+   - Go to **Security** or **Privacy** (location may vary by device).
+   - Enable **Unknown Sources** or **Install unknown apps** to allow installation from sources other than the Google Play Store.
+   - For specific browser apps, you may need to grant the permission to that app individually.
+3. Open your file manager or the download notification on your device.
+4. Tap the downloaded `.apk` file.
+5. Tap **Install** when prompted.
+6. Once installation is complete, tap **Open** to launch the application, or find it in your app drawer.
+
+> [!NOTE]
+> This is a third-party APK (not from Google Play Store). Make sure you download it only from the official
+> [GitHub Releases](https://github.com/maxiking445/johnCompanyHelper/releases/latest) page to ensure authenticity and security.
+
 
 ## Disclaimers
 
