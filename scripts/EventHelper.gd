@@ -56,7 +56,9 @@ func shuffleDiscardIntoDrawPile() -> void:
 		return
 		
 	discard_pile.shuffle()
-	draw_pile.append_array(discard_pile)
+	var remaining_draw_pile: Array[IndiaEvent] = draw_pile.duplicate()
+	draw_pile = discard_pile.duplicate()
+	draw_pile.append_array(remaining_draw_pile)
 	discard_pile.clear()
 	
 func shuffleDiscardCards() -> void:

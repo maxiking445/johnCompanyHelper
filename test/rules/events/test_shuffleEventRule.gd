@@ -38,3 +38,15 @@ func test_execute_keeps_active_event_set_for_caller_to_clear() -> void:
 	_rule.execute(_game_state)
 
 	assert_eq(EventHelper.activeEvent, SHUFFLE_MADRAS)
+
+
+func test_execute_places_discards_on_top_of_remaining_draw_stack() -> void:
+	_rule.execute(_game_state)
+
+	# The active Shuffle tile is reinserted into the remaining draw stack.
+	# Only the other discarded tile must be at the top after shuffling.
+	assert_eq(EventHelper.draw_pile[0], WINDFALL_HYDERABAD)
+	assert_eq(EventHelper.draw_pile.size(), 3)
+	assert_true(EventHelper.draw_pile.has(TURMOIL_BOMBAY))
+	assert_true(EventHelper.draw_pile.has(SHUFFLE_MADRAS))
+	assert_true(EventHelper.discard_pile.is_empty())
