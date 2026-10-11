@@ -50,3 +50,17 @@ func test_execute_places_discards_on_top_of_remaining_draw_stack() -> void:
 	assert_true(EventHelper.draw_pile.has(TURMOIL_BOMBAY))
 	assert_true(EventHelper.draw_pile.has(SHUFFLE_MADRAS))
 	assert_true(EventHelper.discard_pile.is_empty())
+
+
+func test_empty_draw_stack_is_reshuffled_before_elephant_march() -> void:
+	# Only the previously discarded Windfall tile remains when Shuffle resolves.
+	EventHelper.draw_pile.clear()
+	EventHelper.discard_pile = [SHUFFLE_MADRAS, WINDFALL_HYDERABAD]
+
+	_rule.execute(_game_state)
+
+	# The next tile exists before the Elephant March reads the draw stack.
+	assert_eq(EventHelper.draw_pile.size(), 2)
+	assert_eq(EventHelper.draw_pile[0], WINDFALL_HYDERABAD)
+	assert_true(EventHelper.draw_pile.has(SHUFFLE_MADRAS))
+	assert_true(EventHelper.discard_pile.is_empty())

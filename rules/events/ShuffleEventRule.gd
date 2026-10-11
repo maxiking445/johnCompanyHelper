@@ -14,8 +14,13 @@ draw stack. If the draw stack is empty, perform the Elephant's March last.
 func execute(game_state: GameState) -> void:
 	print("Executing ShuffleEventRule ...")
 	var elephantMarchRule: ElephantMarchRule = elephantRule.new()
-	elephantMarchRule.execute(game_state)
+	# With an empty draw stack, the Elephant marches only after reshuffling.
+	var draw_stack_was_empty := EventHelper.draw_pile.is_empty()
+	if not draw_stack_was_empty:
+		elephantMarchRule.execute(game_state)
 	performShuffle()
+	if draw_stack_was_empty:
+		elephantMarchRule.execute(game_state)
 
 	
 		
