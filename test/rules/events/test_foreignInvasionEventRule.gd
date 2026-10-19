@@ -126,3 +126,18 @@ func _create_state(
 	order.open()
 	state.orders = [order]
 	return state
+
+
+func test_elephant_redirect_requires_inside_the_invaded_region() -> void:
+	var bombay := _create_state(StateType.StateType.BOMBAY, 1)
+	_game_state.states = [bombay]
+	_game_state.elephant = ElephantModel.new()
+
+	_game_state.elephant.placeInCenterOf(StateType.StateType.MADRAS)
+	assert_false(_rule._elephant_was_inside_invaded_region(_game_state, bombay))
+
+	_game_state.elephant.placeOnBorderOf(StateType.StateType.BOMBAY, StateType.StateType.MADRAS)
+	assert_false(_rule._elephant_was_inside_invaded_region(_game_state, bombay))
+
+	_game_state.elephant.placeInCenterOf(StateType.StateType.BOMBAY)
+	assert_true(_rule._elephant_was_inside_invaded_region(_game_state, bombay))

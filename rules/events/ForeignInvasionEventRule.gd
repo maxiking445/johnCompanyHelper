@@ -82,7 +82,8 @@ func _resolve_invasion(
 		)
 		if succeeded:
 			apply_success(game_state, state, invasion_strength)
-			elephant_redirect_rule.execute_with_circle_shape(game_state)
+			if _elephant_was_inside_invaded_region(game_state, state):
+				elephant_redirect_rule.execute_with_circle_shape(game_state)
 		return
 
 	if invasion_rule.is_invasion_successful(
@@ -145,3 +146,10 @@ func apply_success(
 			cascade_rule.execute_location(game_state, state.location)
 		else:
 			game_state.closeAllOrders(state.location)
+
+
+# A Foreign Invasion redirects the Elephant only from the invaded region.
+func _elephant_was_inside_invaded_region(game_state: GameState, state: StateModel) -> bool:
+	return (game_state.elephant != null
+		and game_state.elephant.is_inside_state()
+		and game_state.elephant.current_state == state.location)
